@@ -1,0 +1,35 @@
+.file-uploader {
+    position: relative;
+}
+.file-uploader input[type="file"]
+{
+    position: absolute;
+    top: -100vh;
+    height: 0;
+}
+
+.up-upload-image {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.up-upload-image a {
+    width: 100%;
+    object-fit: cover;
+    max-height: 100%;
+    text-align: center;
+
+}
+
+.up-upload-image a img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.up-upload-image.image img {
+    width: auto;
+}

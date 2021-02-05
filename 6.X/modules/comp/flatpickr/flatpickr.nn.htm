@@ -1,0 +1,18 @@
+<script type="text/x-template" id="flatpickr-component-template">
+    <p class="control has-icons-right">
+        <button v-if="asButton"
+                ref="input"
+                :class="{'button': true, 'is-medium': size == 'md', 'is-danger': set_class == 'danger'}">
+            {{ value }}
+            &nbsp;
+            &nbsp;
+        </button>
+        <input v-else :class="{'input': true, 'is-medium': size == 'md', 'is-danger': set_class == 'danger'}"
+               :placeholder="placeholder"
+               type="text" ref="input">
+        <span class="icon is-small is-right">
+            <i class="fa fa-calendar"></i>
+        </span>
+    </p>
+</script>
+<script src="/mjs/comp-flatpickr/flatpickr.js" defer></script>
