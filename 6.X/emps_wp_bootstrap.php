@@ -30,6 +30,24 @@ if (!isset($_COOKIE['EMPS'])) {
     setcookie("EMPS", time(), time() + 60 * 60 * 24 * 30, '/');
 }
 
+
+/*
+ * Composer Autoloader
+ *
+ * Since EMPS 6, there is no common 'vendor' folder for all EMPS websites on the server. Each website has to
+ * install its own dependencies by combining the EMPS pre_composer.json file with the project's composer.json file
+ *
+ * To install all dependencies of the project (not only Composer, but also bower, npm) run:
+ *
+ * ./emps install
+ *
+ * in the project's folder
+ */
+if (!$emps_no_common_autoload) {
+    require_once EMPS_COMMON_PATH_PREFIX."/../vendor/autoload.php";
+}
+
+
 // The main script
 require_once EMPS_PATH_PREFIX . "/EMPS.php";                        // EMPS Class
 
@@ -62,24 +80,6 @@ $emps_bots = array(
     'StackRambler',
     'Googlebot',
 );
-
-
-/*
- * Composer Autoloader
- *
- * Since EMPS 6, there is no common 'vendor' folder for all EMPS websites on the server. Each website has to
- * install its own dependencies by combining the EMPS pre_composer.json file with the project's composer.json file
- *
- * To install all dependencies of the project (not only Composer, but also bower, npm) run:
- *
- * ./emps install
- *
- * in the project's folder
- */
-if (!$emps_no_common_autoload) {
-    require_once EMPS_COMMON_PATH_PREFIX."/../vendor/autoload.php";
-}
-
 
 $emps->pre_init();
 
