@@ -19,17 +19,6 @@ $emps_paths = array_merge($emps_paths, $emps_extra_paths);
 $path = implode($glue, $emps_paths);
 ini_set('include_path', $path);
 
-// Send the file if the user wants a file
-require_once EMPS_COMMON_PATH_PREFIX . "/emps_sendfile.php";
-// No further execution of the main script will be needed if this script does the job
-
-// A cookie test - this will let us know if the browser supports cookies
-$emps_just_set_cookie = false;
-if (!isset($_COOKIE['EMPS'])) {
-    $emps_just_set_cookie = true;
-    setcookie("EMPS", time(), time() + 60 * 60 * 24 * 30, '/');
-}
-
 
 /*
  * Composer Autoloader
@@ -45,6 +34,17 @@ if (!isset($_COOKIE['EMPS'])) {
  */
 if (!$emps_no_common_autoload) {
     require_once EMPS_COMMON_PATH_PREFIX."/../vendor/autoload.php";
+}
+
+// Send the file if the user wants a file
+require_once EMPS_COMMON_PATH_PREFIX . "/emps_sendfile.php";
+// No further execution of the main script will be needed if this script does the job
+
+// A cookie test - this will let us know if the browser supports cookies
+$emps_just_set_cookie = false;
+if (!isset($_COOKIE['EMPS'])) {
+    $emps_just_set_cookie = true;
+    setcookie("EMPS", time(), time() + 60 * 60 * 24 * 30, '/');
 }
 
 
