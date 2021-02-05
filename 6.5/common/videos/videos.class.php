@@ -62,9 +62,7 @@ class EMPS_Videos
 
     function process_video($video_id)
     {
-        global $emps, $SET;
-        $os = $SET;
-        $SET = array();
+        global $emps;
         $ctx = $emps->p->get_context(DT_VIDEO, 1, $video_id);
 
         $video = $emps->db->get_row("e_videos", "id=$video_id");
@@ -84,11 +82,7 @@ class EMPS_Videos
             $SET['description'] = $snip['description'];
             $SET['duration'] = $this->covtime($data['duration']);
 
-            unset($_REQUEST['id']);
-            unset($SET['id']);
-            unset($GLOBALS['id']);
-
-            $emps->db->sql_update("e_videos", "id=$video_id");
+            $emps->db->sql_update_row("e_videos", ['SET' => $SET], "id=$video_id");
             $emps->p->save_properties($SET, $ctx, P_VIDEO);
 
 
@@ -111,16 +105,15 @@ class EMPS_Videos
                 $data = file_get_contents($img['url']);
 
                 if ($data) {
-                    $_REQUEST = array();
-                    $SET = array();
-                    $_REQUEST['md5'] = md5(uniqid(time() + 1231111));
-                    $_REQUEST['filename'] = $a['URL'];
-                    $_REQUEST['type'] = 'image/jpeg';
-                    $_REQUEST['size'] = strlen($data);
-                    $_REQUEST['thumb'] = $img['width'] . 'x' . $img['height'] . "|120x90|auto,max";
-                    $_REQUEST['context_id'] = $ctx;
-                    $_REQUEST['ord'] = $ord + 10;
-                    $emps->db->sql_insert("e_uploads");
+                    $nr = [];
+                    $nr['md5'] = md5(uniqid(time() + 1231111));
+                    $nr['filename'] = "video.jpg";
+                    $nr['type'] = 'image/jpeg';
+                    $nr['size'] = strlen($data);
+                    $nr['thumb'] = $img['width'] . 'x' . $img['height'] . "|120x90|auto,max";
+                    $nr['context_id'] = $ctx;
+                    $nr['ord'] = $ord + 10;
+                    $emps->db->sql_insert_row("e_uploads", ['SET' => $nr]);
                     $file_id = $emps->db->last_insert();
                     $oname = $this->p->up->upload_filename($file_id, DT_IMAGE);
 
@@ -150,7 +143,7 @@ class EMPS_Videos
             $SET['width'] = $data['width'];
             $SET['height'] = $data['height'];
 
-            $emps->db->sql_update("e_videos", "id=$video_id");
+            $emps->db->sql_update_row("e_videos", ['SET' => $SET], "id=$video_id");
             $emps->p->save_properties($SET, $ctx, P_VIDEO);
 
             $image = file_get_contents($data['thumbnail_large']);
@@ -158,16 +151,15 @@ class EMPS_Videos
             $x = explode("/", $data['thumbnail_large']);
             $name = $x[count($x) - 1];
 
-            $_REQUEST = array();
-            $SET = array();
-            $_REQUEST['md5'] = md5(uniqid(time() + 1231111));
-            $_REQUEST['filename'] = $name;
-            $_REQUEST['type'] = 'image/jpeg';
-            $_REQUEST['size'] = strlen($image);
-            $_REQUEST['thumb'] = "1920x1080|120x90|inner";
-            $_REQUEST['context_id'] = $ctx;
-            $_REQUEST['ord'] = 10;
-            $emps->db->sql_insert("e_uploads");
+            $nr = [];
+            $nr['md5'] = md5(uniqid(time() + 1231111));
+            $nr['filename'] = $name;
+            $nr['type'] = 'image/jpeg';
+            $nr['size'] = strlen($image);
+            $nr['thumb'] = "1920x1080|120x90|inner";
+            $nr['context_id'] = $ctx;
+            $nr['ord'] = 10;
+            $emps->db->sql_insert_row("e_uploads", ['SET' => $nr]);
             $file_id = $emps->db->last_insert();
             $oname = $this->p->up->upload_filename($file_id, DT_IMAGE);
 
@@ -195,7 +187,7 @@ class EMPS_Videos
             $SET['duration'] = $data['duration'];
             $SET['embed_url'] = $data['embed_url'];
 
-            $emps->db->sql_update("e_videos", "id=$video_id");
+            $emps->db->sql_update_row("e_videos", ['SET' => $SET], "id=$video_id");
             $emps->p->save_properties($SET, $ctx, P_VIDEO);
 
             $image = file_get_contents($data['thumbnail_url']);
@@ -203,16 +195,15 @@ class EMPS_Videos
             $x = explode("/", $data['thumbnail_url']);
             $name = $x[count($x) - 1];
 
-            $_REQUEST = array();
-            $SET = array();
-            $_REQUEST['md5'] = md5(uniqid(time() + 1231111));
-            $_REQUEST['filename'] = $name;
-            $_REQUEST['type'] = 'image/jpeg';
-            $_REQUEST['size'] = strlen($image);
-            $_REQUEST['thumb'] = "1920x1080|120x90|inner";
-            $_REQUEST['context_id'] = $ctx;
-            $_REQUEST['ord'] = 10;
-            $emps->db->sql_insert("e_uploads");
+            $nr = array();
+            $nr['md5'] = md5(uniqid(time() + 1231111));
+            $nr['filename'] = $name;
+            $nr['type'] = 'image/jpeg';
+            $nr['size'] = strlen($image);
+            $nr['thumb'] = "1920x1080|120x90|inner";
+            $nr['context_id'] = $ctx;
+            $nr['ord'] = 10;
+            $emps->db->sql_insert_row("e_uploads", ['SET' => $nr]);
             $file_id = $emps->db->last_insert();
             $oname = $this->p->up->upload_filename($file_id, DT_IMAGE);
 

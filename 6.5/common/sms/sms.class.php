@@ -17,7 +17,7 @@ class EMPS_SMS
 
     public function enqueue_message($to, $msg)
     {
-        global $emps, $SET;
+        global $emps;
 
         if (!trim($to)) {
             return false;
@@ -32,7 +32,7 @@ class EMPS_SMS
         $SET['to'] = $to;
         $SET['message'] = $msg;
         $SET['params'] = json_encode($params);
-        $emps->db->sql_insert("e_smscache");
+        $emps->db->sql_insert_row("e_smscache", ['SET' => $SET]);
         return true;
     }
 

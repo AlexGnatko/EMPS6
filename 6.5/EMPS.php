@@ -635,9 +635,9 @@ class EMPS extends EMPS_Common
         $row = $this->db->get_row("e_counter", "code = '{$metric}' and context_id = {$context_id} and per = {$period}");
         if ($row) {
             $SET['vle'] = $row['vle'] + $value;
-            $this->db->sql_update("e_counter", "id = " . $row['id']);
+            $this->db->sql_update_row("e_counter", ['SET' => $nr], "id = " . $row['id']);
         } else {
-            $this->db->sql_insert("e_counter");
+            $this->db->sql_insert_row("e_counter", ['SET' => $nr]);
         }
         $this->db->query("unlock tables");
 

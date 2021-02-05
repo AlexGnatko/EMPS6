@@ -170,13 +170,14 @@ class EMPS_Uploads
             $this->delete_file($row['id'], DT_FILE);
         }
 
-        $_REQUEST['md5'] = md5(uniqid(time()));
-        $_REQUEST['file_name'] = $file_name;
-        $_REQUEST['context_id'] = $context_id;
-        $_REQUEST['content_type'] = $content_type;
-        $_REQUEST['size'] = strlen($data);
-        $_REQUEST['comment'] = $comment;
-        $emps->db->sql_insert("e_files");
+        $nr = [];
+        $nr['md5'] = md5(uniqid(time()));
+        $nr['file_name'] = $file_name;
+        $nr['context_id'] = $context_id;
+        $nr['content_type'] = $content_type;
+        $nr['size'] = strlen($data);
+        $nr['comment'] = $comment;
+        $emps->db->sql_insert_row("e_files", ['SET' => $nr]);
         $file_id = $emps->db->last_insert();
         $xfname = $this->upload_filename($file_id, DT_FILE);
 
@@ -209,7 +210,7 @@ class EMPS_Uploads
 
     public function download_file($context_id, $url, $filename)
     {
-        global $emps, $SET;
+        global $emps;
 
         if (!$filename) {
             $a = parse_url($url);
@@ -244,7 +245,7 @@ class EMPS_Uploads
             $SET['comment'] = $this->set_comment;
         }
         $SET['ord'] = $this->ord;
-        $emps->db->sql_insert("e_files");
+        $emps->db->sql_insert("e_files", ['SET' => $SET]);
         $file_id = $emps->db->last_insert();
 
         $xfname = $this->upload_filename($file_id, DT_FILE);
@@ -254,7 +255,7 @@ class EMPS_Uploads
 
     public function import_files($context_id, $data)
     {
-        global $SET, $emps;
+        global $emps;
         $this->delete_files_context($context_id);
 
         $SET = array();

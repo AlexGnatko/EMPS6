@@ -548,7 +548,7 @@ class EMPS_GoogleGeocode extends EMPS_YandexGeocode
 
     public function ensure_timezone($name)
     {
-        global $emps, $SET;
+        global $emps;
 
         $row = $emps->db->get_row("geo_timezone", "name = '" . $emps->db->sql_escape($name) . "'");
         if ($row) {
@@ -557,7 +557,7 @@ class EMPS_GoogleGeocode extends EMPS_YandexGeocode
 
         $SET = array();
         $SET['name'] = $name;
-        $emps->db->sql_insert("geo_timezone");
+        $emps->db->sql_insert_row("geo_timezone", ['SET' => $SET]);
         return $emps->db->last_insert();
     }
 

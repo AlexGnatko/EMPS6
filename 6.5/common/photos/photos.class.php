@@ -159,12 +159,11 @@ class EMPS_Photos
 
             $emps->db->query("delete from ".TP."e_thumbs where size = '{$size}' and upload_id = {$ra['id']}");
 
-            $_REQUEST = array();
-            $_GLOBALS['id'] = "";
-            $_REQUEST['upload_id'] = $ra['id'];
-            $_REQUEST['size'] = $size;
-            $_REQUEST['dt'] = time();
-            $emps->db->sql_insert("e_thumbs");
+            $nr = [];
+            $nr['upload_id'] = $ra['id'];
+            $nr['size'] = $size;
+            $nr['dt'] = time();
+            $emps->db->sql_insert_row("e_thumbs", ['SET' => $nr]);
 
             if (is_resource($dst)) {
                 imagedestroy($dst);
@@ -446,27 +445,27 @@ class EMPS_Photos
 
             $row = $emps->db->get_row("e_uploads", "md5='$md5'");
             if ($row) {
-                $_REQUEST = array();
-                $_REQUEST['filename'] = $name;
-                $_REQUEST['descr'] = $descr;
-                $_REQUEST['type'] = $type;
-                $_REQUEST['size'] = $size;
-                $_REQUEST['thumb'] = EMPS_PHOTO_SIZE;
-                $_REQUEST['ord'] = $ord;
-                $emps->db->sql_update("e_uploads", "id=" . $row['id']);
+                $nr = array();
+                $nr['filename'] = $name;
+                $nr['descr'] = $descr;
+                $nr['type'] = $type;
+                $nr['size'] = $size;
+                $nr['thumb'] = EMPS_PHOTO_SIZE;
+                $nr['ord'] = $ord;
+                $emps->db->sql_update_row("e_uploads", ['SET' => $nr], "id=" . $row['id']);
 
                 $file_id = $row['id'];
             } else {
-                $_REQUEST = array();
-                $_REQUEST['md5'] = $md5;
-                $_REQUEST['filename'] = $name;
-                $_REQUEST['descr'] = $descr;
-                $_REQUEST['type'] = $type;
-                $_REQUEST['size'] = $size;
-                $_REQUEST['thumb'] = EMPS_PHOTO_SIZE;
-                $_REQUEST['context_id'] = $context_id;
-                $_REQUEST['ord'] = $ord;
-                $emps->db->sql_insert("e_uploads");
+                $nr = array();
+                $nr['md5'] = $md5;
+                $nr['filename'] = $name;
+                $nr['descr'] = $descr;
+                $nr['type'] = $type;
+                $nr['size'] = $size;
+                $nr['thumb'] = EMPS_PHOTO_SIZE;
+                $nr['context_id'] = $context_id;
+                $nr['ord'] = $ord;
+                $emps->db->sql_insert_row("e_uploads", ['SET' => $nr]);
                 $file_id = $emps->db->last_insert();
             }
 
@@ -638,7 +637,7 @@ class EMPS_Photos
 
     public function download_image($context_id, $url)
     {
-        global $emps, $SET;
+        global $emps;
 
         $data = file_get_contents($url);
         if ($data === FALSE) {
@@ -732,7 +731,7 @@ class EMPS_Photos
         $SET['ord'] = $this->ord;
         $SET['protect'] = $this->protect;
         $SET['descr'] = $this->descr;
-        $emps->db->sql_insert("e_uploads");
+        $emps->db->sql_insert_row("e_uploads", ['SET' => $SET]);
         $file_id = $emps->db->last_insert();
         $this->last_downloaded_id = $file_id;
 

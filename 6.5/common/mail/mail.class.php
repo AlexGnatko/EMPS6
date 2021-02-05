@@ -121,7 +121,7 @@ class EMPS_Mail
 
     public function send_message_ex($user_id, $template, $title, $mode)
     {
-        global $emps, $emps_smtp_data, $emps_smtp_params, $smarty, $SET;
+        global $emps, $emps_smtp_data, $emps_smtp_params, $smarty;
 
         if (!$user_id) return -50;
 
@@ -180,7 +180,7 @@ class EMPS_Mail
             $SET['smtpdata'] = serialize($data);
             $SET['dt'] = time();
             $SET['sdt'] = 0;
-            $emps->db->sql_insert("e_msgcache");
+            $emps->db->sql_insert_row("e_msgcache", ['SET' => $SET]);
             if ($emps->db->last_insert()) {
                 $r = true;
             } else {
