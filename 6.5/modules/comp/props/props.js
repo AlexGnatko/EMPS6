@@ -4,7 +4,7 @@ Vue.component('props-editor', {
     data: function(){
         return {
             lst: [],
-            guid: guid(),
+            guid: EMPS.guid(),
             edit_mode: false,
             current_row: {},
             import_text: '',
