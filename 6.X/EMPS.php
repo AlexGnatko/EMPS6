@@ -183,6 +183,15 @@ class EMPS_Common
                     setcookie($_sess_name, $_sess_id, time() + EMPS_SESSION_COOKIE_LIFETIME, "/");
                     $_SESSION['lsu'] = time();
                 }
+                if (count($_GET) > 0) {
+                    foreach ($_GET as $n => $v) {
+                        $n = strtolower($n);
+                        if (substr($n, 0, 4) == "utm_") {
+                            $_SESSION['utm'][$n] = $v;
+                        }
+                    }
+                    $this->copy_values($_SESSION['utm'], $_GET, "gclid,gclsrc,dclid,fbclid,zanpid");
+                }
             }
         }
     }

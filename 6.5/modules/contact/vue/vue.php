@@ -32,6 +32,10 @@ if ($_POST['post_message']) {
         $mail = new EMPS_Mail;
 
         $smarty->assign("BaseURL", EMPS_SCRIPT_WEB);
+        if (isset($_SESSION['utm'])) {
+            $payload['utm'] = $_SESSION['utm'];
+        }
+
         $smarty->assign("row", $payload);
         $body = $smarty->fetch("db:msg/msginfo");
 
