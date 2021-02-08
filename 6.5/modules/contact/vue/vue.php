@@ -49,6 +49,10 @@ if ($_POST['post_message']) {
         $row['time'] = $emps->form_time($row['dt']);
         $row['msg'] = $payload['msg'];
 
+        if (isset($_SESSION['utm'])) {
+            $row['utm'] = $_SESSION['utm'];
+        }
+
         $smarty->assign("msg", $row);
         $to = $emps->get_setting("order_mailto");
         if(!$to){
