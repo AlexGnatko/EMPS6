@@ -21,6 +21,9 @@
 {{/if}}
 
 <p><strong>Телефон</strong>: {{$msg.phone}}</p>
+{{if $msg.utm}}
+<p><strong>UTM</strong>: {{$msg.utm|json_encode}}</p>
+{{/if}}
 <p>{{$msg.msg|nl2br}}</p>
 </div>
 {{/if}}
