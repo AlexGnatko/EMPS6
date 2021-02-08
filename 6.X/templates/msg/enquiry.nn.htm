@@ -5,6 +5,9 @@
 <p><strong>Name</strong>: {{$msg.name}}</p>
 <p><strong>E-mail</strong>: {{$msg.email}}</p>
 <p><strong>Phone</strong>: {{$msg.phone}}</p>
+{{if $row.utm}}
+<p><strong>UTM</strong>: {{$row.utm|json_encode}}</p>
+{{/if}}
 <p>{{$msg.msg|nl2br}}</p>
 </div>
 {{else}}
