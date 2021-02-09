@@ -344,6 +344,9 @@ trait EMPS_Common_Routing
                 return true;
             }
         } else {
+            if (count($_GET) > 0) {
+                return false;
+            }
             return true;
         }
         return false;
