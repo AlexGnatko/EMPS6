@@ -190,7 +190,8 @@ class EMPS_Common
                             $_SESSION['utm'][$n] = $v;
                         }
                     }
-                    $this->copy_values($_SESSION['utm'], $_GET, "gclid,gclsrc,dclid,fbclid,zanpid");
+                    $this->copy_values($_SESSION['utm'], $_GET,
+                        "gclid,gclsrc,dclid,fbclid,yclid,ymclid,zanpid");
                 }
             }
         }
