@@ -164,8 +164,6 @@ if ($emps->virtual_path && !$emps->fast) {
     // HTML view
     if (!$emps->no_smarty) {
         $emps->pre_display();
-        $out = ob_get_clean();
-        $smarty->assign("ob_out", $out);
 
         if (file_exists($tn)) {
             $x = explode("-", $pp);
