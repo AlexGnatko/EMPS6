@@ -154,9 +154,16 @@ if ($emps->virtual_path && !$emps->fast) {
             if ($fn) {
                 $fn = stream_resolve_include_path($fn);
                 if ($fn !== false) {
+                    $emps_not_found = false;
                     require_once $fn;
+                } else {
+                    $emps_not_found = true;
                 }
+            } else {
+                $emps_not_found = true;
             }
+        } else {
+            $emps_not_found = true;
         }
     }
 
@@ -171,6 +178,7 @@ if ($emps->virtual_path && !$emps->fast) {
                 // Prevent component HTML from being displayed
                 $emps_not_found = true;
             } else {
+                $emps_not_found = false;
                 $smarty->assign("main_body", $tn);
 
                 $smarty->display("db:main");
