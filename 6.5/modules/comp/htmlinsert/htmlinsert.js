@@ -18,7 +18,7 @@
                 classes: window.emps_pic_classes,
                 no_class: window.emps_pic_no_class,
                 select_class: false,
-                guid: guid(),
+                guid: EMPS.guid(),
             };
         },
         methods: {

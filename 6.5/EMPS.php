@@ -32,7 +32,9 @@ class EMPS extends EMPS_Common
         $this->p = new EMPS_Properties();
         if (!$this->fast) {
             $this->auth = new EMPS_Auth();
+            $this->blocks = new EMPS_Blocks();
         }
+
         $this->p->db = $this->db;
         $this->db->query("SET SESSION sql_mode=''");
     }
@@ -713,5 +715,6 @@ class EMPS extends EMPS_Common
         define($dt_name, $acode);
         return $acode;
     }
+
 }
 

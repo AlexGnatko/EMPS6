@@ -11,6 +11,7 @@ function emps_define_constant($name, $value)
 emps_define_constant('DT_WEBSITE', 1);
 emps_define_constant('DT_USER', 5);
 emps_define_constant('DT_CONTENT', 10);
+emps_define_constant('DT_CONTENT_BLOCK', 11);
 emps_define_constant('DT_FOLDER', 12);
 emps_define_constant('DT_ALBUM', 14);
 emps_define_constant('DT_MENU', 20);
@@ -25,6 +26,7 @@ emps_define_constant('DT_SHADOW', 210);
 emps_define_constant('P_WEBSITE', "");
 emps_define_constant('P_MENU', "name:t,regex:t,grant:t");
 emps_define_constant('P_CONTENT', "title:t,descr:t,html:t,keywords:t");
+emps_define_constant('P_CONTENT_BLOCK', "");
 emps_define_constant('EXTRA_P_USER', '');
 emps_define_constant('P_USER', "phone:c,fax:c,lastname:c,firstname:c,newusername:c,sentnew:c,setpwd:c,position:c,company:c,email:c,street:t,http:c,twitter:c,facebook:c,vk:c,profile_image:c,display_name:c,about:t,gender:i,bdt:i" . EXTRA_P_USER);
 emps_define_constant('P_CLIENT', 'http:c');

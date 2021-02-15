@@ -34,7 +34,7 @@ CREATE TEMPORARY TABLE `temp_e_actkeys` (
 -- table
 CREATE TEMPORARY TABLE `temp_e_content` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `context_id` int(18) NOT NULL DEFAULT '0',
+  `context_id` bigint NOT NULL DEFAULT '0',
   `uri` varchar(255) NOT NULL DEFAULT '',
   `lang` char(2) NOT NULL DEFAULT '',
   `type` char(1) NOT NULL DEFAULT 'p',
@@ -63,8 +63,8 @@ CREATE TEMPORARY TABLE `temp_e_contexts` (
 
 -- table
 CREATE TEMPORARY TABLE `temp_e_ctx_links` (
-  `ctx_1_id` int(18) NOT NULL DEFAULT '0',
-  `ctx_2_id` int(18) NOT NULL DEFAULT '0',
+  `ctx_1_id` bigint NOT NULL DEFAULT '0',
+  `ctx_2_id` bigint NOT NULL DEFAULT '0',
   `status` int(11) NOT NULL DEFAULT '0',
   KEY `ctx_1_id` (`ctx_1_id`),
   KEY `ctx_2_id` (`ctx_2_id`),
@@ -75,7 +75,7 @@ CREATE TEMPORARY TABLE `temp_e_ctx_links` (
 CREATE TEMPORARY TABLE `temp_e_files` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `md5` varchar(32) NOT NULL,
-  `context_id` int(18) NOT NULL DEFAULT '0',
+  `context_id` bigint NOT NULL DEFAULT '0',
   `content_type` varchar(255) NOT NULL DEFAULT '',
   `file_name` varchar(255) NOT NULL DEFAULT '',
   `descr` text NOT NULL DEFAULT '',
@@ -379,8 +379,8 @@ CREATE TEMPORARY TABLE `temp_e_uploads` (
   `thumb` varchar(128) NOT NULL DEFAULT '0',
   `folder` varchar(255) NOT NULL,
   `descr` text NOT NULL,
-  `context_id` int(18) NOT NULL,
-  `upper_context_id` int(18) NOT NULL,
+  `context_id` bigint NOT NULL,
+  `upper_context_id` bigint NOT NULL,
   `ord` bigint NOT NULL,
   `dt` bigint NOT NULL,
   PRIMARY KEY (`id`),
@@ -465,9 +465,9 @@ CREATE TEMPORARY TABLE `temp_e_videos` (
 
 -- table
 CREATE TEMPORARY TABLE `temp_e_websites` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `parent` int(11) NOT NULL,
+  `parent` bigint NOT NULL,
   `hostname` varchar(255) NOT NULL,
   `hostname_filter` varchar(255) NOT NULL,
   `lang` varchar(8) NOT NULL,
@@ -491,7 +491,7 @@ CREATE TEMPORARY TABLE `temp_e_websites` (
 
 -- table
 CREATE TEMPORARY TABLE `temp_e_sources` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `url` varchar(255) NOT NULL,
   `cdt` bigint NOT NULL,
@@ -573,16 +573,16 @@ CREATE TEMPORARY TABLE `temp_e_unique_texts` (
 
 -- table
 CREATE TEMPORARY TABLE `temp_e_track_events` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone` varchar(255) NOT NULL,
   `type` int(11) NOT NULL,
   `descr` text NOT NULL,
-  `cdt` int(11) NOT NULL,
-  `dt` int(11) NOT NULL,
+  `cdt` bigint NOT NULL,
+  `dt` bigint NOT NULL,
   `ip` varchar(255) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `email` (`email`),
   KEY `phone` (`phone`),
@@ -595,14 +595,59 @@ CREATE TEMPORARY TABLE `temp_e_track_events` (
 
 -- table
 CREATE TEMPORARY TABLE `temp_e_data_types` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `value` int(11) NOT NULL,
-  `cdt` int(11) NOT NULL,
-  `dt` int(11) NOT NULL,
+  `value` bigint NOT NULL,
+  `cdt` bigint NOT NULL,
+  `dt` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `value` (`value`),
   KEY `cdt` (`cdt`),
   KEY `dt` (`dt`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- table
+CREATE TEMPORARY TABLE `temp_e_blocks` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `context_id` bigint NOT NULL DEFAULT '0',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `code` varchar(255) NOT NULL DEFAULT '',
+  `template` varchar(255) NOT NULL DEFAULT '',
+  `cdt` bigint NOT NULL DEFAULT '0',
+  `dt` bigint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `context_id` (`context_id`),
+  KEY `name` (`name`),
+  KEY `code` (`code`),
+  KEY `template` (`template`),
+  KEY `cdt` (`cdt`),
+  KEY `dt` (`dt`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- table
+CREATE TEMPORARY TABLE `temp_e_block_param_values` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `block_id` bigint NOT NULL DEFAULT '0',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `lang` varchar(2) NOT NULL DEFAULT 'nn',
+  `vtype` char(2)  NOT NULL DEFAULT 'c',
+  `idx` int NOT NULL DEFAULT '0',
+  `v_char` varchar(255) DEFAULT NULL,
+  `v_text` mediumtext DEFAULT NULL,
+  `v_int` bigint DEFAULT NULL,
+  `v_float` float DEFAULT NULL,
+  `cdt` bigint NOT NULL DEFAULT '0',
+  `dt` bigint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `block_id` (`block_id`),
+  KEY `name` (`name`),
+  KEY `lang` (`lang`),
+  KEY `vtype` (`vtype`),
+  KEY `idx` (`idx`),
+  KEY `v_char` (`v_char`),
+  KEY `v_int` (`v_int`),
+  KEY `v_float` (`v_float`),
+  KEY `cdt` (`cdt`),
+  KEY `dt` (`dt`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci;

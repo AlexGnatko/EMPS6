@@ -1,0 +1,47 @@
+<div class="columns">
+    <div class="column is-5">
+        <div class="columns">
+            <div class="column">
+                <h2 class="is-size-4">Данные блока:</h2>
+            </div>
+            <div class="column is-narrow">
+                <button type="button" @click="save_and_preview"
+                        class="button is-primary is-light" title="Cохранить и показать">
+                    <i class="fa fa-save"></i>&nbsp;&nbsp;
+                    <i class="fa fa-arrow-right"></i>&nbsp;&nbsp;
+                    <i class="fa fa-eye"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-block is-block is-scrollable-pad">
+            <block-values ref="values" prefix="root" @saved="preview" :id="row.id"></block-values>
+            </div>
+        </div>
+
+        <div class="has-text-right mt-3">
+            <button type="button" @click="save_and_preview"
+                    class="button is-primary is-light" title="Cохранить и показать">
+                <i class="fa fa-save"></i>&nbsp;&nbsp;
+                <i class="fa fa-arrow-right"></i>&nbsp;&nbsp;
+                <i class="fa fa-eye"></i>
+            </button>
+        </div>
+    </div>
+    <div class="column">
+        <div class="columns">
+            <div class="column">
+                <h2 class="is-size-4">Предпросмотр:</h2>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-block is-block is-scrollable-pad">
+                <block-preview ref="preview" :id="row.id">
+
+                </block-preview>
+            </div>
+        </div>
+    </div>
+</div>

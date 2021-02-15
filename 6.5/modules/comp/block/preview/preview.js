@@ -1,0 +1,33 @@
+EMPS.vue_component('block-preview', '/mjs/comp-block-preview/preview.vue',
+    {
+        props: ['id'],
+        data: function(){
+            return {
+                html: "",
+                error: ""
+            };
+        },
+        methods: {
+            load_preview: function() {
+                var that = this;
+                axios
+                    .get("/comp-block-preview/" + this.id + "/")
+                    .then(function(response){
+                        var data = response.data;
+                        that.html = data;
+                        that.$refs.viewer.innerHTML = that.html;
+                    });
+            }
+        },
+        computed: {
+        },
+        watch: {
+            id: function(newval) {
+                setTimeout(this.load_preview, 100);
+            }
+        },
+        mounted: function(){
+            this.load_preview();
+        }
+    }
+);

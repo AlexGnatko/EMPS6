@@ -3,7 +3,7 @@
 {{if $page.adminpage }}
 <body class="adminbg">
 {{include file="db:page/navbar"}}
-<div class="container main-part">
+<div class="container main-part {{if $page.fluid}}is-fluid{{/if}}">
 
 {{else}}
 

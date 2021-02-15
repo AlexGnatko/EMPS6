@@ -36,9 +36,11 @@ class EMPS_NG_PickList
             $x = explode("|", $extra);
             foreach ($x as $v) {
                 $xx = explode("=", $v, 2);
+
                 if ($xx[0] == 'group') {
                     continue;
                 }
+                $xx[1] = str_replace('{slash}', '/', $xx[1]);
                 if (count($xx) == 2) {
                     $and .= " and ";
                     $and .= $emps->db->sql_escape($xx[0]) . " = '" . $emps->db->sql_escape($xx[1]) . "'";

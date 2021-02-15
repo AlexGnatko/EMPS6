@@ -31,13 +31,21 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
     protected function fetch($name, &$source, &$mtime)
     {
         global $emps;
+        $skip = false;
+        $x = explode("|", $name, 2);
+        $name = $x[0];
+        if ($x[1] == 'skip') {
+            $skip = true;
+        }
 
         $r = $emps->get_setting($name);
 
         if (!$r) {
             $fn = $emps->page_file_name($name, 'view');
             if (file_exists($fn)) {
-                $source = file_get_contents($fn);
+                if (!$skip) {
+                    $source = file_get_contents($fn);
+                }
                 $mtime = filemtime($fn);
             } else {
                 $fn = $emps->common_module_html($name);
@@ -80,8 +88,6 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
     }
 }
 
-;
-
 class Smarty_Resource_EMPS_Page extends Smarty_Resource_Custom
 {
     protected function fetch($name, &$source, &$mtime)
@@ -91,7 +97,7 @@ class Smarty_Resource_EMPS_Page extends Smarty_Resource_Custom
         $ra = $emps->get_db_content_item($name);
         if ($ra) {
             $data = $emps->get_content_data($ra);
-            if ($data['html']) {
+            if (isset($data['html'])) {
                 $source = $data['html'];
                 $mtime = $ra['dt'];
             }
@@ -117,10 +123,69 @@ class Smarty_Resource_EMPS_Page extends Smarty_Resource_Custom
     }
 }
 
-;
+class Smarty_Resource_EMPS_StaticBlock extends Smarty_Resource_Custom
+{
+    protected function fetch($name, &$source, &$mtime)
+    {
+        global $emps;
+
+
+        $ra = $emps->blocks->get_block($name);
+        if ($ra) {
+            $data = $emps->blocks->render_block_static($ra);
+            if (isset($data['html'])) {
+                $source = $data['html'];
+                $mtime = $ra['dt'];
+            }
+        } else {
+            $source = "";
+            $mtime = time() - 60;
+        }
+        return true;
+    }
+
+    protected function fetchTimestamp($name)
+    {
+        global $emps;
+
+        $ra = $emps->blocks->get_block($name);
+        if ($ra) {
+            return $ra['dt'];
+        } else {
+            return (time() - 60);
+        }
+    }
+}
+
+class Smarty_Resource_EMPS_StaticBlockTemplate extends Smarty_Resource_EMPS_DB
+{
+    protected function fetch($name, &$source, &$mtime)
+    {
+        global $emps;
+
+        parent::fetch($name."|skip", $source, $mtime);
+
+        $ra = $emps->blocks->render_block_template_static($name);
+        if ($ra) {
+//            var_dump($ra); exit;
+            if (isset($ra['html'])) {
+                $source = $ra['html'];
+            } else {
+                $source = "";
+            }
+        } else {
+            $source = "";
+            $mtime = time() - 60;
+        }
+        return true;
+    }
+
+}
 
 $smarty->registerResource('db', new Smarty_Resource_EMPS_DB());
 $smarty->registerResource('page', new Smarty_Resource_EMPS_Page());
+$smarty->registerResource('sblk', new Smarty_Resource_EMPS_StaticBlock());
+$smarty->registerResource('sblt', new Smarty_Resource_EMPS_StaticBlockTemplate());
 
 
 function smarty_emps($params, Smarty_Internal_Template $template)

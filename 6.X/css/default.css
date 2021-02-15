@@ -130,3 +130,9 @@ h1 {
 	}
 
 }
+
+.is-scrollable-pad {
+	overflow-Y: scroll;
+	height: calc(100vh - 20rem);
+	scrollbar-width: thin;
+}
