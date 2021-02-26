@@ -65,7 +65,12 @@ class EMPS_Blocks {
             $rv .= '{{foreach from=$' . $param . ' item="row" name="a"}}'.PHP_EOL;
             $rv .= '{{if $row.type == "ref"}}'.PHP_EOL;
             //$rv .= '{{"sblk:`$row.value`"}}'.PHP_EOL;
+            $rv .= '{{$block_id = $row.value}}'.PHP_EOL;
+            $rv .= '{{if !$avoid_block.$block_id}}'.PHP_EOL;
+            $rv .= '{{$avoid_block.$block_id = true}}';
             $rv .= '{{include file="sblk:`$row.value`" vars=[]}}'.PHP_EOL;
+            $rv .= '{{else}}Recursive block {{$block_id}}!'.PHP_EOL;
+            $rv .= '{{/if}}'.PHP_EOL;
             $rv .= '{{/if}}'.PHP_EOL;
             $rv .= '{{if $row.type == "raw"}}'.PHP_EOL;
 //            $rv .= "SBLT!".PHP_EOL;
@@ -258,5 +263,16 @@ class EMPS_Blocks {
             $emps->db->sql_update_row("e_block_param_values", ['SET' => $nr], "id = {$row['id']}");
         }
 
+    }
+
+    public function check_expanded(&$array) {
+        foreach ($array as &$v) {
+            if (!isset($v['expanded'])) {
+                $v['expanded'] = false;
+            }
+            if (is_array($v['value'])) {
+                $this->check_expanded($v['value']);
+            }
+        }
     }
 }

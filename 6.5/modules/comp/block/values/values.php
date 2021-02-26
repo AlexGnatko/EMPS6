@@ -39,6 +39,9 @@ if ($emps->auth->credentials("admin")) {
         if (!isset($v['value'])) {
             $v['value'] = $v['default'];
         }
+        if (is_array($v['value'])) {
+            $emps->blocks->check_expanded($v['value']);
+        }
 
         $lst[] = $v;
     }

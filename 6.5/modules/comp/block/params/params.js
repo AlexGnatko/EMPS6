@@ -1,6 +1,6 @@
 EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
     {
-        props: ['value', 'prefix'],
+        props: ['value', 'prefix', 'clipboard'],
         components: {
             'editor': Editor // <- Important part
         },
@@ -8,7 +8,6 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
             return {
                 emps_tinymce_settings: window.emps_tinymce_settings,
                 error: "",
-                clipboard: null,
                 sublst: [],
             };
         },
@@ -17,15 +16,17 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                 if (!(row.value instanceof Array)) {
                     row.value = [];
                 }
-                row.value.push({type: 'ref', value: 0});
+                row.value.push({type: 'ref', value: 0, expanded: true});
                 this.$forceUpdate();
             },
             save: function() {
                 this.$emit("save");
             },
             remove_item: function(index, lst) {
-                lst.splice(index, 1);
-                this.$forceUpdate();
+                if (confirm(window.strings.do_delete)) {
+                    lst.splice(index, 1);
+                    this.$forceUpdate();
+                }
             },
             urlencode: function(x) {
                 x = x.replace(/\//gi, '{slash}');
@@ -75,18 +76,30 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                 }
                 return JSON.parse(JSON.stringify(a));
             },
+            emit_clipboard: function(data) {
+                this.$emit("clipboard", data);
+                this.clipboard = data;
+                this.$forceUpdate();
+            },
             copy_to_clipboard: function(srow) {
-                this.clipboard = this.copy_array(srow);
+                this.emit_clipboard(this.copy_array(srow));
             },
             insert_from_clipboard: function(row, si) {
-                row.value.splice(si, 0, this.clipboard);
-                this.clipboard = null;
-                this.$forceUpdate();
+                console.log(JSON.stringify(row));
+                if (si == -1) {
+                    if (!(row.value instanceof Array)) {
+                        row.value = [];
+                    }
+                    row.value.push(this.clipboard);
+                } else {
+                    row.value.splice(si, 0, this.clipboard);
+                }
+
+                this.emit_clipboard(null);
             },
             cut_to_clipboard: function(srow, row, si) {
                 this.copy_to_clipboard(srow);
                 row.value.splice(si, 1);
-                this.$forceUpdate();
             }
         },
         computed: {

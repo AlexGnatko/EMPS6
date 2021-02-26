@@ -245,7 +245,7 @@ class EMPS_Uploads
             $SET['comment'] = $this->set_comment;
         }
         $SET['ord'] = $this->ord;
-        $emps->db->sql_insert("e_files", ['SET' => $SET]);
+        $emps->db->sql_insert_row("e_files", ['SET' => $SET]);
         $file_id = $emps->db->last_insert();
 
         $xfname = $this->upload_filename($file_id, DT_FILE);

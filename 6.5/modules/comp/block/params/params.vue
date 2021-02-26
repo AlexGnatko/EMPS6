@@ -72,19 +72,26 @@
                                     <div class="column">
                                         <div class="field has-addons">
                                             <div class="control is-expanded">
-                                                <input type="text" v-model="srow.template" class="input" />
+                                                <input type="text" v-model="srow.template"
+                                                       @keydown.enter="change_template(srow)"
+                                                       class="input" />
                                             </div>
                                             <div class="control">
                                                 <button
                                                         @click="change_template(srow)"
-                                                        class="button is-info" type="button">
+                                                        class="button is-info is-light" type="button">
                                                     <i class="fa fa-check"></i>
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="column is-narrow">
-
+                                        <button type="button"
+                                                @click="srow.expanded = !srow.expanded"
+                                                class="button is-info is-light">
+                                            <i v-if="!srow.expanded" class="fa fa-chevron-down"></i>
+                                            <i v-else class="fa fa-chevron-up"></i>
+                                        </button>
                                         <button type="button"
                                                 @click="convert_to_ref(srow)"
                                                 class="button is-info is-light">
@@ -99,10 +106,19 @@
                                     </div>
                                 </div>
 
-                                <block-params v-model="value.value[idx].value[si]" :prefix="prefix + '_' + idx + '_' + si" @save="save"></block-params>
+                                <block-params v-if="srow.expanded" v-model="value.value[idx].value[si]"
+                                              @clipboard="emit_clipboard"
+                                              :clipboard="clipboard"
+                                              :prefix="prefix + '_' + idx + '_' + si" @save="save"></block-params>
                             </template>
                         </template>
                         <button type="button" @click="add_row(row)" class="button is-primary is-light">Добавить элемент</button>
+                        <button type="button"
+                                v-if="clipboard !== null"
+                                @click="insert_from_clipboard(row, -1)"
+                                class="button is-info is-light">
+                            <i class="fa fa-clipboard"></i>
+                        </button>
 
                     </div>
                 </div>
