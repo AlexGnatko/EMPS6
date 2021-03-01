@@ -1055,7 +1055,13 @@ trait EMPS_Common_Utils
         return $rv;
     }
 
-    private $md5_shortener = "yenaEFGHIJKLMNOPQRSTUVWXYZDbcdBfghijklmCopqrstuvwxAz0123456789-$";
+    private $md5_shortener = "yenaEFGHIJKLMNOPQRSTUVWXYZDbcdBfghijklmCopqrstuvwxAz0123456789-_";
+
+    public function safe_short_md5($short_md5) {
+        $rv = str_replace("_", "", $short_md5);
+        $rv = str_replace("-", "", $rv);
+        return $rv;
+    }
 
     public function short_md5($md5) {
         $bin = hex2bin($md5);
