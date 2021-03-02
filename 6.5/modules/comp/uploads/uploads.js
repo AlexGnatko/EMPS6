@@ -7,6 +7,7 @@ emps_scripts.push(function() {
                 selected_file: '',
                 need_upload: false,
                 queue: [],
+                context_id: 0,
                 files: []
             };
         },
@@ -129,6 +130,7 @@ emps_scripts.push(function() {
                         var data = response.data;
                         if (data.code == 'OK') {
                             that.files = data.files;
+                            that.context_id = data.context_id;
                         }else{
                             alert(data.message);
                         }

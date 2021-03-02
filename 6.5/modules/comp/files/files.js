@@ -10,6 +10,7 @@
                 change_mode: 'upload',
                 change_download_url: '',
                 queue: [],
+                context_id: 0,
                 files: []
             };
         },
@@ -61,6 +62,7 @@
 
                     if (data.code == 'OK') {
                         that.files = data.files;
+                        that.context_id = data.context_id;
                         that.close_modal("changeModal");
                     }else{
                         toastr.error(file.name, string_failed, {positionClass: "toast-bottom-full-width"});
