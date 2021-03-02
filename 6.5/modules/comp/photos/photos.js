@@ -23,6 +23,7 @@
                 file: {},
                 loading: false,
                 uploading_zip: false,
+                context_id: 0,
                 edit_mode: 'q',
             };
         },
@@ -195,6 +196,7 @@
                         var data = response.data;
                         if (data.code == 'OK') {
                             that.files = data.files;
+                            that.context_id = data.context_id;
                             if (after !== undefined) {
                                 call(after);
                             }

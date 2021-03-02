@@ -147,6 +147,7 @@ class EMPS_VueTableEditor
         }
 
         $context_id = $emps->p->get_context($this->ref_type, $this->ref_sub, $row['id']);
+        $row['own_context_id'] = $context_id;
         if ($this->props_by_ref) {
             $row = $emps->p->read_properties_ref($row, $context_id);
         } else {
