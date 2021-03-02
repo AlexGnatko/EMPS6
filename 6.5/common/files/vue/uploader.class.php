@@ -178,6 +178,7 @@ class EMPS_VuePhotosUploader {
         $response = [];
         $response['code'] = "OK";
         $response['can_save'] = $this->can_save;
+        $response['context_id'] = $this->context_id;
         $response['files'] = $this->list_uploaded_files();
         $emps->json_response($response);
         if (!$emps_no_exit) {
