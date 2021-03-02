@@ -139,6 +139,7 @@
                         var data = response.data;
                         if (data.code == 'OK') {
                             that.files = data.files;
+                            that.context_id = data.context_id;
                         }else{
                             alert(data.message);
                         }
