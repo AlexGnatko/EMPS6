@@ -82,7 +82,9 @@
         <script src="/bower_components/axios/dist/axios.min.js{{$page.css_reset}}" {{$add_defer}}></script>
     {{/if}}
     <script>
-        axios.defaults.headers.common['Data-Only'] = 'yes';
+        emps_scripts.push(function(){
+            axios.defaults.headers.common['Data-Only'] = 'yes';
+        });
     </script>
     {{if $page.vue_numeric}}
         <script src="/node_modules/accounting-js/dist/accounting.umd.js{{$page.css_reset}}" {{$add_defer}}></script>
