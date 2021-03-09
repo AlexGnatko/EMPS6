@@ -1,5 +1,8 @@
 {{assign var="add_defer" value=""}}
 {{assign var="add_media" value="media=\"screen\""}}
+{{if $page.defer_js}}
+    {{assign var="add_defer" value="defer"}}
+{{/if}}
 {{if $page.defer_all}}
     {{assign var="add_defer" value="defer"}}
     {{assign var="add_media" value="media=\"none\" data-dynamic=\"true\""}}

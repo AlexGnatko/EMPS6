@@ -29,4 +29,4 @@ if (file_exists($file_name)) {
     require_once $file_name;
 }
 
-$emps->page_properties_from_settings("css_reset,defer_all,css_fw,admin_tools");
+$emps->page_properties_from_settings("css_reset,defer_js,defer_all,css_fw,admin_tools");
