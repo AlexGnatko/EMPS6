@@ -2,6 +2,8 @@
 
 ### General APT installation
 
+CurrentDir = $(pwd)
+
 apt update
 apt -y install software-properties-common
 
@@ -13,7 +15,6 @@ apt -y install mc
 
 apt -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 echo "deb http://download.webmin.com/download/repository sarge contrib" >> /etc/apt/sources.list
-pushd
 cd /root
 wget http://www.webmin.com/jcameron-key.asc
 apt-key add jcameron-key.asc
@@ -21,7 +22,9 @@ apt update
 apt -y install apt-transport-https
 apt -y install webmin
 apt -y install libio-socket-inet6-perl
-popd
+
+cd $CurrentDir
+pwd
 
 ### Install smartmontools
 
