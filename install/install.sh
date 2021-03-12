@@ -2,7 +2,7 @@
 
 ### General APT installation
 
-CurrentDir = $(pwd)
+CurrentDir=$(pwd)
 
 apt update
 apt -y install software-properties-common
