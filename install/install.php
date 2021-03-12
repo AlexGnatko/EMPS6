@@ -2,7 +2,6 @@
 
 require_once "functions.php";
 
-
 $config = json_decode(file_get_contents("config.json"), true);
 
 $bad_config = false;
@@ -83,9 +82,12 @@ $installer->nginx_config_file("deny.conf");
 $installer->nginx_config_file("gzip.conf");
 $installer->nginx_config_file("rewrite.conf", ['php7.0-fpm' => 'php'.$ver.'-fpm'], "rewrite-{$ver}.conf");
 
-$installer->ensure_directory("/srv/www");
+mkdir("/srv");
+mkdir("/srv/www");
 chdir("/srv/www");
 system("git clone http://gitlab.ag38.ru/root/emps-factory.git");
+
+$installer->ensure_user($config);
 
 $factory_path = "/srv/www/emps-factory";
 mkdir($factory_path."/htdocs/local");
@@ -103,8 +105,11 @@ $installer->paths_config_file($factory_path."/sample_local.php",
     ]
     );
 
+system("chown {$config['main_user']} /srv/www");
+system("chown -R {$config['main_user']} /srv/www/emps-factory");
+
 system("service nginx reload");
 
-file_get_contents("http://{{$factory_hostname}}/sqlsync/");
-file_get_contents("http://{{$factory_hostname}}/sqlsync/factory/");
-file_get_contents("http://{{$factory_hostname}}/ensure_root/{$factory_root_pwd}/");
+file_get_contents("http://{$factory_hostname}/sqlsync/");
+file_get_contents("http://{$factory_hostname}/sqlsync/factory/");
+file_get_contents("http://{$factory_hostname}/ensure_root/{$factory_root_pwd}/");

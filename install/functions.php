@@ -16,7 +16,7 @@ class EMPS_Installer {
         $phpini_list = json_decode(file_get_contents($template), true);
         $file_dirty = false;
         foreach ($phpini_list as $line) {
-            $dirty = $this->replace_ini_strings($file, $line['from'], $line['to']);
+            $dirty = $this->replace_ini_strings($x, $line['from'], $line['to']);
             if ($dirty) {
                 $file_dirty = true;
             } else {
@@ -76,6 +76,27 @@ class EMPS_Installer {
             }
         }
         $this->paths_config_file($source_path, $dest_path, $rlst);
+    }
+
+    public function ensure_user($config) {
+        $rc = shell_exec("grep -c '^{$config['main_user']}:' /etc/passwd");
+        if(intval($rc) == 1){
+            // user exists
+            $this->say("Setting new password...");
+            exec("echo {$config['main_user']}:{$config['user_password']} | chpasswd");
+        }else{
+            // user does not exist
+            $this->echo_shell("useradd -b /home/{$config['main_user']} -f -1 -G www-data,git -m -U {$config['main_user']}");
+            sleep(1);
+
+            $rc = shell_exec("grep -c '^{$config['main_user']}:' /etc/passwd");
+            if(intval($rc) == 1){
+                $this->say("Setting new password...");
+                exec("echo {$config['main_user']}:{$config['user_password']} | chpasswd");
+            }else{
+                $this->say("Failed to create user!");
+            }
+        }
     }
 }
 
