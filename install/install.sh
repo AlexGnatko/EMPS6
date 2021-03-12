@@ -54,7 +54,7 @@ apt -y install awstats
 ### Let's Encrypt certbot
 
 apt -y install certbot
-apt -y install python-certbot-nginx
+apt -y install python3-certbot-nginx
 
 ### Run the PHP installer script
 
