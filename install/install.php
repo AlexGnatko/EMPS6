@@ -75,6 +75,7 @@ $installer->say("Interrupt the mysql server by pressing Ctrl+C");
 system("mysqld --user=mysql --init-file=/tmp/mysql-init-emps.txt --console");
 system("service mysql stop");
 system("service mysql start");
+unlink("/tmp/mysql-init-emps.txt");
 
 $installer->nginx_config_file("conf.d/logformat.conf");
 $installer->nginx_config_file("sites-enabled/00-factory.conf", ['factory.ag38.ru' => $factory_hostname]);
@@ -84,6 +85,7 @@ $installer->nginx_config_file("rewrite.conf", ['php7.0-fpm' => 'php'.$ver.'-fpm'
 
 mkdir("/srv");
 mkdir("/srv/www");
+mkdir("/srv/www/htdocs");
 chdir("/srv/www");
 system("git clone http://gitlab.ag38.ru/root/emps-factory.git");
 
@@ -106,7 +108,11 @@ $installer->paths_config_file($factory_path."/sample_local.php",
     );
 
 system("chown {$config['main_user']} /srv/www");
+system("chown -R {$config['main_user']} /srv/www/htdocs");
 system("chown -R {$config['main_user']} /srv/www/emps-factory");
+
+copy(__DIR__."/templates/nginx/index.html", "/srv/www/htdocs/index.html");
+copy(__DIR__."/templates/nginx/sites-available/default", "/etc/nginx/sites-available/default");
 
 system("service nginx reload");
 

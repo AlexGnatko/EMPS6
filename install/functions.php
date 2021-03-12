@@ -86,7 +86,7 @@ class EMPS_Installer {
             exec("echo {$config['main_user']}:{$config['user_password']} | chpasswd");
         }else{
             // user does not exist
-            $this->echo_shell("useradd -b /home/{$config['main_user']} -f -1 -G www-data,git -m -U {$config['main_user']}");
+            system("useradd -b /home/{$config['main_user']} -f -1 -G www-data,git -m -U {$config['main_user']}");
             sleep(1);
 
             $rc = shell_exec("grep -c '^{$config['main_user']}:' /etc/passwd");
