@@ -66,9 +66,9 @@ $factory_hostname = $config['factory_hostname'];
 $factory_root_pwd = $config['factory_root_pwd'];
 
 system("mysql -u root -e \"ALTER USER 'root'@'localhost' IDENTIFIED mysql_native_password BY '{$config['mysql_root_password']};\"");
-system("mysql -u root -p{$config['mysql_root_password']} -e \"CREATE USER '{$config['main_user']}'@'%' IDENTIFIED BY mysql_native_password '{$config['mysql_user_password']}';\"");
-system("mysql -u root -p{$config['mysql_root_password']} -e \"grant all privileges on `{$config['main_user']}\_%`.* to '{$config['main_user']}'@'%';\"");
-system("mysql -u root -p{$config['mysql_root_password']} -e \"create database if not exists `{$config['main_user']}_emps_factory` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\"");
+system("mysql -u root -p{$config['mysql_root_password']} -e \"CREATE USER '{$config['main_user']}'@'%' IDENTIFIED mysql_native_password BY '{$config['mysql_user_password']}';\"");
+system("mysql -u root -p{$config['mysql_root_password']} -e \"grant all privileges on {$config['main_user']}\_%.* to '{$config['main_user']}'@'%';\"");
+system("mysql -u root -p{$config['mysql_root_password']} -e \"create database if not exists {$config['main_user']}_emps_factory DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\"");
 system("service mysql restart");
 
 $installer->nginx_config_file("conf.d/logformat.conf");
