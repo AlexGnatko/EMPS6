@@ -65,20 +65,11 @@ system("service php{$ver}-fpm restart");
 $factory_hostname = $config['factory_hostname'];
 $factory_root_pwd = $config['factory_root_pwd'];
 
-file_put_contents("/tmp/mysql-init-emps.txt",
-"ALTER USER 'root'@'localhost' IDENTIFIED BY '{$config['mysql_root_password']}';
-    CREATE USER '{$config['main_user']}'@'%' IDENTIFIED BY '{$config['mysql_user_password']}';
-    grant all privileges on `{$config['main_user']}\_%`.* to '{$config['main_user']}'@'%';
-    create database if not exists `{$config['main_user']}_emps_factory` 
-    DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    ");
-
-system("service mysql stop");
-$installer->say("Interrupt the mysql server by pressing Ctrl+C");
-system("mysqld --user=mysql --init-file=/tmp/mysql-init-emps.txt --console");
-system("service mysql stop");
-system("service mysql start");
-//unlink("/tmp/mysql-init-emps.txt");
+system("mysql -u root -e \"ALTER USER 'root'@'localhost' IDENTIFIED mysql_native_password BY '{$config['mysql_root_password']};\"");
+system("mysql -u root -p{$config['mysql_root_password']} -e \"CREATE USER '{$config['main_user']}'@'%' IDENTIFIED BY mysql_native_password '{$config['mysql_user_password']}';\"");
+system("mysql -u root -p{$config['mysql_root_password']} -e \"grant all privileges on `{$config['main_user']}\_%`.* to '{$config['main_user']}'@'%';\"");
+system("mysql -u root -p{$config['mysql_root_password']} -e \"create database if not exists `{$config['main_user']}_emps_factory` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\"");
+system("service mysql restart");
 
 $installer->nginx_config_file("conf.d/logformat.conf");
 $installer->nginx_config_file("sites-enabled/00-factory.conf", ['factory.ag38.ru' => $factory_hostname]);
