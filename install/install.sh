@@ -62,6 +62,10 @@ apt -y install awstats
 apt -y install certbot
 apt -y install python3-certbot-nginx
 
+### NPM
+
+apt -y install npm
+
 ### Run the PHP installer script
 
 php ./install.php

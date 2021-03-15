@@ -16,7 +16,7 @@
     "to": "max_file_uploads = 100"
   },
   {
-    "from": "/^(|;)include_path = /",
+    "from": "/^(|;)include_path = \"\\.:/",
     "to": "include_path = \".:/srv/www/lib\""
   }
 ]

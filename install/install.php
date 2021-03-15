@@ -89,7 +89,29 @@ mkdir("/srv/www/htdocs");
 chdir("/srv/www");
 system("git clone http://gitlab.ag38.ru/root/emps-factory.git");
 
+system("groupadd git");
 $installer->ensure_user($config);
+
+mkdir("/srv/www/lib");
+system("git clone https://github.com/AlexGnatko/EMPS.git");
+system("git clone https://github.com/AlexGnatko/EMPS6.git");
+
+
+$composer_temp = "/tmp/composer-setup.php";
+copy("https://getcomposer.org/installer", $composer_temp);
+chmod($composer_temp, 0755);
+system("php /temp/composer-setup.php");
+unlink("/tmp/composer-setup.php");
+
+chdir("/srv/www/lib/EMPS");
+system("composer install");
+chdir("/srv/www/lib/EMPS6");
+system("composer install");
+system("npm install -g bower");
+system("php ./emps.php install");
+
+chdir("/srv/www/emps-factory/");
+system("composer install");
 
 $factory_path = "/srv/www/emps-factory";
 mkdir($factory_path."/htdocs/local");
