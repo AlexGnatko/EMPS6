@@ -121,12 +121,16 @@ mkdir($factory_path."/htdocs/local");
 mkdir($factory_path."/htdocs/local/temp", 0777);
 mkdir($factory_path."/htdocs/local/temp_c", 0777);
 mkdir($factory_path."/htdocs/local/upload", 0777);
+chmod($factory_path."/htdocs/local/temp", 0777);
+chmod($factory_path."/htdocs/local/temp_c", 0777);
+chmod($factory_path."/htdocs/local/upload", 0777);
 
 $installer->paths_config_file($factory_path."/sample_local.php",
     $factory_path."/htdocs/local/local.php",
     [
         'factory.somehost.com' => $factory_hostname,
         'user_emps_factory' => $config['main_user'] . "_emps_factory",
+        'emps_factory_user' => $config['main_user'],
         'passW0rd' => $config['mysql_user_password'],
         'rootPassW0rd' => $config['mysql_root_password'],
     ]
