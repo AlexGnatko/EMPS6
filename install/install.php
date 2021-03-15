@@ -104,6 +104,7 @@ chmod($composer_temp, 0755);
 system("php ".$composer_temp);
 unlink($composer_temp);
 rename("composer.phar", "/bin/composer");
+putenv("COMPOSER_ALLOW_SUPERUSER=1");
 
 chdir("/srv/www/lib/EMPS");
 system("composer install");
