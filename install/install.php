@@ -93,6 +93,7 @@ system("groupadd git");
 $installer->ensure_user($config);
 
 mkdir("/srv/www/lib");
+chdir("/srv/www/lib");
 system("git clone https://github.com/AlexGnatko/EMPS.git");
 system("git clone https://github.com/AlexGnatko/EMPS6.git");
 
