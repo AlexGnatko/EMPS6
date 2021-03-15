@@ -2,6 +2,9 @@
 
 require_once "functions.php";
 
+$phpMyAdmin_url = "https://files.phpmyadmin.net/phpMyAdmin/5.1.0/phpMyAdmin-5.1.0-english.tar.gz";
+$phpMyAdmin_name = "phpMyAdmin-5.1.0-english";
+
 $config = json_decode(file_get_contents("config.json"), true);
 
 $bad_config = false;
@@ -75,7 +78,7 @@ $installer->say("Interrupt the mysql server by pressing Ctrl+C");
 system("mysqld --user=mysql --init-file=/tmp/mysql-init-emps.txt --console");
 system("service mysql stop");
 system("service mysql start");
-unlink("/tmp/mysql-init-emps.txt");
+//unlink("/tmp/mysql-init-emps.txt");
 
 $installer->nginx_config_file("conf.d/logformat.conf");
 $installer->nginx_config_file("sites-enabled/00-factory.conf", ['factory.ag38.ru' => $factory_hostname]);
@@ -150,6 +153,21 @@ copy(__DIR__."/templates/nginx/index.html", "/srv/www/htdocs/index.html");
 copy(__DIR__."/templates/nginx/sites-available/default", "/etc/nginx/sites-available/default");
 
 system("service nginx reload");
+
+copy($phpMyAdmin_url, "/srv/www/emps-factory/htdocs/".$phpMyAdmin_name.".tar.gz");
+chdir("/srv/www/emps-factory/htdocs/");
+system("rm -R {$phpMyAdmin_name}");
+system("tar xzf ./{$phpMyAdmin_name}.tar.gz");
+rename($phpMyAdmin_name, $config['phpmyadmin']);
+chdir($config['phpmyadmin']);
+system("rm -R setup");
+
+$installer->paths_config_file("config.sample.inc.php",
+    "config.inc.php",
+    [
+        "cfg['blowfish_secret'] = '';" => "cfg['blowfish_secret'] = '".md5(uniqid(time()))."';",
+    ]
+);
 
 file_get_contents("http://{$factory_hostname}/sqlsync/");
 file_get_contents("http://{$factory_hostname}/sqlsync/factory/");
