@@ -101,8 +101,8 @@ system("git clone https://github.com/AlexGnatko/EMPS6.git");
 $composer_temp = "/tmp/composer-setup.php";
 copy("https://getcomposer.org/installer", $composer_temp);
 chmod($composer_temp, 0755);
-system("php /temp/composer-setup.php");
-unlink("/tmp/composer-setup.php");
+system("php ".$composer_temp);
+unlink($composer_temp);
 
 chdir("/srv/www/lib/EMPS");
 system("composer install");
