@@ -3,7 +3,7 @@
 class EMPS_StaticContent
 {
     public $table_name = "e_static_content";
-    public $path = EMPS_SCRIPT_PATH."/static-content";
+    public $path = EMPS_SCRIPT_PATH."/static";
     public $web_path = EMPS_SCRIPT_WEB."/static";
 
     public function path_from_md5($md5) {
