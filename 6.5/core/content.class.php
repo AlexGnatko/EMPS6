@@ -95,3 +95,5 @@ class EMPS_StaticContent
         return $lst;
     }
 }
+
+$emps->sc = new EMPS_StaticContent();
