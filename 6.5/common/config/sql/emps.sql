@@ -99,6 +99,32 @@ CREATE TEMPORARY TABLE `temp_e_files` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- table
+CREATE TEMPORARY TABLE `temp_e_static_content` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `md5` varchar(32) NOT NULL,
+  `reference_id` bigint NOT NULL DEFAULT '0',
+  `context_id` bigint NOT NULL DEFAULT '0',
+  `filename` varchar(255) NOT NULL DEFAULT '',
+  `descr` text NOT NULL DEFAULT '',
+  `comment` varchar(255) NOT NULL DEFAULT '',
+  `size` bigint NOT NULL DEFAULT '0',
+  `dt` bigint NOT NULL DEFAULT '0',
+  `offloaded` int(11) NOT NULL DEFAULT '0',
+  `ord` int(11) NOT NULL DEFAULT '0',
+  `user_id` bigint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `filename` (`filename`),
+  KEY `size` (`size`),
+  KEY `dt` (`dt`),
+  KEY `md5` (`md5`),
+  KEY `reference_id` (`reference_id`),
+  KEY `context_id` (`context_id`),
+  KEY `signature` (`user_id`),
+  KEY `offloaded` (`offloaded`),
+  KEY `ord` (`ord`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- table
 CREATE TEMPORARY TABLE `temp_e_aws_offloading` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `type` int(11) NOT NULL DEFAULT '0',
