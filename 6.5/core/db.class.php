@@ -305,6 +305,12 @@ class EMPS_DB
         return $r;
     }
 
+    public function touch($table, $cond) {
+        $nr = [];
+        $nr['dt'] = time();
+        $this->sql_update_row($table, ['SET' => $nr], $cond);
+    }
+
     public function sql_ensure_row($table, $row, $single = false){
 
         $where = $this->where_clause($row);
