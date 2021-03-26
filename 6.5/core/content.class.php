@@ -44,7 +44,11 @@ class EMPS_StaticContent
         $md5 = md5(uniqid($filename.time()));
         $path = $this->path_from_md5($md5);
         $full_filename = $path."/".$filename;
-        file_put_contents($full_filename, $data);
+        $rv = file_put_contents($full_filename, $data);
+        if ($rv === false) {
+            error_log("Can not create static file: {$filename}");
+            return 0;
+        }
         $size = filesize($full_filename);
         $nr = [];
         $nr['md5'] = $md5;
