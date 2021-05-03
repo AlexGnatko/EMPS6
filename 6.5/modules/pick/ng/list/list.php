@@ -32,6 +32,7 @@ class EMPS_NG_PickList
     {
         global $emps;
         $and = "";
+        error_log($extra);
         if ($extra) {
             $x = explode("|", $extra);
             foreach ($x as $v) {
