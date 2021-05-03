@@ -47,6 +47,7 @@ class EMPS_NG_PickList
                     $and .= $emps->db->sql_escape($xx[0]) . " = '" . $emps->db->sql_escape($xx[1]) . "'";
                 } else {
                     $xx = explode("<>", $v, 2);
+                    error_log("xx<>: " . json_encode($xx));
                     if (count($xx) == 2) {
                         $and .= " and ";
                         $and .= $emps->db->sql_escape($xx[0]) . " <> '" . $emps->db->sql_escape($xx[1]) . "'";
