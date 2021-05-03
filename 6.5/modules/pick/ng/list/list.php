@@ -32,25 +32,25 @@ class EMPS_NG_PickList
     {
         global $emps;
         $and = "";
-        error_log($extra);
+//        error_log($extra);
         if ($extra) {
             $x = explode("|", $extra);
             foreach ($x as $v) {
-                error_log("IN FOREACH");
+//                error_log("IN FOREACH");
                 $xx = explode("=", $v, 2);
-                error_log("xx=: " . json_encode($xx));
+//                error_log("xx=: " . json_encode($xx));
 
                 if ($xx[0] == 'group') {
                     continue;
                 }
                 if (count($xx) == 2) {
                     $xx[1] = str_replace('{slash}', '/', $xx[1]);
-                    error_log("count xx = 2?");
+//                    error_log("count xx = 2?");
                     $and .= " and ";
                     $and .= $emps->db->sql_escape($xx[0]) . " = '" . $emps->db->sql_escape($xx[1]) . "'";
                 } else {
                     $xx = explode("<>", $v, 2);
-                    error_log("xx<>: " . json_encode($xx));
+//                    error_log("xx<>: " . json_encode($xx));
                     if (count($xx) == 2) {
                         $and .= " and ";
                         $and .= $emps->db->sql_escape($xx[0]) . " <> '" . $emps->db->sql_escape($xx[1]) . "'";
@@ -139,7 +139,7 @@ class EMPS_NG_PickList
             $q = "select SQL_CALC_FOUND_ROWS " . $this->what . " from " . TP .
                 $this->table_name . " as t " . $this->join . " where ((t.name like '%$text%') or (t.id = {$id})) " . $and . " " .
                 $this->where . $this->orderby . " limit {$start}, {$perpage}";
-            $emps->save_setting("last_picker_query", $q);
+//            $emps->save_setting("last_picker_query", $q);
 
             $r = $emps->db->query($q);
 
