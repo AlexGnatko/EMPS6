@@ -45,6 +45,7 @@ class EMPS_NG_PickList
                 }
                 $xx[1] = str_replace('{slash}', '/', $xx[1]);
                 if (count($xx) == 2) {
+                    error_log("count xx = 2?");
                     $and .= " and ";
                     $and .= $emps->db->sql_escape($xx[0]) . " = '" . $emps->db->sql_escape($xx[1]) . "'";
                 } else {
