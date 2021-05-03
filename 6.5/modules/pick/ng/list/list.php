@@ -131,9 +131,12 @@ class EMPS_NG_PickList
             $perpage = $this->perpage;
             $start = intval($start);
 
-            $r = $emps->db->query("select SQL_CALC_FOUND_ROWS " . $this->what . " from " . TP .
+            $q = "select SQL_CALC_FOUND_ROWS " . $this->what . " from " . TP .
                 $this->table_name . " as t " . $this->join . " where ((t.name like '%$text%') or (t.id = {$id})) " . $and . " " .
-                $this->where . $this->orderby . " limit {$start}, {$perpage}");
+                $this->where . $this->orderby . " limit {$start}, {$perpage}";
+            $emps->save_setting("last_picker_query", $q);
+
+            $r = $emps->db->query($q);
 
             $pages = $emps->count_pages($emps->db->found_rows());
 
