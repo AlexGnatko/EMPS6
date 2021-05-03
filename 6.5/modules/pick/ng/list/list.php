@@ -38,6 +38,7 @@ class EMPS_NG_PickList
             foreach ($x as $v) {
                 error_log("IN FOREACH");
                 $xx = explode("=", $v, 2);
+                error_log("xx=: " . json_encode($xx));
 
                 if ($xx[0] == 'group') {
                     continue;
