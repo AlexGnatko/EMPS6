@@ -36,6 +36,7 @@ class EMPS_NG_PickList
         if ($extra) {
             $x = explode("|", $extra);
             foreach ($x as $v) {
+                error_log("IN FOREACH");
                 $xx = explode("=", $v, 2);
 
                 if ($xx[0] == 'group') {
