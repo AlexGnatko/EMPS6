@@ -35,6 +35,22 @@ function smarty_plugin_downloads($params)
     }
 }
 
+function smarty_plugin_video($params)
+{
+    global $smarty, $emps;
+
+    $id = $params['id'];
+    $mctx = $emps->p->get_context(DT_VIDEO, 1, $id);
+
+    $video = $emps->db->get_row("e_videos", "id=$id");
+    if ($video) {
+        $video = $emps->p->read_properties($video, $mctx);
+
+        $smarty->assign("video", $video);
+        return $smarty->fetch("db:videos/videocon");
+    }
+}
+
 
 $fn = $emps->common_module('config/smarty/plugins.php');
 if (file_exists($fn)) {
