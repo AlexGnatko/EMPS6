@@ -62,7 +62,7 @@ in the include_path. All the dependencies are now installed via Composer.
 
 The `emps` script in the root folder sets up all the JS and CSS dependencies,
 some of which are delivered with bower, some with npm. Some other dependences were
-easier to include the EMPS code itself.
+easier to include in the EMPS code itself.
 
 ## Work in Progress
 
