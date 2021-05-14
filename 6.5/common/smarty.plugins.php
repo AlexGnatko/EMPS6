@@ -1,6 +1,66 @@
 <?php
 global $emps;
 
+function smarty_common_photoreport($params)
+{
+    global $smarty, $emps, $sp_photos;
+
+    require_once($emps->common_module('photos/photos.class.php'));
+
+    if (!isset($sp_photos)) {
+        $sp_photos = new EMPS_Photos;
+    }
+
+    $context_id = $params['context'];
+    $ps = array();
+
+    if (!$context_id) {
+        $list = $params['list'];
+        $x = explode(",", $list);
+        $cl = "";
+        foreach ($x as $v) {
+            $pic = $emps->db->get_row("e_uploads", "id = " . intval($v));
+            $cl .= "." . $v;
+            if ($pic) {
+                $pic = $sp_photos->explain_pic($pic);
+                $ps[] = $pic;
+            }
+        }
+        $smarty->assign("rel", "rel" . md5($cl));
+    } else {
+        $ps = $sp_photos->list_pics($context_id, 1000);
+        $smarty->assign("rel", "rel" . md5($context_id));
+    }
+
+    $smarty->assign("ctx", $context_id);
+
+    $smarty->assign("vert", $params['vert']);
+    $smarty->assign("fullpic", $params['fullpic']);
+    $smarty->assign("size", $params['size']);
+    $smarty->assign("pretitle", $params['pretitle']);
+
+    $smarty->assign("pset", $ps);
+
+}
+
+function smarty_plugin_montage($params)
+{
+    global $smarty;
+
+    smarty_common_photoreport($params);
+
+    return $smarty->fetch("db:photos/montage");
+}
+
+function smarty_plugin_photoreport($params)
+{
+    global $smarty;
+
+    smarty_common_photoreport($params);
+
+    return $smarty->fetch("db:photos/photoreport");
+}
+
 function smarty_plugin_downloads($params)
 {
     global $smarty, $emps, $up;
