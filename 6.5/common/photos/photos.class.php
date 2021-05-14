@@ -252,6 +252,8 @@ class EMPS_Photos
     {
         global $emps;
 
+        $this->fix_orientation($oname, 100);
+
         if (strstr($ra['type'], "jpeg")) {
             $img = imagecreatefromjpeg($oname);
         } elseif (strstr($ra['type'], "png")) {
@@ -1249,6 +1251,34 @@ class EMPS_Photos
                 copy($old_file_name, $new_file_name);
             }
         }
+    }
+
+    public function fix_orientation($source, $quality = 90, $destination = null)
+    {
+        if ($destination === null) {
+            $destination = $source;
+        }
+        $info = getimagesize($source);
+        if ($info['mime'] === 'image/jpeg') {
+            $exif = exif_read_data($source);
+            if (!empty($exif['Orientation']) && in_array($exif['Orientation'], [2, 3, 4, 5, 6, 7, 8])) {
+                $image = imagecreatefromjpeg($source);
+                if (in_array($exif['Orientation'], [3, 4])) {
+                    $image = imagerotate($image, 180, 0);
+                }
+                if (in_array($exif['Orientation'], [5, 6])) {
+                    $image = imagerotate($image, -90, 0);
+                }
+                if (in_array($exif['Orientation'], [7, 8])) {
+                    $image = imagerotate($image, 90, 0);
+                }
+                if (in_array($exif['Orientation'], [2, 5, 7, 4])) {
+                    imageflip($image, IMG_FLIP_HORIZONTAL);
+                }
+                imagejpeg($image, $destination, $quality);
+            }
+        }
+        return true;
     }
 
     public function count_photos($context_id){
