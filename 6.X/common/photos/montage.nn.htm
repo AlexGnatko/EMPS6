@@ -1,5 +1,5 @@
 <div class="emps-montage-container">
-    {{foreach from=$pset|@array_reverse:true item="pic"}}
+    {{foreach from=($pset|@array_reverse:true) item="pic"}}
         {{$use_vert = $vert}}
         {{$use_hor = "16x9"}}
         {{if $pic.vert}}

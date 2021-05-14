@@ -5,14 +5,14 @@ function smarty_common_photoreport($params)
 {
     global $smarty, $emps, $sp_photos;
 
-    require_once($emps->common_module('photos/photos.class.php'));
+    require_once $emps->common_module('photos/photos.class.php');
 
     if (!isset($sp_photos)) {
-        $sp_photos = new EMPS_Photos;
+        $sp_photos = new EMPS_Photos();
     }
 
     $context_id = $params['context'];
-    $ps = array();
+    $ps = [];
 
     if (!$context_id) {
         $list = $params['list'];
