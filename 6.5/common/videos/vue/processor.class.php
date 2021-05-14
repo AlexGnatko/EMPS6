@@ -101,7 +101,7 @@ class EMPS_VideoProcessor
                 $this->handle_list();
             }
 
-            error_log("process");
+//            error_log("process");
             if ($_GET['delete_video']) {
                 $id = $_GET['delete_video'];
                 $r = $emps->db->query("select * from ".TP."e_videos 
@@ -111,6 +111,20 @@ class EMPS_VideoProcessor
                     $this->v->delete_video($id);
                 }
                 $this->handle_list();
+            }
+
+            if ($_GET['take_pic']) {
+                $id = $_GET['take_pic'];
+                $row = $emps->db->get_row("e_videos", "id = {$id}");
+
+                if ($row) {
+                    $row = $this->explain_video($row);
+                    if ($row['pic']) {
+                        $this->v->p->copy_image($row['pic']['id'], $this->context_id);
+                        $emps->json_ok([]); exit;
+                    }
+                }
+                $emps->json_error("Can't copy the image!"); exit;
             }
 
             if ($_GET['reorder_videos']) {

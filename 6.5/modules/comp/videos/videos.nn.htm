@@ -3,11 +3,13 @@
     {{$str_cancel = "Cancel"}}
     {{$str_no_descr = "(no description)"}}
     {{$str_descr = "Description"}}
+    {{$str_take = "Take thumbnail to photos"}}
 {{else}}
     {{$str_delete = "Удалить"}}
     {{$str_cancel = "Отмена"}}
     {{$str_no_descr = "(нет описания)"}}
     {{$str_descr = "Описание"}}
+    {{$str_take = "Взять картинку в фотографии"}}
 {{/if}}
 <videos inline-template :context="{{$context_id}}">
     <div class="videos">
@@ -19,6 +21,12 @@
                         <figure class="image upload-image">
                             <img :src="pic_url(video.pic)" :alt="video.name">
                         </figure>
+                        <div class="field has-text-centered">
+                            <button type="button" @click="take_video_pic(video.id)" class="button" title="{{$str_take}}">
+                                <i class="fa fa-arraow-right"></i>
+                                <i class="fa fa-camera"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="media-content">
                         <div class="columns">

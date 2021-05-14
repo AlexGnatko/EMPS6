@@ -86,13 +86,16 @@ class EMPS_Videos
             $emps->p->save_properties($SET, $ctx, P_VIDEO);
 
 
-            $img = $snip['thumbnails']['standard'];
+            $img = $snip['thumbnails']['maxres'];
             if (!$img) {
-                $img = $snip['thumbnails']['high'];
+                $img = $snip['thumbnails']['standard'];
                 if (!$img) {
-                    $img = $snip['thumbnails']['medium'];
+                    $img = $snip['thumbnails']['high'];
                     if (!$img) {
-                        $img = $snip['thumbnails']['default'];
+                        $img = $snip['thumbnails']['medium'];
+                        if (!$img) {
+                            $img = $snip['thumbnails']['default'];
+                        }
                     }
                 }
             }

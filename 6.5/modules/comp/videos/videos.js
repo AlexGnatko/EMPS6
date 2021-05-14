@@ -66,6 +66,19 @@ emps_scripts.push(function() {
                         }
                     });
             },
+            take_video_pic: function(id) {
+                var that = this;
+                axios
+                    .get("./?take_pic=" + id)
+                    .then(function (response) {
+                        var data = response.data;
+                        if (data.code == 'OK') {
+                            toastr.success("Фотография добавлена!");
+                        } else {
+                            alert(data.message);
+                        }
+                    });
+            },
             on_sort_videos: function(e) {
                 var files = this.lst.slice();
                 files.splice(e.newIndex, 0, files.splice(e.oldIndex, 1)[0]);
