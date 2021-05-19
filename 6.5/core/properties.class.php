@@ -10,10 +10,10 @@ class EMPS_Properties
 
     public $default_ctx = false;
 
-    public $no_full = false;
-    public $no_idx = false;
+    public $no_full = true;
+    public $no_idx = true;
 
-    public $wt = false;
+    public $wt = true;
 
     public $database_error = false;
 
