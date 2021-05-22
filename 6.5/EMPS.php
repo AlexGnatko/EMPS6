@@ -190,6 +190,7 @@ class EMPS extends EMPS_Common
     {
         // Get a fine-tuning setting
         if (!is_array($this->settings_cache)) {
+            $this->p->no_full = false;
             $default_settings = $this->p->read_properties(array(), $this->default_ctx);
             if (!$default_settings) {
                 $default_settings = array();
@@ -221,6 +222,7 @@ class EMPS extends EMPS_Common
     {
         // Get a fine-tuning setting
         if (!is_array($this->settings_cache_common)) {
+            $this->p->no_full = false;
             $website_settings = $this->p->read_properties(array(), $this->default_ctx);
             if (!$website_settings) {
                 $website_settings = array();
