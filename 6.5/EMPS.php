@@ -15,7 +15,7 @@ class EMPS extends EMPS_Common
     public $db;
     public $cas;
 
-    public $settings_cache, $settings_cache_common, $content_cache;
+    public $settings_cache, $settings_cache_common, $content_cache, $new_settings;
 
     public $period_size = 60 * 60 * 24 * 7;
 
@@ -69,7 +69,6 @@ class EMPS extends EMPS_Common
             }
             $ndlst = array();
             foreach($dlst as $v) {
-                reset($mlst);
                 $add = true;
                 foreach($mlst as $nn => $vv){
                     if ($vv['uri'] == $v['uri'] && $vv['grp'] == $v['grp']) {
@@ -82,7 +81,6 @@ class EMPS extends EMPS_Common
                 }
             }
             if ($ndlst) {
-                reset($ndlst);
                 foreach($ndlst as $vv){
                     $mlst[] = $vv;
                 }
@@ -90,7 +88,6 @@ class EMPS extends EMPS_Common
                 uasort($mlst, array($this, 'sort_menu'));
             }
         }
-        reset($mlst);
         foreach($mlst as $ra) {
             if(!$ra['enabled']){
                 continue;
@@ -173,6 +170,7 @@ class EMPS extends EMPS_Common
         }
         $a = array($name => $value);
         $this->p->save_properties($a, $this->website_ctx, $code);
+        $this->new_settings[$name] = $value;
     }
 
     public function save_setting_common($code, $value)
@@ -208,6 +206,10 @@ class EMPS extends EMPS_Common
             $website_settings['_full'] = array_merge($default_settings['_full'], $website_settings['_full']);
             $this->settings_cache = array_merge($default_settings, $website_settings);
 //			dump($this->settings_cache);
+        }
+        $rv = $this->new_settings[$code];
+        if (isset($rv)) {
+            return $rv;
         }
         $rv = $this->settings_cache[$code];
         if(isset($rv)){
