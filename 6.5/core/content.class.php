@@ -48,6 +48,7 @@ class EMPS_StaticContent
         $rv = file_put_contents($full_filename, $data);
         if ($rv === false) {
             error_log("Can not create static file: {$filename}");
+            rmdir($path);
             return 0;
         }
         $size = filesize($full_filename);
