@@ -41,6 +41,7 @@ class EMPS_StaticContent
     public function create_file($filename, $data, $context_id, $ord = 10) {
         global $emps;
 
+        $filename = str_replace("/", "_", $filename);
         $md5 = md5(uniqid($filename.time()));
         $path = $this->path_from_md5($md5);
         $full_filename = $path."/".$filename;

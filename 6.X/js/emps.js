@@ -62,7 +62,7 @@ var EMPS = {
         return "/";
     },
     soft_navi: function(title, href) {
-        window.history.pushState([], title, href);
+        window.history.pushState({}, title, href);
     },
     load_css: function(href) {
         var head  = document.getElementsByTagName('head')[0];

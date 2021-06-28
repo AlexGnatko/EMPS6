@@ -15,8 +15,8 @@ echo '/* bootstrap.min.css */'."\r\n";
 
 $css_fw = $emps->get_setting("css_fw");
 if ($css_fw == "bulma") {
-    echo file_get_contents($emps->plain_file("/bulma/css/bulma.min.css"));
-    echo file_get_contents($emps->plain_file("/bulma/ext.css"));
+    echo file_get_contents($emps->plain_file("/bulma/css/bulma.min.css")).PHP_EOL;
+    echo file_get_contents($emps->plain_file("/bulma/ext.css")).PHP_EOL;
 } else {
 }
 
@@ -27,3 +27,4 @@ echo file_get_contents($emps->plain_file("/css/site-default.css"));
 echo '/* editor.css */'."\r\n";
 echo file_get_contents($emps->plain_file("/css/editor.css"));
 
+echo ".mce-content-body {padding: 0.5rem !important}".PHP_EOL;
