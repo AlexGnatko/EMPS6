@@ -1,6 +1,6 @@
 EMPS.vue_component('modal', '/mjs/comp-modal/modal.vue', {
     template: '#modal-component-template',
-    props: ['id', 'form', 'submit', 'size', 'buttonClass', 'noFooter', 'noActions', 'plain'],
+    props: ['id', 'form', 'submit', 'size', 'buttonClass', 'noFooter', 'noActions', 'plain', 'noCloseButton'],
     data: function(){
         return {
             btn_class: {'button': true}

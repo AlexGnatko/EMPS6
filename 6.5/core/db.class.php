@@ -407,7 +407,7 @@ class EMPS_DB
             return $this->row_cache[$table][$where];
         }
         $row = $this->get_row_plain($table, $where);
-        $row_cache[$table][$where] = $row;
+        $this->row_cache[$table][$where] = $row;
         return $row;
     }
 

@@ -7,7 +7,7 @@
     <template v-if="plain">
         <div class="modal-background" @click="close_modal"></div>
         <slot></slot>
-        <button class="modal-close is-large" aria-label="close" @click="close_modal"></button>
+        <button v-if="!noCloseButton" class="modal-close is-large" aria-label="close" @click="close_modal"></button>
     </template>
     <template v-else>
         <div class="modal-background" @click="close_modal($event)"></div>

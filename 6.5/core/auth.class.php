@@ -254,15 +254,17 @@ class EMPS_Auth
             }
         }
 
-        if (isset($_POST['post_oauth'])) {
-            if ($_POST['post_oauth'] == 1) {
-                $target = $_POST['post_oauth_target'];
-                $this->do_oauth_login($target, 'start');
+        if (!defined('EMPS_NO_OAUTH')) {
+            if (isset($_POST['post_oauth'])) {
+                if ($_POST['post_oauth'] == 1) {
+                    $target = $_POST['post_oauth_target'];
+                    $this->do_oauth_login($target, 'start');
+                }
             }
-        }
 
-        if (isset($_GET['provider'])) {
-            $this->do_oauth_login($_GET['provider'], 'finish');
+            if (isset($_GET['provider'])) {
+                $this->do_oauth_login($_GET['provider'], 'finish');
+            }
         }
 
         if (isset($_GET['logout'])) {
