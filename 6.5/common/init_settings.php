@@ -28,3 +28,15 @@ if (!$setting) {
     echo "Set order_mailto\r\n";
 }
 
+$setting = $emps->get_setting("css_fw");
+if (!$setting) {
+    $emps->save_setting("css_fw", "bulma");
+    echo "Set css_fw\r\n";
+}
+
+$setting = $emps->get_setting("admin_tools");
+if (!$setting) {
+    $emps->save_setting("admin_tools", "vv");
+    echo "Set admin_tools\r\n";
+}
+

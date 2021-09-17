@@ -10,10 +10,10 @@
 
 {{if $page.css_fw == "bulma"}}
 
-    <nav class="navbar is-primary">
+    <nav class="navbar {{if $navbar_class}}{{$navbar_class}}{{else}}is-primary{{/if}}">
         <div class="container">
             <div class="navbar-brand">
-                <a class="navbar-item brand-item" href="/" title="{{"page/mainhead"|emps:get_setting}}">
+                <a class="navbar-item {{if $brand_class}}{{$brand_class}}{{else}}brand-item{{/if}}" href="/" title="{{"page/mainhead"|emps:get_setting}}">
                     {{$navbar_image = ("page/brand_image"|emps:get_setting)}}
                     {{if $navbar_image}}
                         <img class="brand-logo" src="{{$navbar_image}}" />

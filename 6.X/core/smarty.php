@@ -38,6 +38,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
             $skip = true;
         }
 
+        //echo "name: {$name}";
         $r = $emps->get_setting($name);
 
         if (!$r) {
@@ -45,6 +46,8 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
             if (file_exists($fn)) {
                 if (!$skip) {
                     $source = file_get_contents($fn);
+                } else {
+                    $source = "";
                 }
                 $mtime = filemtime($fn);
             } else {
@@ -69,6 +72,10 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
     {
         global $emps;
 
+        $x = explode("|", $name, 2);
+        $name = $x[0];
+
+        //echo "name: {$name}";
         $r = $emps->get_setting_time($name);
 
         if ($r == -1 || !$r) {
@@ -76,7 +83,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
             if (!file_exists($fn)) {
                 $fn = $emps->common_module_html($name);
                 if (!file_exists($fn)) {
-                    return time() - 60;
+                    return null;
                 } else {
                     $r = filemtime($fn);
                 }
