@@ -3,7 +3,7 @@
 // the available EMPS tools without running into problems
 // with the fact that the script is not run by a web server
 
-define('EMPS_COMMON_PATH_PREFIX', 'EMPS6/common');
+define('EMPS_COMMON_PATH_PREFIX', 'EMPS6/6.X');
 
 date_default_timezone_set(EMPS_TZ);
 
@@ -36,6 +36,7 @@ require_once EMPS_PATH_PREFIX . "/EMPS.php";                        // EMPS Clas
 $emps_require_file = "modules/_common/config/customizer.php";
 
 $emps = new EMPS();
+
 
 require_once EMPS_PATH_PREFIX . "/core/core.php";                    // Core classes (some not included if $emps->fast is set)
 

@@ -7,4 +7,4 @@
 
 define('EMPS_PATH_PREFIX', 'EMPS6/6.5');
 
-require_once "EMPS/common/emps_worker_bootstrap.php";
+require_once "EMPS6/6.X/emps_worker_bootstrap.php";
