@@ -338,14 +338,5 @@ class EMPS_Common
         header("Cache-Control: max-age=" . $seconds);
     }
 
-    public function php_session_id() {
-        global $emps;
 
-        $code = $_COOKIE['PHPSESSID'];
-        $row = $emps->db->get_row("e_php_sessions", "sess_id = '{$code}'");
-        if ($row) {
-            return $row['id'];
-        }
-        return 0;
-    }
 }
