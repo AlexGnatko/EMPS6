@@ -27,7 +27,7 @@
                                 class="button is-outlined is-danger is-small">
                             <i class="fa fa-trash"></i>
                         </button>&nbsp;
-                        <strong><a :href="file.url" target="_blank">{{"file.name"|js}}</a></strong>
+                        <strong v-if="!noName"><a :href="file.url" target="_blank">{{"file.name"|js}}</a></strong>
                     </template>
                 </div>
             </template>
@@ -45,7 +45,7 @@
                                 class="button is-outlined is-danger is-small">
                             <i class="fa fa-trash"></i>
                         </button>&nbsp;
-                        <strong><a :href="file.url" target="_blank">{{"file.name"|js}}</a></strong>
+                        <strong v-if="!noName"><a :href="file.url" target="_blank">{{"file.name"|js}}</a></strong>
                     </template>
                 </div>
                 <template v-if="(files.length == 0) && (defaultimg !== null)">
@@ -64,7 +64,7 @@
                             class="button is-outlined is-danger is-small">
                         <i class="fa fa-trash"></i>
                     </button>&nbsp;
-                    <strong><a :href="file.url" target="_blank">{{"file.name"|js}}</a></strong>
+                    <strong v-if="!noName"><a :href="file.url" target="_blank">{{"file.name"|js}}</a></strong>
                 </div>
 
                 <div :class="{'columns is-variable is-2': true, 'is-multiline': cols == 1}">
