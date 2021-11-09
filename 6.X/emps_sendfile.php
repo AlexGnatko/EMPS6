@@ -40,6 +40,12 @@ if (!strstr($uri, ".php") && !strstr($uri, ".sql") && !strstr($uri, "/modules/")
     }
 
     if ($go) {
+        if (is_dir($fname)) {
+            $go = false;
+        }
+    }
+
+    if ($go) {
         $content_type = \MimeType\MimeType::getType($fname);
 
         ob_end_clean();
