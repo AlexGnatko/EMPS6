@@ -22,7 +22,12 @@ if (!$hours) {
     $hours = 12;
 }
 
-$smarty->clearCompiledTemplate(null, null, $hours * 60 * 60);
+$last_dt = intval($emps->get_setting("last_smarty_clear"));
+if ($last_dt < (time() - ($hours * 60 * 60))) {
+    $emps->save_setting("last_smarty_clear", time());
+    $smarty->clearCompiledTemplate();
+    echo "Cleared!";
+}
 
-echo "Cleared!";
+
 
