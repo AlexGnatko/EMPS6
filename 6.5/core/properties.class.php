@@ -37,7 +37,7 @@ class EMPS_Properties
                 $field = "v_int";
                 break;
             case "b":
-                $field = "v_bool";
+                $field = "v_int";
                 break;
             case "f":
                 $field = "v_float";
@@ -216,7 +216,7 @@ class EMPS_Properties
                         $field = "v_data";
                         break;
                     case "b":
-                        $field = "v_bool";
+                        $field = "v_int";
                         break;
                 }
 
@@ -300,7 +300,7 @@ class EMPS_Properties
                     $value = $prop['v_data'];
                     break;
                 case "b":
-                    $value = $prop['v_bool'];
+                    $value = ($prop['v_int'] == 0)?false:true;
                     break;
                 default:
                     $value = $prop['v_text'];
@@ -347,7 +347,7 @@ class EMPS_Properties
                     $value = $ra['v_data'];
                     break;
                 case "b":
-                    $value = $ra['v_bool'];
+                    $value = ($ra['v_int'] == 0)?false:true;
                     break;
                 default:
                     $value = $ra['v_text'];
@@ -419,7 +419,7 @@ class EMPS_Properties
                     $value = $ra['v_data'];
                     break;
                 case "b":
-                    $value = $ra['v_bool'];
+                    $value = ($ra['v_int']==0)?false:true;
                     break;
                 default:
                     $value = $ra['v_text'];

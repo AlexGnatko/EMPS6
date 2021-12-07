@@ -5,11 +5,12 @@ var EMPS_V_subtable = {
             newrow: {},
             editrow: {},
             sending: false,
+            str_delete: "Удалить строку?",
             lst: [],
         };
     },
     methods: {
-        load_subtable_list: function() {
+        load_subtable_list: function(after) {
             var that = this;
             axios
                 .get("./?list_subtable=1")
@@ -17,9 +18,12 @@ var EMPS_V_subtable = {
                     var data = response.data;
                     if (data.code == 'OK') {
                         that.lst = data.lst;
-			if (data.total !== undefined) {
-				that.total = data.total;
-			}
+                        if (data.total !== undefined) {
+                            that.total = data.total;
+                        }
+                        if (after !== undefined) {
+                            after.call(that);
+                        }
                     }else{
                         toastr.error(data.message);
                     }
@@ -78,7 +82,7 @@ var EMPS_V_subtable = {
                 });
         },
         delete_row: function(selected_row) {
-            if (confirm('Удалить строку?')) {
+            if (confirm(this.str_delete)) {
                 var that = this;
                 var row = {};
                 row.post_delete_from_subtable = 1;

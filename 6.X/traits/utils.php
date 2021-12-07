@@ -307,11 +307,29 @@ trait EMPS_Common_Utils
 
     public function parse_time($v)
     {
+        $format = EMPS_DT_FORMAT;
+        $x = explode(" ", $format);
+        $date = $x[0];
+        $split = ".";
+        if (strstr($date, "/")) {
+            $xx = explode("/", $date);
+            $split = "/";
+        } else {
+            $xx = explode(".", $date);
+        }
         $p = explode(" ", $v);
-        $d = explode(".", $p[0]);
-        $mon = intval($d[1]);
-        $day = intval($d[0]);
-        $year = intval($d[2]);
+        $d = explode($split, $p[0]);
+        foreach ($d as $n => $v) {
+            if ($xx[$n] == "%d") {
+                $day = $v;
+            }
+            if ($xx[$n] == "%m") {
+                $mon = $v;
+            }
+            if ($xx[$n] == "%Y") {
+                $year = $v;
+            }
+        }
         if (!$p[1]) {
             $p[1] = '12:00:00';
         }

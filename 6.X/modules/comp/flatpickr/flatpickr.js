@@ -7,7 +7,7 @@
             return {
                 picker: null,
                 set_class: '',
-                config: emps_flatpickr_options,
+                config: window.emps_flatpickr_options,
             };
         },
         methods: {
@@ -47,9 +47,17 @@
                 if (this.dateFormat !== undefined) {
                     dateFormat = this.dateFormat;
                 }
+                if (this.config.dateFormat !== undefined) {
+                    dateFormat = this.config.dateFormat;
+                }
                 if (this.hasTime) {
                     this.config.enableTime = true;
-                    this.config.dateFormat = dateFormat + " H:i";
+                    if (dateFormat.indexOf("H:i") == -1) {
+                        this.config.dateFormat = dateFormat + " H:i";
+                    } else {
+                        this.config.dateFormat = dateFormat;
+                    }
+
                 } else {
                     this.config.enableTime = false;
                     this.config.dateFormat = dateFormat;
