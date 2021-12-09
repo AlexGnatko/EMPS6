@@ -2,7 +2,9 @@
 
     Vue.component('flatpickr', {
         template: '#flatpickr-component-template',
-        props: ['size', 'value', 'hasTime', 'minDate', 'maxDate', 'setclass', 'dateFormat', 'placeholder', 'asButton'],
+        props: ['size', 'value', 'hasTime', 'minDate', 'maxDate', 'setclass',
+            'hasClock',
+            'dateFormat', 'placeholder', 'asButton'],
         data: function(){
             return {
                 picker: null,

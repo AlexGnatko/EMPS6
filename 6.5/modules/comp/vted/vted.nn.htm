@@ -132,15 +132,18 @@
                             {{/if}}
                         </div>
                         <div class="column is-narrow">
-                            {{if $smarty.capture.buttons_pre}}
-                                {{$smarty.capture.buttons_pre}}
-                            {{/if}}
-                            <a :href="back_link()" class="button is-link" @click="navigate(back_link(), $event)">
-                                <i class="fa fa-reply"></i> &nbsp;
-                                {{$str_back}}</a>
-                            {{if $smarty.capture.buttons_post}}
-                                {{$smarty.capture.buttons_post}}
-                            {{/if}}
+                            <div class="buttons">
+                                {{if $smarty.capture.buttons_pre}}
+                                    {{$smarty.capture.buttons_pre}}
+                                {{/if}}
+                                <a :href="back_link()" class="button is-link" @click="navigate(back_link(), $event)">
+                                    <i class="fa fa-reply"></i> &nbsp;
+                                    {{$str_back}}</a>
+                                {{if $smarty.capture.buttons_post}}
+                                    {{$smarty.capture.buttons_post}}
+                                {{/if}}
+
+                            </div>
                         </div>
                     </div>
 

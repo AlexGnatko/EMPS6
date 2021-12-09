@@ -40,7 +40,7 @@
         </div>
     {{/if}}
 
-    <div class="is-flex-desktop">
+    <div class="vted-controls mb-3">
         {{if $has_tree}}
             <div class="field">
                 <button class="button is-default is-outlined" @click="toggle('show_tree')">
@@ -86,7 +86,7 @@
             &nbsp;
             <form class="field has-addons " @submit="search" style="flex: 2">
                 <div class="control is-expanded">
-                    <input class="input is-success is-fullwidth" type="text" v-model="search_text">
+                    <input class="input is-success is-fullwidth" type="text" style="min-width: 10em" v-model="search_text">
                 </div>
                 <div class="control">
                     <button type="button" class="button is-success is-outlined" @click="clear_search('')">

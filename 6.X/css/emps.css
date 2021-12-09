@@ -26,3 +26,7 @@ a.emps-montage-item img {
     }
 }
 
+.vted-controls {
+    display: flex;
+    flex-flow: wrap;
+}
