@@ -71,6 +71,9 @@
                         <tbody>
                             <xsl:for-each select="s:sitemapindex/s:sitemap">
                                 <tr>
+                                    <xsl:if test="position() mod 2 != 1">
+                                        <xsl:attribute  name="class">high</xsl:attribute>
+                                    </xsl:if>
                                     <td class="url">
                                         <xsl:variable name="itemURL">
                                             <xsl:value-of select="s:loc"/>
