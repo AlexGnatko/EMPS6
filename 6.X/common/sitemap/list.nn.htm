@@ -6,6 +6,7 @@
         <loc>{{$BaseURL}}{{$item.link}}</loc>
         <lastmod>{{$item.lastmod}}</lastmod>
         <changefreq>{{$item.freq}}</changefreq>
+        <priority>{{if $item.priority > 0}}{{$item.priority}}{{else}}0.5{{/if}}</priority>
 {{foreach from=$item.images item="image"}}
         <image:image>
             <image:loc>{{$image.url}}</image:loc>
