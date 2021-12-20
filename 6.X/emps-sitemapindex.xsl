@@ -61,7 +61,7 @@
                     </p>
                 </div>
                 <div id="content">
-                    <table id="sitemap" class="tablesorter" border="1" cellpadding="3">
+                    <table id="sitemap" cellpadding="5">
                         <thead>
                             <tr style="border-bottom:1px black solid;">
                                 <th style="text-align:left">URL</th>
@@ -71,7 +71,14 @@
                         <tbody>
                             <xsl:for-each select="s:sitemapindex/s:sitemap">
                                 <tr>
-                                    <td class="url"><xsl:value-of select="s:loc"/></td>
+                                    <td class="url">
+                                        <xsl:variable name="itemURL">
+                                            <xsl:value-of select="s:loc"/>
+                                        </xsl:variable>
+                                        <a href="{$itemURL}">
+                                            <xsl:value-of select="s:loc"/>
+                                        </a>
+                                    </td>
                                     <td><xsl:value-of select="concat(substring(s:lastmod,0,11),concat(' ', substring(s:lastmod,12,5)))"/></td>
                                 </tr>
                             </xsl:for-each>
