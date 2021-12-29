@@ -191,6 +191,10 @@ trait EMPS_Common_Routing
         }
     }
 
+    public function getvar($varname) {
+        return $GLOBALS[$varname];
+    }
+
     public function not_found()
     {
         global $smarty;
