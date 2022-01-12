@@ -81,7 +81,7 @@ mkdir("/srv");
 mkdir("/srv/www");
 mkdir("/srv/www/htdocs");
 chdir("/srv/www");
-system("git clone http://gitlab.ag38.ru/root/emps-factory.git");
+system("git clone https://github.com/AlexGnatko/emps-factory.git");
 chdir("emps-factory");
 system("git pull");
 
