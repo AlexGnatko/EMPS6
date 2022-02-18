@@ -7,7 +7,7 @@ acronym 'emps'. The latest versions of EMPS do not contain those folders, but
 the name stuck anyway.
 
 Smarty (http://www.smarty.net/) is a vital component of the framework. It is currently
-installed using composer, but in previous versions were found on the include_path.
+installed using composer, but in previous versions it was found on the include_path.
 Earlier versions supported 
 Smarty 2, but this one only accepts Smarty 3.
 
