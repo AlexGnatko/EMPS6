@@ -111,7 +111,7 @@ helpful combination of features sometimes).
 And then the Vue.js
 app send requests to the `orders.php` script (or any other script for that matter)
  that return JSON data (no Smarty templates and no HTML).
-They do it by calling `$emps->json_response($data); exit;` or `$emps->json_error('No such order!'); exit;`.
+They do it by calling `$emps->json_ok($data); exit;` or `$emps->json_error('No such order!'); exit;`.
 Note that the `exit` prevents any further processing and displaying of the HTML code.
 * The `mjs` component loader. Sometimes there are also `.css` and `.js` and `.vue` (in EMPS, 
 `.vue` files contain only the plain HTML code of the template) files.
