@@ -115,7 +115,7 @@ They do it by calling `$emps->json_ok($data); exit;` or `$emps->json_error('No s
 Note that the `exit` prevents any further processing and displaying of the HTML code.
 * The `mjs` component loader. Sometimes there are also `.css` and `.js` and `.vue` (in EMPS, 
 `.vue` files contain only the plain HTML code of the template) files.
-In order to load any one of the from JS or from the template `<script>` tags,
+In order to load any one of them from JS or from the template `<script>` tags,
 use the following URL template: `/mjs/{$module_pp}/{$filename}`, where `{$module_pp}` is
 the value of the `$pp` variable in the URL of this module (in our case it will be `manage-orders`),
 and `{$filename}` is the actual file name. For example, if we also need to load the JS
