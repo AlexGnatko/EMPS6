@@ -43,7 +43,7 @@ class EMPS_VuePhotosUploader {
                         $context_id = $this->context_id;
 
                         $nr = [];
-                        $nr['md5'] = md5(uniqid(time()));
+                        $nr['md5'] = md5(uniqid(microtime().$v['name'][0].$v['type'][0]));
                         $nr['filename'] = $v['name'][0];
                         $nr['type'] = $v['type'][0];
                         $nr['size'] = $v['size'][0];
