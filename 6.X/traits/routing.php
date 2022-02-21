@@ -251,33 +251,50 @@ trait EMPS_Common_Routing
     public function elink()
     {
         // Make up an internal link with the variables
-        $x = explode(",", EMPS_URL_VARS);
-        $rlist = [];
-        foreach ($x as $v) {
-            $rlist[$v] = $GLOBALS[$v];
-        }
 
-        $t = "";
-        $tc = "";
+        $t = "./";
 
-        foreach ($x as $v) {
-            $v = $this->xrawurlencode($GLOBALS[$v]);
-            if (!$v) {
-                $tc .= "/-";
-            } else {
-                $t .= $tc;
-                $t .= "/$v";
-                $tc = "";
+        if (!$this->no_url_vars) {
+            $x = explode(",", EMPS_URL_VARS);
+            $rlist = [];
+            foreach ($x as $v) {
+                $rlist[$v] = $GLOBALS[$v];
             }
-        }
-        $t .= "/";
 
+            $t = "";
+            $tc = "";
+
+            foreach ($x as $v) {
+                $v = $this->xrawurlencode($GLOBALS[$v]);
+                if (!$v) {
+                    $tc .= "/-";
+                } else {
+                    $t .= $tc;
+                    $t .= "/$v";
+                    $tc = "";
+                }
+            }
+            $t .= "/";
+        }
+
+        $vars = EMPS_VARS;
+        if ($this->custom_vars) {
+            $vars = $this->custom_vars;
+        }
         $s = false;
-        $xx = explode(",", EMPS_VARS);
+        $xx = explode(",", $vars);
         foreach ($xx as $value) {
-            if ($GLOBALS[$value] == "") continue;
-            if ($rlist[$value] != "") continue;
-            if ($s) $t .= "&"; else $t .= "?";
+            if ($GLOBALS[$value] == "") {
+                continue;
+            }
+            if ($rlist[$value] != "") {
+                continue;
+            }
+            if ($s) {
+                $t .= "&";
+            } else {
+                $t .= "?";
+            }
             $s = true;
             $t .= $value . "=" . rawurlencode($GLOBALS[$value]);
         }
