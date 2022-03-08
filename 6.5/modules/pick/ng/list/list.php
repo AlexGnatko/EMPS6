@@ -67,6 +67,49 @@ class EMPS_NG_PickList
         return $and;
     }
 
+    public function parse_filter($extra)
+    {
+        global $emps;
+        $rv = [];
+        if ($extra) {
+            $x = explode("|", $extra);
+            foreach ($x as $v) {
+                $xx = explode("=", $v, 2);
+
+                if ($xx[0] == 'group') {
+                    continue;
+                }
+                if (count($xx) == 2) {
+                    $xx[1] = str_replace('{slash}', '/', $xx[1]);
+                    $a = [];
+                    $a['mode'] = "eq";
+                    $a['name'] = $emps->db->sql_escape($xx[0]);
+                    $a['value'] = $emps->db->sql_escape($xx[1]);
+                    $rv[] = $a;
+                } else {
+                    $xx = explode("<>", $v, 2);
+                    if (count($xx) == 2) {
+                        $a = [];
+                        $a['mode'] = "neq";
+                        $a['name'] = $emps->db->sql_escape($xx[0]);
+                        $a['value'] = $emps->db->sql_escape($xx[1]);
+                        $rv[] = $a;
+                    } else {
+                        $xx = explode("_in_", $v, 2);
+                        if (count($xx) == 2) {
+                            $a = [];
+                            $a['mode'] = "in";
+                            $a['name'] = $emps->db->sql_escape($xx[0]);
+                            $a['value'] = $emps->db->sql_escape($xx[1]);
+                            $rv[] = $a;
+                        }
+                    }
+                }
+            }
+        }
+        return $rv;
+    }
+
     public function handle_request()
     {
         global $emps, $start, $perpage;
