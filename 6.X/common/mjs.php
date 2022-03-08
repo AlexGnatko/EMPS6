@@ -49,9 +49,43 @@ if ($ext == "vue") {
     $emps->pre_display();
     $page = "_{$part},!{$file}";
     $smarty->display("db:{$page}");
+} elseif ($ext == "js") {
+    $fh = fopen($file_name, "rb");
+    if ($fh) {
+        $fl = fgets($fh);
+        fclose($fh);
+        if (substr($fl, 0, 9) == "// minify") {
+            $min_file_name = $file_name.".min";
+            $pass = false;
+            if (file_exists($min_file_name)) {
+                if (filemtime($file_name) < filemtime($min_file_name)) {
+                    $pass = true;
+                }
+            }
+            if ($pass) {
+                $fh = fopen($min_file_name, "rb");
+                if ($fh) {
+                    fpassthru($fh);
+                    fclose($fh);
+                }
+            } else {
+                $uglify = EMPS_COMMON_PATH_PREFIX."/node_modules/uglify-js/bin/uglifyjs";
+                $uglify = stream_resolve_include_path($uglify);
+                $rv = shell_exec("node {$uglify} --compress --mangle -- {$file_name}");
+                file_put_contents($min_file_name, $rv);
+                echo $rv;
+            }
+        } else {
+            $fh = fopen($file_name, "rb");
+            if ($fh) {
+                fpassthru($fh);
+                fclose($fh);
+            }
+        }
+    }
 } else {
     $fh = fopen($file_name, "rb");
-    if($fh){
+    if ($fh) {
         fpassthru($fh);
         fclose($fh);
     }
