@@ -220,6 +220,22 @@ class EMPS extends EMPS_Common
         return false;
     }
 
+    public function get_setting_plain($code) {
+        // Get a fine-tuning setting
+        $this->p->no_full = false;
+
+        $value = $this->p->read_property($code, $this->website_ctx);
+        if ($value === null) {
+            $value = $this->p->read_property($code, $this->default_ctx);
+        }
+
+        $rv = $this->new_settings[$code];
+        if (isset($rv)) {
+            return $rv;
+        }
+        return $value;
+    }
+
     public function get_setting_common($code)
     {
         // Get a fine-tuning setting

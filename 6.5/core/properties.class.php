@@ -366,6 +366,58 @@ class EMPS_Properties
         return $row;
     }
 
+    public function read_property($code, $context_id) {
+        global $emps;
+
+        $code = $emps->db->sql_escape($code);
+        $r = $emps->db->query('select * from ' . TP . "e_properties where context_id = {$context_id} 
+            and code = '{$code}'
+            and status = 0 order by idx asc");
+        if (!$r) {
+            $this->database_error = true;
+        }
+        $row = [];
+        while ($ra = $emps->db->fetch_named($r)) {
+            switch ($ra['type']) {
+                case "i":
+                case "r":
+                    $value = $ra['v_int'];
+                    if($this->wt){
+                        $value = intval($value);
+                    }
+                    break;
+                case "f":
+                    $value = $ra['v_float'];
+                    if($this->wt){
+                        $value = floatval($value);
+                    }
+                    break;
+                case "c":
+                    $value = $ra['v_char'];
+                    break;
+                case "d":
+                    $value = $ra['v_data'];
+                    break;
+                case "b":
+                    $value = ($ra['v_int'] == 0)?false:true;
+                    break;
+                default:
+                    $value = $ra['v_text'];
+            }
+            $row[$ra['code']] = $value;
+            if(!$this->no_idx){
+                $row[$ra['code'] . '_idx'][$ra['idx']] = $value;
+                if (!$row[$ra['code'] . '_count']) $row[$ra['code'] . '_count'] = 0;
+                $row[$ra['code'] . '_count']++;
+            }
+            if(!$this->no_full){
+                $row['_full'][$ra['code']] = $ra;
+            }
+        }
+        $emps->db->free($r);
+        return $row[$code];
+    }
+
     public function read_properties_soft($row, $ref_type, $ref_sub, $ref_id) {
         $context_id = $this->get_context_soft($ref_type, $ref_sub, $ref_id);
         if (!$context_id) {
