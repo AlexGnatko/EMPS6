@@ -72,6 +72,7 @@ system("mysql -u root -p{$config['mysql_root_password']} -e \"create database if
 system("service mysql restart");
 
 $installer->nginx_config_file("conf.d/logformat.conf");
+$installer->nginx_config_file("conf.d/http.conf");
 $installer->nginx_config_file("sites-enabled/00-factory.conf", ['factory.ag38.ru' => $factory_hostname]);
 $installer->nginx_config_file("deny.conf");
 $installer->nginx_config_file("gzip.conf");
