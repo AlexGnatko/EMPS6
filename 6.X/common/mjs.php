@@ -55,7 +55,8 @@ if ($ext == "vue") {
         $fl = fgets($fh);
         fclose($fh);
         if (substr($fl, 0, 9) == "// minify") {
-            $min_file_name = $file_name.".min";
+            $min_file_name = $emps->min_file_name($page);
+            //$min_file_name = $file_name.".min";
             $pass = false;
             if (file_exists($min_file_name)) {
                 if (filemtime($file_name) < filemtime($min_file_name)) {
@@ -73,6 +74,7 @@ if ($ext == "vue") {
                 $uglify = stream_resolve_include_path($uglify);
                 $rv = shell_exec("node {$uglify} --compress --mangle -- {$file_name}");
                 file_put_contents($min_file_name, $rv);
+                chmod($min_file_name, 0777);
                 echo $rv;
             }
         } else {

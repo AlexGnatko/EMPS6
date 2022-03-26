@@ -50,6 +50,41 @@ trait EMPS_Common_Files
         return false;
     }
 
+    public function min_file_name($page_name) {
+        if (isset($this->require_cache['min_file'][$page_name])) {
+            return $this->require_cache['min_file'][$page_name];
+        }
+
+        $page_name = substr($page_name, 1);
+        $page_name = str_replace('-', '/', $page_name);
+
+        $x = explode(',', $page_name, 2);
+        $page_name = $x[0];
+        $include_name = $x[1];
+
+        $prefix = EMPS_SCRIPT_PATH."/local/minified/";
+
+        if (!is_dir($prefix)) {
+            mkdir($prefix);
+            chmod($prefix, 0777);
+        }
+
+        $path = $prefix;
+        $x = explode("/", $page_name);
+        foreach ($x as $dir) {
+            $path .= $dir."/";
+            if (!file_exists($path)) {
+                mkdir($path);
+                chmod($path, 0777);
+            }
+        }
+
+        $fn = $path.$include_name;
+
+        $this->require_cache['min_file'][$page_name] = $fn;
+        return $fn;
+    }
+
     public function page_file_name($page_name, $type)
     {
         // This function controls the naming of files used by the application
