@@ -69,7 +69,7 @@ trait EMPS_Common_Properties
                 $var = $xx[1];
                 continue;
             }
-            $vars[$var] .= $v;
+            $vars[$var] = $v;
         }
         foreach ($vars as $name => $val) {
             $this->page_properties[$name] = trim($val);
