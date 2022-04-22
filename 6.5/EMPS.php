@@ -379,7 +379,7 @@ class EMPS extends EMPS_Common
         $row = $this->db->get_row("e_redirect", "'$ouri' regexp olduri");
         if ($row) {
             // redirect if there is an entry in the e_redirect table
-            header("HTTP/1.1 301 Moved Permanently");
+            http_response_code(301);
             $this->redirect_page($row['newuri']);
             exit;
         }

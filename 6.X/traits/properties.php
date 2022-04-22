@@ -30,6 +30,53 @@ trait EMPS_Common_Properties
     }
 
     /**
+     * Copy properties from a Markdown files
+     *
+     * @param $code string Page URI
+     */
+    public function copy_md_properties($code) {
+        $file_name = $this->page_file_name($code, "view");
+        if (!$file_name) {
+            return;
+        }
+        $contents = file_get_contents($file_name);
+        if (!$contents) {
+            return;
+        }
+        $vars = [];
+
+        $x = explode("\n", $contents);
+        foreach ($x as $v) {
+            $v = trim($v);
+            if (mb_substr($v, 0, 1) == "#") {
+                if (mb_substr($v, 1, 1) != "#") {
+                    $title = trim(mb_substr($v, 1));
+                    $vars['title'] = $title;
+                }
+            }
+        }
+        $xx = explode("### META", $contents);
+        if (count($xx) < 2) {
+            return;
+        }
+        $meta = trim($xx[1]);
+        $x = explode("\n", $meta);
+        $var = null;
+
+        foreach ($x as $v) {
+            $xx = explode("#### ", trim($v), 2);
+            if (count($xx) == 2) {
+                $var = $xx[1];
+                continue;
+            }
+            $vars[$var] .= $v;
+        }
+        foreach ($vars as $name => $val) {
+            $this->page_properties[$name] = trim($val);
+        }
+    }
+
+    /**
      * Set properties from a text file (can be obtained from a Smarty template with $lang and {{syn...}} applied)
      *
      * @param $code string Property codes followed by "equals" signs and property values, one property per line
@@ -68,7 +115,7 @@ trait EMPS_Common_Properties
             if ($if_modified) {
                 $if_dt = strtotime($if_modified);
                 if ($this->last_modified <= $if_dt) {
-                    header("HTTP/1.1 304 Not Modified");
+                    http_response_code(304);
                     exit();
                 }
             }

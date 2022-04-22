@@ -150,7 +150,7 @@ trait EMPS_Common_Routing
             // virtual object (CMS database item)
             $this->virtual_path = $vp;
         } elseif ($vp = $this->page_exists($this->PLURI . '/')) {
-            header("HTTP/1.1 301 Moved Permanently");
+            http_response_code(301);
             header("Location: " . $this->PLURI . '/');
             exit;
         } else {
@@ -198,7 +198,7 @@ trait EMPS_Common_Routing
     public function not_found()
     {
         global $smarty;
-        header("HTTP/1.1 404 Not Found");
+        http_response_code(404);
         $smarty->assign("main_body", "db:page/notfound");
         $this->pre_display();
         $this->page_property("plain", $this->get_setting("plain_404"));
@@ -209,7 +209,7 @@ trait EMPS_Common_Routing
     public function database_down()
     {
         global $smarty;
-        header("HTTP/1.1 500 Internal Server Error");
+        http_response_code(500);
         $this->pre_display();
         $smarty->display("db:page/databasedown");
     }
@@ -321,13 +321,13 @@ trait EMPS_Common_Routing
         $addr = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         if ($protocol == 'https') {
             if ($_SERVER['HTTPS'] != 'on') {
-                header("HTTP/1.1 301 Moved Permanently");
+                http_response_code(301);
                 header("Location: https://" . $addr);
                 exit;
             }
         } elseif ($protocol == 'http') {
             if ($_SERVER['HTTPS'] == 'on') {
-                header("HTTP/1.1 301 Moved Permanently");
+                http_response_code(301);
                 header("Location: http://" . $addr);
                 exit;
             }

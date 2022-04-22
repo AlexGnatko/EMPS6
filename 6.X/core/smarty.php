@@ -189,10 +189,72 @@ class Smarty_Resource_EMPS_StaticBlockTemplate extends Smarty_Resource_EMPS_DB
 
 }
 
+class Smarty_Resource_EMPS_Markdown extends Smarty_Resource_Custom
+{
+    protected function fetch($name, &$source, &$mtime)
+    {
+        global $emps;
+
+        $source = "";
+        $mtime = time() - 60;
+
+        $fn = $emps->page_file_name($name, 'view');
+
+        if (file_exists($fn)) {
+            $source = file_get_contents($fn);
+
+            $xx = explode("### META", $source);
+            $source = $xx[0];
+
+            $parsedown = new Parsedown();
+
+            $source = $parsedown->text($source);
+
+            $str = $source;
+            $rv = "";
+            while (true) {
+                $x = explode("[[", $str, 2);
+                if (count($x) == 1) {
+                    $rv .= $str;
+                    break;
+                }
+                $rv .= $x[0];
+                $xx = explode("]]", $x[1], 2);
+                $f = $xx[0];
+                $rv .= '{{include file="' . $f . '"}}';
+                $str = $xx[1];
+            }
+            $source = $rv;
+
+            $emps->save_setting("last_source", $source);
+
+            $mtime = filemtime($fn);
+        }
+
+        return true;
+    }
+
+    protected function fetchTimestamp($name)
+    {
+        global $emps;
+
+        $fn = $emps->page_file_name($name, 'view');
+
+        $r = time();
+
+        if (file_exists($fn)) {
+            $r = filemtime($fn);
+        }
+
+        return $r;
+    }
+}
+
 $smarty->registerResource('db', new Smarty_Resource_EMPS_DB());
 $smarty->registerResource('page', new Smarty_Resource_EMPS_Page());
 $smarty->registerResource('sblk', new Smarty_Resource_EMPS_StaticBlock());
 $smarty->registerResource('sblt', new Smarty_Resource_EMPS_StaticBlockTemplate());
+$smarty->registerResource('md', new Smarty_Resource_EMPS_Markdown());
 
 
 function smarty_emps($params, Smarty_Internal_Template $template)

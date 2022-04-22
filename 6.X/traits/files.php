@@ -21,9 +21,11 @@ trait EMPS_Common_Files
                 $fn .= '/' . $include_name;
                 break;
         }
+        error_log("file name: {$fn}\r\n");
         if (isset($this->require_cache['try_page_file_name'][$fn])) {
             return $this->require_cache['try_page_file_name'][$fn];
         }
+
         $fn = stream_resolve_include_path($fn);
 
         $this->require_cache['try_page_file_name'][$fn] = $fn;
@@ -50,13 +52,26 @@ trait EMPS_Common_Files
         return false;
     }
 
+    public function hyphens_to_slashes($file_name) {
+        $x = explode(",", $file_name);
+        if (count($x) > 1) {
+            $last = array_pop($x);
+            $name = implode(",", $x);
+            $name = str_replace('-', '/', $name);
+            $file_name = $name . "," . $last;
+        } else {
+            $file_name = str_replace('-', '/', $file_name);
+        }
+        return $file_name;
+    }
+
     public function min_file_name($page_name) {
         if (isset($this->require_cache['min_file'][$page_name])) {
             return $this->require_cache['min_file'][$page_name];
         }
 
         $page_name = substr($page_name, 1);
-        $page_name = str_replace('-', '/', $page_name);
+        $page_name = $this->hyphens_to_slashes($page_name);
 
         $x = explode(',', $page_name, 2);
         $page_name = $x[0];
@@ -93,7 +108,7 @@ trait EMPS_Common_Files
         }
         if ($page_name{0} == '_') {
             $page_name = substr($page_name, 1);
-            $page_name = str_replace('-', '/', $page_name);
+            $page_name = $this->hyphens_to_slashes($page_name);
             if ($type == 'inc') {
                 $x = explode(',', $page_name, 2);
                 $page_name = $x[0];

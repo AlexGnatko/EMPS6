@@ -123,7 +123,7 @@ if ($sua == 'yes') {
         if ($page) {
             $smarty->assign("show_page", $page);
         }
-        header("HTTP/1.1 503 Service Unavailable");
+        http_response_code(503);
         header("Retry-After: 3600");
         $smarty->display("db:site/unavailable");
         exit;

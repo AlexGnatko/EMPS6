@@ -1,4 +1,10 @@
-<h1>Настройки сайта</h1>
+{{if $lang == "en"}}
+    {{$str_title = "Settings"}}
+{{else}}
+    {{$str_title = "Настройки сайта"}}
+{{/if}}
+
+<h1>{{$str_title}}</h1>
 
 <div id="settings_app" style="display: none">
 

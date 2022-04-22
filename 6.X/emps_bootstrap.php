@@ -29,7 +29,7 @@ if (!$emps_no_common_autoload) {
 
 if ($emps_force_hostname) {
     if ($_SERVER['HTTP_HOST'] != EMPS_HOST_NAME) {
-        header("HTTP/1.1 301 Moved Permanently");
+        http_response_code(301);
         header("Location: " . EMPS_SCRIPT_WEB . $_SERVER['REQUEST_URI']);
     }
 }
@@ -139,7 +139,7 @@ if ($sua == 'yes') {
         if ($page) {
             $smarty->assign("show_page", $page);
         }
-        header("HTTP/1.1 503 Service Unavailable");
+        http_response_code(503);
         header("Retry-After: 3600");
         $smarty->display("db:site/unavailable");
         exit;
