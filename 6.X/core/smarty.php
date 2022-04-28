@@ -221,7 +221,10 @@ class Smarty_Resource_EMPS_Markdown extends Smarty_Resource_Custom
                 $rv .= $x[0];
                 $xx = explode("]]", $x[1], 2);
                 $f = $xx[0];
-                $rv .= '{{include file="' . $f . '"}}';
+                $xxx = explode(" ", $f, 2);
+                $f = $xxx[0];
+                $arg = html_entity_decode($xxx[1]);
+                $rv .= '{{include file="' . $f . '" '.$arg.'}}';
                 $str = $xx[1];
             }
             $source = $rv;
