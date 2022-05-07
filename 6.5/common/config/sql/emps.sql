@@ -239,7 +239,7 @@ CREATE TEMPORARY TABLE `temp_e_properties` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `idx` int(11) NOT NULL,
   `type` char(1) NOT NULL,
-  `code` varchar(32) NOT NULL,
+  `code` varchar(255) NOT NULL,
   `context_id` bigint NOT NULL,
   `v_int` bigint DEFAULT NULL,
   `v_char` varchar(255) DEFAULT NULL,
