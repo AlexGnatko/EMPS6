@@ -21,7 +21,7 @@ trait EMPS_Common_Files
                 $fn .= '/' . $include_name;
                 break;
         }
-        error_log("file name: {$fn}\r\n");
+        //error_log("file name: {$fn}\r\n");
         if (isset($this->require_cache['try_page_file_name'][$fn])) {
             return $this->require_cache['try_page_file_name'][$fn];
         }
