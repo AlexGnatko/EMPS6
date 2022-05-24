@@ -47,7 +47,7 @@ if ($emps->auth->credentials("admin")) {
     }
 
 
-    $emps->json_ok(['lst' => $lst]);
+    $emps->json_ok(['lst' => $lst, 'vlst' => $vlst, 'nlst' => $nlst]);
 } else {
     $emps->json_error("Admin access needed!");
 }
