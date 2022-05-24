@@ -27,12 +27,14 @@ if ($emps->auth->credentials("admin")) {
     foreach ($vlst as $vv) {
         if ($vv['vtype'] == 'c') {
             $value = $vv['v_char'];
-        } elseif ($vv['vtype']{0} == 'a') {
+        } elseif (substr($vv['vtype'], 0, 1) == 'a') {
             $value = json_decode($vv['v_text'], true);
         } else {
             $value = $vv['v_text'];
         }
-        $nlst[$vv['name']]['value'] = $value;
+        if (isset($nlst[$vv['name']])) {
+            $nlst[$vv['name']]['value'] = $value;
+        }
     }
 
     $lst = [];
@@ -49,7 +51,8 @@ if ($emps->auth->credentials("admin")) {
     }
 
 
-    $emps->json_ok(['lst' => $lst, 'vlst' => $vlst, 'nlst' => $nlst]);
+    //$emps->json_ok(['lst' => $lst, 'vlst' => $vlst, 'nlst' => $nlst]);
+    $emps->json_ok(['lst' => $lst]);
 } else {
     $emps->json_error("Admin access needed!");
 }
