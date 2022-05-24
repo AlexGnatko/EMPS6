@@ -11,8 +11,10 @@ if ($emps->auth->credentials("admin")) {
     if ($_POST['post_save_values']) {
         $payload = $_POST['payload'];
 
+        $ord = 10;
         foreach ($payload as $param) {
-            $emps->blocks->save_param_value($row['id'], $param, $emps->lang, 0);
+            $emps->blocks->save_param_value($row['id'], $param, $emps->lang, 0, $ord);
+            $ord += 10;
         }
 
         $emps->db->sql_update_row("e_blocks", ['SET' => ['dt' => time()]], "id = {$row['id']}");

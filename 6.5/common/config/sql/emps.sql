@@ -663,6 +663,7 @@ CREATE TEMPORARY TABLE `temp_e_block_param_values` (
   `v_text` mediumtext DEFAULT NULL,
   `v_int` bigint DEFAULT NULL,
   `v_float` float DEFAULT NULL,
+  `ord` bigint NOT NULL DEFAULT '0',
   `cdt` bigint NOT NULL DEFAULT '0',
   `dt` bigint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -674,6 +675,7 @@ CREATE TEMPORARY TABLE `temp_e_block_param_values` (
   KEY `v_char` (`v_char`),
   KEY `v_int` (`v_int`),
   KEY `v_float` (`v_float`),
+  KEY `ord` (`ord`),
   KEY `cdt` (`cdt`),
   KEY `dt` (`dt`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci;

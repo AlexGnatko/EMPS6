@@ -226,7 +226,7 @@ class EMPS_Blocks {
         return ['html' => $text];
     }
 
-    public function save_param_value($block_id, $param, $lang, $idx) {
+    public function save_param_value($block_id, $param, $lang, $idx, $ord) {
         global $emps;
 
         /*
@@ -250,6 +250,7 @@ class EMPS_Blocks {
         $qr = $nr;
         $nr['vtype'] = $param['type'];
         $nr['idx'] = $idx;
+        $nr['ord'] = $ord;
         if ($param['type'] == 'c') {
             $nr['v_char'] = $param['value'];
         }
