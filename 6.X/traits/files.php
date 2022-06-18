@@ -192,6 +192,8 @@ trait EMPS_Common_Files
 
         if (!file_exists($fn)) {
             $fn = false;
+        } else {
+//            error_log("Common file: {$fn}\r\n");
         }
 
         $this->require_cache['common_module_html_try'][$fn] = $fn;

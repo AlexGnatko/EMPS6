@@ -54,7 +54,7 @@ class EMPS_Auth
         $user = $this->ensure_fullname($user);
 
         if (!$mode) {
-            if ($user['password'] != md5($password)) {
+            if ($user['password'] != $this->encrypt_password($password)) {
                 $this->login_error("wrong_password");
                 return false;
             }
@@ -270,6 +270,7 @@ class EMPS_Auth
         if (isset($_GET['logout'])) {
             if ($_GET['logout'] == 1) {
                 $this->close_session();
+                $emps->redirect_elink();
             }
         }
 
@@ -896,7 +897,7 @@ class EMPS_Auth
 
         $nr = [];
         $nr['username'] = $userword;
-        $nr['password'] = md5($password);
+        $nr['password'] = $this->encrypt_password($password);
         $nr['context_id'] = $emps->website_ctx;
         $nr['status'] = 0;
         $emps->db->sql_insert_row("e_users", ['SET' => $nr]);
@@ -911,6 +912,10 @@ class EMPS_Auth
             }
         }
         return $user_id;
+    }
+
+    public function encrypt_password($password) {
+        return md5($password);
     }
 
     public function taken_user($username)

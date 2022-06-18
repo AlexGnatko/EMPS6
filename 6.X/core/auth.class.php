@@ -40,6 +40,7 @@ class EMPS_Auth_Common
         if (isset($_GET['logout'])) {
             if ($_GET['logout'] == 1) {
                 $this->close_session();
+                $emps->redirect_elink();
             }
         }
 

@@ -54,7 +54,7 @@ if ($ext == "vue") {
     if ($fh) {
         $fl = fgets($fh);
         fclose($fh);
-        if (substr($fl, 0, 9) == "// minify") {
+        if (substr($fl, 0, 9) == "// minify" && !$emps_no_nodejs) {
             $min_file_name = $emps->min_file_name($page);
             //$min_file_name = $file_name.".min";
             $pass = false;
