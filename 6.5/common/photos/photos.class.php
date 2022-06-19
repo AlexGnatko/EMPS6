@@ -1259,7 +1259,7 @@ class EMPS_Photos
             $destination = $source;
         }
         $info = getimagesize($source);
-        if ($info['mime'] === 'image/jpeg') {
+        if ($info['mime'] === 'image/jpeg' && function_exists('exif_read_data')) {
             $exif = exif_read_data($source);
             if (!empty($exif['Orientation']) && in_array($exif['Orientation'], [2, 3, 4, 5, 6, 7, 8])) {
                 $image = imagecreatefromjpeg($source);

@@ -72,8 +72,7 @@ class EMPS_VuePhotosUploader {
                             $file['md5'] = $row['md5'];
                             $file['size'] = intval($row['size']);
                             $file['url'] = "/pic/".$row['md5'].".".$row['ext']."?dt=".$row['dt'];
-                            $file['thumbnail'] = "/freepic/".$row['md5'].".jpg?size=".
-                                $this->thumb_size."&opts=inner&dt=".$row['dt'];
+                            $file['thumbnail'] = $this->thumbnail_url($row);
                             $file['dt'] = $row['dt'];
                             $file['ext'] = $row['ext'];
                             $file['has_orig'] = $row['has_orig'];
@@ -96,6 +95,11 @@ class EMPS_VuePhotosUploader {
         if (!$emps_no_exit) {
             exit;
         }
+    }
+
+    public function thumbnail_url($row) {
+        return "/freepic/".$row['md5'].".jpg?size=".
+            $this->thumb_size."&opts=inner&dt=".$row['dt'];
     }
 
     public function handle_reimport($id, $url){
@@ -199,7 +203,7 @@ class EMPS_VuePhotosUploader {
             $file['name'] = $ra['filename'];
             $file['size'] = intval($ra['size']);
             $file['url'] = "/pic/{$ra['md5']}/{$ra['filename']}?dt={$ra['dt']}";
-            $file['thumbnail'] = "/freepic/{$ra['md5']}.jpg?size={$this->thumb_size}&opts=inner&dt={$ra['dt']}";
+            $file['thumbnail'] = $this->thumbnail_url($ra);
 
             $lst[] = $file;
         }
@@ -433,6 +437,9 @@ class EMPS_VuePhotosUploader {
                 $this->handle_list();
             }
 
+            if ($_GET['zip']) {
+                $this->handle_zip();
+            }
         }else{
             $response = [];
             $response['code'] = "Error";
@@ -440,10 +447,6 @@ class EMPS_VuePhotosUploader {
 
             $emps->json_response($response); exit;
 
-        }
-
-        if ($_GET['zip']) {
-            $this->handle_zip();
         }
 
         if ($_GET['list_uploaded_photos']) {
