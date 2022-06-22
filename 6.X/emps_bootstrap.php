@@ -107,6 +107,11 @@ $emps->start_time = emps_microtime_float($emps_start_time);
 
 ob_start();
 
+$actions_file_name = $emps->common_module('config/project/actions.php');
+if (file_exists($actions_file_name)) {
+    require_once $actions_file_name;
+}
+
 if (!$emps->fast) {
     $emps->auth->handle_logon();
 

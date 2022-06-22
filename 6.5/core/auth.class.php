@@ -31,6 +31,9 @@ class EMPS_Auth
     {
         global $emps;
 
+        $rv = $emps->do_action("username_filter", ['username' => $username]);
+        $username = $rv['username'];
+
 /*        if (mb_substr($username, 0, 1) == '8') {
             $username = '+7' . mb_substr($username, 1);
         }*/
@@ -888,6 +891,9 @@ class EMPS_Auth
     {
         global $emps;
 
+        $rv = $emps->do_action("username_filter", ['username' => $userword]);
+        $userword = $rv['username'];
+
         $user = $emps->db->get_row("e_users", "lcase(username) = lcase('{$userword}') and status>0");
         if ($user) {
             return -1;
@@ -921,6 +927,10 @@ class EMPS_Auth
     public function taken_user($username)
     {
         global $emps;
+
+        $rv = $emps->do_action("username_filter", ['username' => $username]);
+        $username = $rv['username'];
+
         $row = $emps->db->get_row("e_users", "lcase(username) = lcase('" . $username . "') and status>0");
         if ($row) {
             return $row;
@@ -931,6 +941,10 @@ class EMPS_Auth
     public function taken_user_fast($username)
     {
         global $emps;
+
+        $rv = $emps->do_action("username_filter", ['username' => $username]);
+        $username = $rv['username'];
+
         $row = $emps->db->get_row("e_users", "username = '{$username}' and status > 0");
         if ($row) {
             return $row;

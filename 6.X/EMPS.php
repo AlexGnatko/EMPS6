@@ -5,6 +5,7 @@ require_once "traits/utils.php";
 require_once "traits/properties.php";
 require_once "traits/menus.php";
 require_once "traits/files.php";
+require_once "traits/actions.php";
 
 /**
  * The version-independent base class for EMPS
@@ -20,6 +21,7 @@ class EMPS_Common
     use EMPS_Common_Properties;
     use EMPS_Common_Menus;
     use EMPS_Common_Files;
+    use EMPS_Common_Actions;
 
     /**
      * @var $p The Properties object
