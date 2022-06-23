@@ -10,7 +10,7 @@ class EMPS_Mail
 
     public function mail_smtp($to, $subject, $body, $smtp_data, $params)
     {
-        global $smarty;
+        global $smarty, $emps;
 
         $rv = false;
 
@@ -27,7 +27,14 @@ class EMPS_Mail
             // 0 = off (for production use)
             // 1 = client messages
             // 2 = client and server messages
-            $mail->SMTPDebug = 3;
+            $debug_off = $emps->get_setting("smtp_debug");
+            if ($debug_off == 'on') {
+                $mail->SMTPDebug = 3;
+            } else {
+                $mail->SMTPDebug = 0;
+            }
+
+
             //Ask for HTML-friendly debug output
             $mail->Debugoutput = 'echo';
 
