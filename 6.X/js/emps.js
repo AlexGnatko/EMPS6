@@ -2,7 +2,6 @@
 var EMPS = {
     enum_cache: {},
     scroll_data: {},
-    url_prefix: '',
     sp_id: 0,
     get_path_vars: function(){
         var l = window.location.href;
@@ -120,7 +119,7 @@ var EMPS = {
         }
         var that = this;
         axios
-            .get(this.url_prefix + "/json-loadenum/" + code + "/" + css_reset)
+            .get("/json-loadenum/" + code + "/" + css_reset)
             .then(function(response){
                 var data = response.data;
                 if (data.code == 'OK') {
@@ -140,7 +139,7 @@ var EMPS = {
         }
         var that = this;
         axios
-            .get(this.url_prefix + "/json-loadenum/" + code + "/?string=1")
+            .get("/json-loadenum/" + code + "/?string=1")
             .then(function(response){
                 var data = response.data;
                 if (data.code == 'OK') {
@@ -253,7 +252,7 @@ var EMPS = {
             return 0;
         }
         axios
-            .get(this.url_prefix + "/json-context/" + ref_type + "-" + ref_sub + "-" + ref_id + "/")
+            .get("/json-context/" + ref_type + "-" + ref_sub + "-" + ref_id + "/")
             .then(function(response){
                 var data = response.data;
                 if (data.code == 'OK') {
@@ -276,7 +275,7 @@ var EMPS = {
         Vue.component(name, function(resolve) {
             obj.template = '#' + name + "-component-template";
             axios
-                .get(this.url_prefix + url + css_reset)
+                .get(url + css_reset)
                 .then(function(response){
                     var data = response.data;
                     $(obj.template).html(data);
@@ -306,7 +305,7 @@ var EMPS = {
             var element = $(this);
             var url = element.data('src');
             axios
-                .get(this.url_prefix + url + css_reset)
+                .get(url + css_reset)
                 .then(function(response){
                     var data = response.data;
                     element.html(data);
