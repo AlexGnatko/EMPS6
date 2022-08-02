@@ -296,7 +296,7 @@ trait EMPS_Common_Routing
                 $t .= "?";
             }
             $s = true;
-            $t .= $value . "=" . rawurlencode($GLOBALS[$value]);
+            $t .= $value . "=" . rawurlencode(strval($GLOBALS[$value]));
         }
         return $t;
     }
