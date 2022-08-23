@@ -844,6 +844,9 @@ class EMPS_VueTableEditor
 
             $response = $this->pre_send_response($response);
 
+            $log = ob_get_clean();
+            $response['log'] = $log;
+
             $emps->json_response($response); exit;
         }
 
