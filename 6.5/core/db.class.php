@@ -320,7 +320,7 @@ class EMPS_DB
     public function sql_ensure_row($table, $row, $single = false){
 
         $where = $this->where_clause($row);
-        //error_log($table." > ".$where);
+//        error_log($table." > ".$where);
         $existing_row = $this->get_row($table, $where);
         if($existing_row){
             if ($single) {

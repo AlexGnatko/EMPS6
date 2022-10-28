@@ -14,6 +14,7 @@ EMPS.vue_component('modal', '/mjs/comp-modal/modal.vue', {
         on_open: function(data){
             var element = document.getElementById(this.id);
             element.classList.add("is-active");
+
         },
         submit_form: function(){
             if(this.submit !== undefined){
