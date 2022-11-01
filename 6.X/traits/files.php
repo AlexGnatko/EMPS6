@@ -21,14 +21,29 @@ trait EMPS_Common_Files
                 $fn .= '/' . $include_name;
                 break;
         }
-        //error_log("file name: {$fn}\r\n");
+//        echo "file name: {$fn}\r\n";
         if (isset($this->require_cache['try_page_file_name'][$fn])) {
             return $this->require_cache['try_page_file_name'][$fn];
         }
 
-        $fn = stream_resolve_include_path($fn);
+        $fn = $this->resolve_include_path($fn);
+
+//        echo "resolved: {$fn}\r\n";
 
         $this->require_cache['try_page_file_name'][$fn] = $fn;
+        return $fn;
+    }
+
+    public function resolve_include_path($fn) {
+        $ofn = $fn;
+        $fn = stream_resolve_include_path($fn);
+        if ($fn === false) {
+            if (file_exists($fn)) {
+                $fn = $ofn;
+            } else {
+//                echo "not found: {$ofn}\r\n";
+            }
+        }
         return $fn;
     }
 
@@ -38,7 +53,7 @@ trait EMPS_Common_Files
         if (isset($this->require_cache['try_template_name'][$fn])) {
             return $this->require_cache['try_template_name'][$fn];
         }
-        $fn = stream_resolve_include_path($fn);
+        $fn = $this->resolve_include_path($fn);
 
         $this->require_cache['try_template_name'][$fn] = $fn;
         return $fn;
@@ -218,23 +233,23 @@ trait EMPS_Common_Files
                         $len = mb_strlen($x[count($x) - 1], "utf-8");
                         if ($len <= 3) {
                             $fn = EMPS_PATH_PREFIX . '/common/' . $file_name;
-                            $fn = stream_resolve_include_path($fn);
+                            $fn = $this->resolve_include_path($fn);
                             if (!$fn) {
                                 $fn = EMPS_COMMON_PATH_PREFIX . '/common/' . $file_name;
-                                $fn = stream_resolve_include_path($fn);
+                                $fn = $this->resolve_include_path($fn);
                             }
                         } else {
                             $fn = EMPS_PATH_PREFIX . '/common/' . $file_name . '.' . $this->lang . '.htm';
-                            $fn = stream_resolve_include_path($fn);
+                            $fn = $this->resolve_include_path($fn);
                             if (!$fn) {
                                 $fn = EMPS_PATH_PREFIX . '/common/' . $file_name . '.nn.htm';
-                                $fn = stream_resolve_include_path($fn);
+                                $fn = $this->resolve_include_path($fn);
                                 if (!$fn) {
                                     $fn = EMPS_COMMON_PATH_PREFIX . '/common/' . $file_name . '.' . $this->lang . '.htm';
-                                    $fn = stream_resolve_include_path($fn);
+                                    $fn = $this->resolve_include_path($fn);
                                     if (!$fn) {
                                         $fn = EMPS_COMMON_PATH_PREFIX . '/common/' . $file_name . '.nn.htm';
-                                        $fn = stream_resolve_include_path($fn);
+                                        $fn = $this->resolve_include_path($fn);
                                     }
                                 }
                             }
@@ -272,10 +287,10 @@ trait EMPS_Common_Files
             $fn = $this->try_common_module(EMPS_SCRIPT_PATH, $file_name);
             if (!$fn || ($level > 1)) {
                 $fn = EMPS_PATH_PREFIX . '/common/' . $file_name;
-                $fn = stream_resolve_include_path($fn);
+                $fn = $this->resolve_include_path($fn);
                 if (!$fn) {
                     $fn = EMPS_COMMON_PATH_PREFIX . '/common/' . $file_name;
-                    $fn = stream_resolve_include_path($fn);
+                    $fn = $this->resolve_include_path($fn);
                 }
             }
         }
@@ -298,7 +313,7 @@ trait EMPS_Common_Files
         if (isset($this->require_cache['common_script_try'][$path][$file_name])) {
             return $this->require_cache['common_script_try'][$path][$file_name];
         }
-        $fn = stream_resolve_include_path($path . "/core/" . $file_name . ".php");
+        $fn = $this->resolve_include_path($path . "/core/" . $file_name . ".php");
 
         if (!file_exists($fn)) {
             $fn = false;
@@ -343,10 +358,10 @@ trait EMPS_Common_Files
             $fn = $this->try_plain_file(EMPS_SCRIPT_PATH, $file_name);
             if (!$fn) {
                 $fn = EMPS_PATH_PREFIX . $file_name;
-                $fn = stream_resolve_include_path($fn);
+                $fn = $this->resolve_include_path($fn);
                 if (!$fn) {
                     $fn = EMPS_COMMON_PATH_PREFIX . $file_name;
-                    $fn = stream_resolve_include_path($fn);
+                    $fn = $this->resolve_include_path($fn);
                 }
             }
         }
@@ -433,7 +448,7 @@ trait EMPS_Common_Files
         }
 
         $file_name = EMPS_PATH_PREFIX.$url;
-        $file_name = stream_resolve_include_path($file_name);
+        $file_name = $this->resolve_include_path($file_name);
 
         if (file_exists($file_name)) {
             $data = file_get_contents($file_name);
@@ -441,7 +456,7 @@ trait EMPS_Common_Files
         }
 
         $file_name = EMPS_COMMON_PATH_PREFIX.$url;
-        $file_name = stream_resolve_include_path($file_name);
+        $file_name = $this->resolve_include_path($file_name);
         if (file_exists($file_name)) {
             $data = file_get_contents($file_name);
             return $data;

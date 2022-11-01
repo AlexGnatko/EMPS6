@@ -71,7 +71,7 @@ if ($ext == "vue") {
                 }
             } else {
                 $uglify = EMPS_COMMON_PATH_PREFIX."/node_modules/uglify-js/bin/uglifyjs";
-                $uglify = stream_resolve_include_path($uglify);
+                $uglify = $emps->resolve_include_path($uglify);
                 $rv = shell_exec("node {$uglify} --compress --mangle -- {$file_name}");
                 file_put_contents($min_file_name, $rv);
                 chmod($min_file_name, 0777);

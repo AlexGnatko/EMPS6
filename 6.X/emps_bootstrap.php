@@ -185,13 +185,16 @@ if ($emps->virtual_path && !$emps->fast) {
     $fn = $emps->page_file_name('_' . $pp, 'controller');
 
     // PHP module
+    //echo $fn;
+    //echo $pp;
+    //exit;
     if (file_exists($fn)) {
         require_once $fn;
     } else {
         if (!file_exists($tn)) {
             $fn = $emps->common_module($pp . '.php');
             if ($fn) {
-                $fn = stream_resolve_include_path($fn);
+                $fn = $emps->resolve_include_path($fn);
                 if ($fn !== false) {
                     require_once $fn;
                 }

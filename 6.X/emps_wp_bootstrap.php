@@ -152,7 +152,7 @@ if ($emps->virtual_path && !$emps->fast) {
         if (!file_exists($tn)) {
             $fn = $emps->common_module($pp . '.php');
             if ($fn) {
-                $fn = stream_resolve_include_path($fn);
+                $fn = $emps->resolve_include_path($fn);
                 if ($fn !== false) {
                     $emps_not_found = false;
                     require_once $fn;

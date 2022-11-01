@@ -1021,7 +1021,7 @@ class EMPS_Auth
     {
         $line = "1qazxsw23edcvfr45tgbnhy67ujmki890olp0PLMKO9IJNBHU87YGVCFT65RDXZSE43WASQ21";
         $len = strlen($line) - 1;
-        $cnt = mt_rand(5, 8);
+        $cnt = mt_rand(8, 16);
         $pwd = "";
         for ($i = 0; $i < $cnt; $i++) {
             $ic = mt_rand(0, $len);
