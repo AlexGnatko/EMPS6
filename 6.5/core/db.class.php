@@ -23,6 +23,8 @@ class EMPS_DB
 
     public $was_inserted = false;
 
+    public $where_table = "";
+
     public function connect()
     {
         global $emps_db_config;
@@ -215,7 +217,7 @@ class EMPS_DB
             } elseif ($n == '$or') {
                 $part = $this->or_clause($v);
             } else {
-                $part = "`{$n}`";
+                $part = "{$this->where_table}`{$n}`";
                 if(is_numeric($v) || is_float($v)) {
                     $part .= " = " . $v;
                 }elseif(is_array($v)){
