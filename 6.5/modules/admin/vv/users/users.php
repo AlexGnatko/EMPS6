@@ -62,6 +62,10 @@ if ($emps->auth->credentials("root")) {
                     unset($nr['password']);
                 }
             }
+            if ($this->ref_id == $emps->auth->USER_ID || $this->ref_id == 1) {
+                // do not allow to block yourself or the root user
+                unset($nr['blocked']);
+            }
             if ($nr['password'] == "") {
                 unset($nr['password']);
             } else {

@@ -68,6 +68,11 @@ class EMPS_Auth
             return false;
         }
 
+        if ($user['blocked'] > 0) {
+            $this->login_error("blocked");
+            return false;
+        }
+
         $user_id = $user['id'];
 
         $nr = [];
@@ -152,6 +157,12 @@ class EMPS_Auth
         }
 
         $this->login['user'] = $user;
+
+        if ($user['blocked'] > 0) {
+            unset($this->USER_ID);
+            unset($_SESSION['session_id']);
+            return false;
+        }
 
         $this->AUTH_R = 1;
         return true;

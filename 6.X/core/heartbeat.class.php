@@ -5,8 +5,10 @@
  */
 class EMPS_Heartbeat
 {
-    public $queue = array();
-    public $ch = array();
+    public $queue = [];
+    public $ch = [];
+    public $rv = [];
+    public $error = [];
 
     public function add_url($url)
     {
@@ -44,7 +46,15 @@ class EMPS_Heartbeat
             curl_multi_select($mh);
         } while ($running > 0);
 
-        foreach ($this->ch as $ch) {
+        foreach ($this->ch as $i => $ch) {
+            $curlError = curl_error($ch);
+            if( $curlError == "") {
+                $this->rv[$i] = curl_multi_getcontent($ch);
+                $this->error[$i] = "";
+            } else {
+                $this->rv[$i] = false;
+                $this->error[$i] = $curlError;
+            }
             curl_multi_remove_handle($mh, $ch);
             curl_close($ch);
         }

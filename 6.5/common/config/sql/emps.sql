@@ -434,6 +434,7 @@ CREATE TEMPORARY TABLE `temp_e_users` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `site` tinyint(4) NOT NULL,
   `type` tinyint(4) NOT NULL,
+  `blocked` tinyint(4) NOT NULL default 0,
   `context_id` bigint NOT NULL,
   `username` varchar(255) NOT NULL,
   `profile_name` varchar(255) NOT NULL,
@@ -448,6 +449,7 @@ CREATE TEMPORARY TABLE `temp_e_users` (
   KEY `cdt` (`cdt`),
   KEY `type` (`type`),
   KEY `site` (`site`),
+  KEY `blocked` (`blocked`),
   KEY `context_id` (`context_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_unicode_ci;
 

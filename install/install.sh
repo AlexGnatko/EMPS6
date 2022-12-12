@@ -42,7 +42,7 @@ apt -y install nginx
 
 apt -y install php
 apt -y install php-fpm
-apt -y install php-curl php-gd php-mbstring php-mysqli php-mysqlnd php-zip php-http php-dom php-xml php-exif
+apt -y install curl php-curl php-gd php-mbstring php-mysqli php-mysqlnd php-zip php-http php-dom php-xml php-exif
 apt -y remove apache2
 
 ### Install Git

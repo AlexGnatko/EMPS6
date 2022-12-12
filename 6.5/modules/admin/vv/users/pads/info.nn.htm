@@ -59,15 +59,30 @@
         </div>
     </div>
 
-    <div class="field">
-        <label class="label">{{$str_codes}}:</label>
-        <div class="control">
-            <input class="input" type="text" placeholder="" v-model="selected_row.grp">
+    <div class="columns">
+        <div class="column field">
+            <label class="label">{{$str_codes}}:</label>
+            <div class="control">
+                <input class="input" type="text" placeholder="" v-model="selected_row.grp">
+            </div>
+            <div class="help">
+                {{$str_codes_info}}
+            </div>
         </div>
-        <div class="help">
-            {{$str_codes_info}}
+        <div class="column is-3 field">
+            <label class="label">Block user:</label>
+            <div class="control">
+                <button type="button" class="button is-outlined is-danger is-fullwidth"
+                        @click="selected_row.blocked = '0'"
+                        v-if="selected_row.blocked == '1'">Blocked</button>
+                <button type="button" class="button is-outlined is-success is-fullwidth"
+                        @click="selected_row.blocked = '1'"
+                        v-if="selected_row.blocked != '1'">Not blocked</button>
+
+            </div>
         </div>
     </div>
+
 
 
     <div class="columns">
