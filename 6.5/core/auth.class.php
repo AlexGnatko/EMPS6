@@ -159,6 +159,7 @@ class EMPS_Auth
         $this->login['user'] = $user;
 
         if ($user['blocked'] > 0) {
+            $this->close_session();
             unset($this->USER_ID);
             unset($_SESSION['session_id']);
             return false;
