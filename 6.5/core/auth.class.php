@@ -1037,7 +1037,7 @@ class EMPS_Auth
         $pwd = "";
         for ($i = 0; $i < $cnt; $i++) {
             $ic = mt_rand(0, $len);
-            $c = $line{$ic};
+            $c = substr($line, $ic, 1);
             $pwd .= $c;
         }
         return $pwd;
