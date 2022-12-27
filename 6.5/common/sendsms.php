@@ -13,6 +13,10 @@ sleep(mt_rand(1,3));
 $srv->init("last_sendsms", 30);
 
 if($srv->is_runnable()) {
+    if (!defined("TWILIO_SID")) {
+        echo "No Twilio defined!\r\n";
+        exit;
+    }
     $tn = TP . "e_smscache";
 
     $r = $emps->db->query("show tables like '" . $tn . "'");
