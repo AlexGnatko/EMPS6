@@ -158,7 +158,7 @@ class EMPS_Auth
 
         $this->login['user'] = $user;
 
-        if ($user['blocked'] > 0) {
+        if (isset($user['blocked']) && intval($user['blocked']) > 0) {
             $this->close_session();
             unset($this->USER_ID);
             unset($_SESSION['session_id']);
@@ -311,7 +311,7 @@ class EMPS_Auth
             }*/
         }
 
-        if ($_POST['json_auth_result']) {
+        if (isset($_POST['json_auth_result'])) {
 
             $response = [];
             if ($this->credentials("users")) {
@@ -983,7 +983,7 @@ class EMPS_Auth
             $emps->db->sql_update_row("e_users", ['SET' => $nr], "id = {$user_id}");
         }
 
-        if (!$user['display_name']) {
+        if (!isset($user['display_name']) || !$user['display_name']) {
             $user['display_name'] = $user['fullname'];
         }
         return $user;

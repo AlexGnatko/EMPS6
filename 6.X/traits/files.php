@@ -121,7 +121,7 @@ trait EMPS_Common_Files
         if (isset($this->require_cache['page_file'][$type][$page_name])) {
             return $this->require_cache['page_file'][$type][$page_name];
         }
-        if ($page_name{0} == '_') {
+        if (substr($page_name, 0, 1) == '_') {
             $page_name = substr($page_name, 1);
             $page_name = $this->hyphens_to_slashes($page_name);
             if ($type == 'inc') {
@@ -137,6 +137,10 @@ trait EMPS_Common_Files
                     $x = explode('/', $page_name);
                     $first_name = array_pop($x);
                 }
+            }
+
+            if (!isset($include_name)) {
+                $include_name = $page_name;
             }
 
             $fn = $this->try_page_file_name($page_name, $first_name, $include_name, $type, EMPS_WEBSITE_SCRIPT_PATH, $this->lang);
@@ -161,6 +165,8 @@ trait EMPS_Common_Files
                     }
                 }
             }
+
+
         } else {
             $fn = $this->try_template_name(EMPS_WEBSITE_SCRIPT_PATH, $page_name, $this->lang);
             if (!$fn) {
@@ -382,7 +388,11 @@ trait EMPS_Common_Files
                 $v = trim($v);
                 $m = explode(':', $v, 2);
                 $name = trim($m[0]);
-                $value = trim($m[1]);
+                $value = null;
+                if (isset($m[1])) {
+                    $value = trim($m[1]);
+                }
+
                 if ($name && $value) {
                     $this->make_enum($name, $value);
                 }

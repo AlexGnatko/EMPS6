@@ -17,3 +17,4 @@ if (!$emps->fast) {
     require_once EMPS_PATH_PREFIX . "/core/content.class.php";
 }
 
+

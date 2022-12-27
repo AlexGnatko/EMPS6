@@ -15,7 +15,7 @@ trait EMPS_Common_Menus
      */
     public function add_to_spath($v)
     {
-        if ($v['uri']{0} == '#') {
+        if (substr($v['uri'], 0, 1) == '#') {
             return false;
         }
         foreach ($this->spath as $cv) {
@@ -148,7 +148,11 @@ trait EMPS_Common_Menus
             unset($menu);
             $xx = explode('/', $v);
             $code = $xx[0];
-            $t = $xx[1];
+            $t = "";
+            if (isset($xx[1])) {
+                $t = $xx[1];
+            }
+
             $menu = $this->section_menu($code, 0);
             $this->scan_selected($menu);
             if ($t == 'mlv') {

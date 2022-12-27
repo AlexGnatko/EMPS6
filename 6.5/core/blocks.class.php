@@ -205,7 +205,7 @@ class EMPS_Blocks {
                 $text .= '{{$' . $v['name'] . '=' . $v['v_int'] . '}}' . PHP_EOL;
             } elseif ($v['vtype'] == 'f') {
                 $text .= '{{$' . $v['name'] . '=' . $v['v_float'] . '}}' . PHP_EOL;
-            } elseif ($v['vtype']{0} == 'a') {
+            } elseif (substr($v['vtype'], 0, 1) == 'a') {
                 $text .= '{{$' . $v['name'] . '="' . addslashes($v['v_text']) . '"|json_decode:true}}' . PHP_EOL;
 //                echo json_encode(json_decode($v['v_text'], true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             } else {
@@ -256,7 +256,7 @@ class EMPS_Blocks {
         }
         if ($param['type'] == 't' || $param['type'] == 'h') {
             $nr['v_text'] = $param['value'];
-        } elseif ($param['type']{0} == 'a') {
+        } elseif (substr($param['type'], 0, 1) == 'a') {
             $nr['v_text'] = json_encode($param['value']);
         }
         $row = $emps->db->sql_ensure_row("e_block_param_values", $qr);

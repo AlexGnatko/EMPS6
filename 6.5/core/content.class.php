@@ -7,9 +7,9 @@ class EMPS_StaticContent
     public $web_path = EMPS_SCRIPT_WEB."/static";
 
     public function path_from_md5($md5) {
-        $c1 = $md5{0};
-        $c2 = $md5{1};
-        $c3 = $md5{2};
+        $c1 = mb_substr($md5, 0, 1);
+        $c2 = mb_substr($md5, 0, 2);
+        $c3 = mb_substr($md5, 0, 3);
         $f = $this->path."/{$c1}";
         if (!file_exists($f)) {
             mkdir($f, 0777);
@@ -30,9 +30,9 @@ class EMPS_StaticContent
     }
 
     public function web_path_from_md5($md5) {
-        $c1 = $md5{0};
-        $c2 = $md5{1};
-        $c3 = $md5{2};
+        $c1 = mb_substr($md5, 0, 1);
+        $c2 = mb_substr($md5, 0, 2);
+        $c3 = mb_substr($md5, 0, 3);
         $f = $this->web_path."/{$c1}/{$c2}/{$c3}/{$md5}";
         return $f;
     }

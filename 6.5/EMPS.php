@@ -15,7 +15,7 @@ class EMPS extends EMPS_Common
     public $db;
     public $cas;
 
-    public $settings_cache, $settings_cache_common, $content_cache, $new_settings;
+    public $settings_cache = [], $settings_cache_common = [], $content_cache = [], $new_settings = [];
 
     public $period_size = 60 * 60 * 24 * 7;
 
@@ -187,7 +187,7 @@ class EMPS extends EMPS_Common
     public function get_setting($code)
     {
         // Get a fine-tuning setting
-        if (!is_array($this->settings_cache)) {
+        if (count($this->settings_cache) == 0) {
             $this->p->no_full = false;
             $default_settings = $this->p->read_properties(array(), $this->default_ctx);
             if (!$default_settings) {
@@ -207,14 +207,14 @@ class EMPS extends EMPS_Common
             $this->settings_cache = array_merge($default_settings, $website_settings);
 //			dump($this->settings_cache);
         }
-        $rv = $this->new_settings[$code];
-        if (isset($rv)) {
-            return $rv;
+
+        if (isset($this->new_settings[$code])) {
+            return $this->new_settings[$code];
         }
-        $rv = $this->settings_cache[$code];
-        if(isset($rv)){
+
+        if(isset($this->settings_cache[$code])){
             if(intval($this->settings_cache['_full'][$code]['id']) > 0){
-                return $rv;
+                return $this->settings_cache[$code];
             }
         }
         return false;
@@ -239,7 +239,7 @@ class EMPS extends EMPS_Common
     public function get_setting_common($code)
     {
         // Get a fine-tuning setting
-        if (!is_array($this->settings_cache_common)) {
+        if (count($this->settings_cache_common) == 0) {
             $this->p->no_full = false;
             $website_settings = $this->p->read_properties(array(), $this->default_ctx);
             if (!$website_settings) {

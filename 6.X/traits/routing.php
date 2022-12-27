@@ -123,7 +123,7 @@ trait EMPS_Common_Routing
         $this->PLURI = $uri;
         $this->menu_URI = $uri;
 
-        if ($uri{0} == '/') {
+        if (substr($uri, 0, 1) == '/') {
             $uri = substr($uri, 1);
         }
         $ouri = $uri;
@@ -131,7 +131,7 @@ trait EMPS_Common_Routing
 
         $this->savevars();
         $uri = $this->PURI;
-        if ($uri{strlen($uri) - 1} == '/') {
+        if (substr($uri, strlen($uri) - 1, 1) == '/') {
             $uri = substr($uri, 0, strlen($uri) - 1);
         }
 

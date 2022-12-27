@@ -74,13 +74,16 @@ trait EMPS_Common_Utils
                 $e['code'] = intval($e['code']);
             }
             $e['value'] = $xx[1];
-            $dx = explode(",", $xx[2]);
-            foreach($dx as $vv){
-                if ($vv) {
-                    $e[$vv] = 1;
+            if (isset($xx[2])) {
+                $dx = explode(",", $xx[2]);
+                foreach($dx as $vv){
+                    if ($vv) {
+                        $e[$vv] = 1;
+                    }
                 }
             }
-            if ($e['str']) {
+
+            if (isset($e['str']) && $e['str']) {
                 $e['code'] = strval($e['code']);
             }
             $lst[] = $e;

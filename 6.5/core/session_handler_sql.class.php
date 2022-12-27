@@ -47,6 +47,7 @@ class EMPS_SessionHandler implements SessionHandlerInterface
         } else {
             if ($ra['dt'] < (time() - 10 * 60)) {
                 $browser_id = $emps->ensure_browser($_SERVER['HTTP_USER_AGENT']);
+                $browser = "";
                 if ($browser_id != $ra['browser_id']) {
                     $browser = ", browser_id = " . $browser_id . " ";
                 }

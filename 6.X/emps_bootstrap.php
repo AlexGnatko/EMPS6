@@ -22,12 +22,11 @@ date_default_timezone_set(EMPS_TZ);
  *
  * in the project's folder
  */
-if (!$emps_no_common_autoload) {
+if (!isset($emps_no_common_autoload) || !$emps_no_common_autoload) {
     require_once EMPS_COMMON_PATH_PREFIX."/../vendor/autoload.php";
 }
 
-
-if ($emps_force_hostname) {
+if (isset($emps_no_common_autoload) && $emps_force_hostname) {
     if ($_SERVER['HTTP_HOST'] != EMPS_HOST_NAME) {
         http_response_code(301);
         header("Location: " . EMPS_SCRIPT_WEB . $_SERVER['REQUEST_URI']);
@@ -62,7 +61,7 @@ require_once EMPS_PATH_PREFIX . "/EMPS.php";                        // EMPS Clas
 $emps = new EMPS();
 $emps->check_fast();
 
-if ($emps_force_protocol && !$_GET['nohttps']) {
+if (isset($emps_no_common_autoload) && $emps_force_protocol && !$_GET['nohttps']) {
     $emps->ensure_protocol($emps_force_protocol);
 }
 

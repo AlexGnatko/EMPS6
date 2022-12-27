@@ -2,6 +2,9 @@
 
 function emps_microtime_float($microtime)
 {
+    if (is_float($microtime)) {
+        return $microtime;
+    }
     list($usec, $sec) = explode(" ", $microtime);
     return ((float)$usec + (float)$sec);
 }

@@ -114,15 +114,6 @@ class EMPS_Common
      */
     public function initialize()
     {
-        if (!$this->cli_mode) {
-            if (get_magic_quotes_gpc()) {
-                $_REQUEST = $this->unslash_prepare($_REQUEST);
-                $_POST = $this->unslash_prepare($_POST);
-                $_GET = $this->unslash_prepare($_GET);
-            }
-        }
-
-
         $this->early_init();
         $this->select_website();
 
@@ -131,7 +122,7 @@ class EMPS_Common
             $this->import_vars();
             $this->savevars();
 
-            if ($_GET['plain']) {
+            if (isset($GET['plain']) && $_GET['plain']) {
                 $this->page_property('plain', true);
             }
         }
@@ -206,7 +197,7 @@ class EMPS_Common
      */
     public function post_init()
     {
-        if(strstr($_SERVER["CONTENT_TYPE"], "application/json")){
+        if(isset($_SERVER["CONTENT_TYPE"]) && strstr($_SERVER["CONTENT_TYPE"], "application/json") !== false){
             $raw = file_get_contents("php://input");
             $request = json_decode($raw, true);
             $_REQUEST = array_merge($_REQUEST, $request);
@@ -222,7 +213,7 @@ class EMPS_Common
      */
     public function pre_init()
     {
-        if(strstr($_SERVER["CONTENT_TYPE"], "application/json")){
+        if(isset($_SERVER["CONTENT_TYPE"]) && strstr($_SERVER["CONTENT_TYPE"], "application/json") !== false){
             $raw = file_get_contents("php://input");
             $request = json_decode($raw, true);
             $_REQUEST = array_merge($_REQUEST, $request);

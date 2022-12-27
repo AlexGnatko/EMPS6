@@ -18,7 +18,7 @@ if (file_exists($file_name)) {
     require_once $file_name;
 }
 
-if ($_GET['load_enum']) {
+if (isset($_GET['load_enum'])) {
     $emps->json_ok(['enum' => $emps->enum[$_GET['load_enum']]]);
     exit;
 }

@@ -6,7 +6,9 @@
 
 define('EMPS_COMMON_PATH_PREFIX', 'EMPS6/6.X');
 // EMPS_PATH_PREFIX is set in the current version's emps_bootstrap.php file
-
+if (!isset($emps_start_time)) {
+    $emps_start_time = microtime(true);
+}
 
 $emps_include_path = ini_get('include_path');
 
@@ -32,7 +34,7 @@ ini_set('include_path', $path);
  *
  * in the project's folder
  */
-if (!$emps_no_common_autoload) {
+if (!isset($emps_no_common_autoload) || !$emps_no_common_autoload) {
     require_once EMPS_COMMON_PATH_PREFIX."/../vendor/autoload.php";
 }
 

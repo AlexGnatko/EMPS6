@@ -5,7 +5,7 @@ $emps->page_property("vuejs", 1);
 $emps->p->no_idx = false;
 $emps->p->no_full = false;
 
-if($_GET['load_settings']){
+if(isset($_GET['load_settings'])){
     $response = [];
     $response['code'] = "OK";
     $lst = [];
@@ -46,7 +46,7 @@ if($_GET['load_settings']){
     $emps->json_response($response);
 }
 
-if($_POST['post_save_changes_settings']){
+if(isset($_POST['post_save_changes_settings'])){
     $row = $_POST['row'];
     $id = intval($_POST['id']);
     if ($row['code']) {
@@ -60,7 +60,7 @@ if($_POST['post_save_changes_settings']){
     $emps->json_response($response);
 }
 
-if($_POST['delete_settings_rows']){
+if(isset($_POST['delete_settings_rows'])){
     $id_list = $_POST['id_list'];
     $settings = $emps->p->read_properties([], $context_id);
     foreach($id_list as $id){
@@ -76,7 +76,7 @@ if($_POST['delete_settings_rows']){
     $emps->json_response($response);
 }
 
-if ($_POST['post_import']) {
+if (isset($_POST['post_import'])) {
     $data = json_decode($_POST['import_json'], true);
     if(!$data){
         // try to import text
