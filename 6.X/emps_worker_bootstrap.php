@@ -47,6 +47,13 @@ $emps->initialize();    // initialization and automatic configuration
 
 $emps->start_time = emps_microtime_float($emps_start_time);
 
+$emps->db->always_use_wt = true;
+
+$emps->p->no_full = true;
+$emps->p->no_idx = true;
+
+$emps->load_enums_from_file();
+
 $emps->post_init();
 
 $emps->pre_controller();
