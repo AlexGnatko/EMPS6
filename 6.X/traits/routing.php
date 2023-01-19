@@ -410,7 +410,7 @@ trait EMPS_Common_Routing
         $this->json_response($response);
     }
 
-    public function json_ok($data) {
+    public function json_ok($data = []) {
         $response = [];
         $response['code'] = "OK";
         $response = array_merge($response, $data);
