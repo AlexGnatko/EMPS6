@@ -8,7 +8,7 @@ var EMPS_common_mixin = {
             vuev.$emit("modal:open:" + id);
         },
         close_modal: function(id){
-            $("#" + id).removeClass("is-active");
+            vuev.$emit("modal:close:" + id);
         },
         enum_val: function(ecode, code) {
             if (this.enums === undefined) {

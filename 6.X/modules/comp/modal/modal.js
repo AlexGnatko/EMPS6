@@ -10,11 +10,15 @@ EMPS.vue_component('modal', '/mjs/comp-modal/modal.vue', {
         close_modal: function(e){
             var element = document.getElementById(this.id);
             element.classList.remove("is-active");
+            this.$emit("closed");
         },
         on_open: function(data){
             var element = document.getElementById(this.id);
             element.classList.add("is-active");
-
+            this.$emit("open");
+        },
+        on_close: function(data) {
+            this.close_modal();
         },
         submit_form: function(){
             if(this.submit !== undefined){
@@ -49,5 +53,6 @@ EMPS.vue_component('modal', '/mjs/comp-modal/modal.vue', {
         this.btn_class = Vue.util.extend(this.btn_class, this.buttonClass);
         this.$forceUpdate();
         vuev.$on("modal:open:" + this.id, this.on_open);
+        vuev.$on("modal:close:" + this.id, this.on_close);
     }
 });
