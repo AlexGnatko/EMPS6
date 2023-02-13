@@ -11,7 +11,6 @@ require_once $emps->core_module("heartbeat.class");
 $hb = new EMPS_Heartbeat;
 
 $hb->add_url("/sendmail/");
-$hb->add_url("/sendsms/");
 $hb->add_url("/purge_sessions/");
 $hb->add_url("/smartyservice/");
 
