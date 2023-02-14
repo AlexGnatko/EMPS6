@@ -10,6 +10,14 @@ define('EMPS_COMMON_PATH_PREFIX', 'EMPS6/6.X');
 
 date_default_timezone_set(EMPS_TZ);
 
+if (isset($emps_force_hostname) && $emps_force_hostname) {
+    if ($_SERVER['HTTP_HOST'] != EMPS_HOST_NAME) {
+        http_response_code(301);
+        header("Location: " . EMPS_SCRIPT_WEB . $_SERVER['REQUEST_URI']);
+        exit;
+    }
+}
+
 /*
  * Composer Autoloader
  *
@@ -26,12 +34,6 @@ if (!isset($emps_no_common_autoload) || !$emps_no_common_autoload) {
     require_once EMPS_COMMON_PATH_PREFIX."/../vendor/autoload.php";
 }
 
-if (isset($emps_no_common_autoload) && $emps_force_hostname) {
-    if ($_SERVER['HTTP_HOST'] != EMPS_HOST_NAME) {
-        http_response_code(301);
-        header("Location: " . EMPS_SCRIPT_WEB . $_SERVER['REQUEST_URI']);
-    }
-}
 
 $emps_include_path = ini_get('include_path');
 
