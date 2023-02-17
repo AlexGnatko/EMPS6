@@ -102,7 +102,7 @@
                 this.describe();
             },
             type: function(val) {
-                this.clear();
+                this.describe();
             }
         }
     });
