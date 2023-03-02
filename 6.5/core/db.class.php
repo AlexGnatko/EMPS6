@@ -221,6 +221,8 @@ class EMPS_DB
                 $part = $this->and_clause($v);
             } elseif ($n == '$or') {
                 $part = $this->or_clause($v);
+            } elseif ($n == '$nt') {
+                $part = "not ".$this->where_clause($v);
             } else {
                 $part = "{$this->where_table}`{$n}`";
                 if(is_numeric($v) || is_float($v)) {
@@ -240,16 +242,19 @@ class EMPS_DB
                         $part .= " <= {$value}";
                     } elseif (isset($v['$like'])) {
                         $value = $v['$like'];
-                        $part .= " like ('$value') ";
+                        $part .= " like ('{$value}') ";
                     } elseif (isset($v['$in'])) {
                         $value = $v['$in'];
-                        $part .= " in ($value) ";
+                        $part .= " in ({$value}) ";
                     } elseif (isset($v['$nin'])) {
                         $value = $v['$nin'];
-                        $part .= " not in ($value) ";
+                        $part .= " not in ({$value}) ";
                     } elseif (isset($v['$not'])) {
                         $value = $v['$not'];
-                        $part .= " <> $value ";
+                        $part .= " <> {$value} ";
+                    } elseif (isset($v['$ev'])) {
+                        $value = $v['$ev'];
+                        $part .= " {$value} ";
                     } else {
                         $a = [];
                         foreach ($v as $item) {
