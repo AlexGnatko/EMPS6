@@ -37,7 +37,7 @@
     {{$str_set_filter = "Установить фильтр"}}
     {{$str_set_sorting = "Сортировать"}}
 {{/if}}
-<vted filter-size="{{$filter_size}}" inline-template>
+<vted filter-size="{{$filter_size}}" ref="vted" inline-template>
     <div>
         <div v-show="list_mode">
             {{if $has_tree}}
