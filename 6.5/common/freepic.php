@@ -42,7 +42,9 @@ if ($ra) {
         } elseif (strstr($ra['type'], "png")) {
         } elseif (strstr($ra['type'], "gif")) {
         } else {
-            $content_type = $type;
+            if ($type != '') {
+                $content_type = $type;
+            }
         }
 
         if (class_exists('http\Env\Response')) {
