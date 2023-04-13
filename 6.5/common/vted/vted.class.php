@@ -504,8 +504,12 @@ class EMPS_VueTableEditor
                 $nr['id'] = $vted->ref_id;
                 $vted->post_save($nr);
 
+                $log = ob_get_clean();
+                $x = explode("\n", $log);
+                $log = $x;
                 $response = [];
                 $response['code'] = "OK";
+                $response['log'] = $log;
                 $emps->json_response($response); exit;
 
             } else {
