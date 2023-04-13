@@ -5,6 +5,8 @@ var EMPS = {
     sp_id: 0,
     get_path_vars: function(){
         var l = window.location.href;
+        var x = l.split("?");
+        l = x[0];
         var p = l.split('//');
         var l = p[1].split('/');
         var last = l.pop();
