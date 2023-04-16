@@ -261,6 +261,7 @@ class EMPS_Videos
         $lst = array();
         $emps->loadvars();
         while ($ra = $emps->db->fetch_named($r)) {
+            $ra = $emps->db->row_types("e_videos", $ra);
             $cctx = $emps->p->get_context(DT_VIDEO, 1, $ra['id']);
 
             $sd = 'videos.' . $ra['id'];
