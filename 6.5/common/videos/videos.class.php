@@ -257,7 +257,7 @@ class EMPS_Videos
     function load_videos($context_id, $sel_id)
     {
         global $emps, $sd;
-        $r = $emps->db->query("select * from " . TP . "e_videos where context_id=$context_id order by ord asc, id asc");
+        $r = $emps->db->query("select * from " . TP . "e_videos where context_id = {$context_id} order by ord asc, id asc");
         $lst = array();
         $emps->loadvars();
         while ($ra = $emps->db->fetch_named($r)) {
