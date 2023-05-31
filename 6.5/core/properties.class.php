@@ -142,7 +142,7 @@ class EMPS_Properties
                     if ($vtaken != "") $vtaken .= ",";
                     $vtaken .= $take;
 
-                    if (strcmp($vv, 'on') == 0) {
+                    if (is_string($vv) && strcmp($vv, 'on') == 0) {
                         $vv = 1;
                         if ($explicit_idx) {
                             $vv = $take;
