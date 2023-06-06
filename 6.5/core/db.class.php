@@ -240,6 +240,9 @@ class EMPS_DB
                     } elseif (isset($v['$lte'])) {
                         $value = $v['$lte'];
                         $part .= " <= {$value}";
+                    } elseif (isset($v['$range'])) {
+                        $value = $v['$range'];
+                        $part .= " >= {$value[0]} and {$this->where_table}`{$n}` <= {$value[1]}";
                     } elseif (isset($v['$like'])) {
                         $value = $v['$like'];
                         $part .= " like ('{$value}') ";
