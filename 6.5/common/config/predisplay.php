@@ -24,10 +24,12 @@ if ($emps->virtual_path) {
     $emps->shadow_properties_link($URI);
 }
 
+$emps->page_properties_from_settings("css_reset,defer_js,defer_all,css_fw,admin_tools");
+
 $file_name = $emps->common_module('config/project/predisplay.php');
 if (file_exists($file_name)) {
     require_once $file_name;
 }
 
-$emps->page_properties_from_settings("css_reset,defer_js,defer_all,css_fw,admin_tools");
+
 
