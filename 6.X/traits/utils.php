@@ -157,7 +157,7 @@ trait EMPS_Common_Utils
         $f = ceil($total / $perpage);
 
         $cf = $f;
-        $scl = floor($GLOBALS[$this->page_var] / $perpage) - 3;
+        $scl = floor(intval($GLOBALS[$this->page_var]) / $perpage) - 3;
         if ($scl < 0) $scl = 0;
 
         if ($f > 7) $f = 7;

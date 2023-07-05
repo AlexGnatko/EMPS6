@@ -96,15 +96,15 @@ class EMPS extends EMPS_Common
 
             $ra['link'] = $ra['uri'];
 
-            $ra['splink'] = $md['splink'];
-            if (!$ra['splink']) {
+            $ra['splink'] = @$md['splink'];
+            if (@!$ra['splink']) {
                 $ra['splink'] = $ra['link'];
             }
 
-            if (!$md['name']) {
+            if (@!$md['name']) {
                 $use_name = $ra['uri'];
             } else {
-                if ($md['name$' . $this->lang]) {
+                if (@$md['name$' . $this->lang]) {
                     $use_name = $md['name$' . $this->lang];
                 } else {
                     $use_name = $md['name'];
@@ -113,11 +113,11 @@ class EMPS extends EMPS_Common
 
             $ra['dname'] = $use_name;
 
-            if ($md['width']) {
+            if (@$md['width']) {
                 $ra['width'] = $md['width'];
             }
 
-            if (!$md['regex']) {
+            if (@!$md['regex']) {
                 if ($ra['uri'] == $this->menu_URI) {
                     $ra['sel'] = 1;
                 } else {
@@ -130,24 +130,24 @@ class EMPS extends EMPS_Common
                 }
             }
 
-            if ($md['regex']) {
+            if (@$md['regex']) {
                 if (preg_match('/' . $md['regex'] . '/', $this->menu_URI)) {
                     $ra['sel'] = 1;
                 }
             }
-            if ($ra['link'] == $this->menu_URI) {
+            if (@$ra['link'] == $this->menu_URI) {
                 $ra['exact_sel'] = true;
             }
 
-            if ($md['grant']) {
+            if (@$md['grant']) {
                 if (!$this->auth->credentials($md['grant'])) continue;
             }
 
-            if ($md['hide']) {
+            if (@$md['hide']) {
                 if ($this->auth->credentials($md['hide'])) continue;
             }
 
-            if ($md['nouser']) {
+            if (@$md['nouser']) {
                 if ($this->auth->USER_ID) continue;
             }
 
