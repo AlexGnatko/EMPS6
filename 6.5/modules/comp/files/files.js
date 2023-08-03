@@ -172,7 +172,6 @@
                 var files = this.files.slice();
                 files.splice(e.newIndex, 0, files.splice(e.oldIndex, 1)[0]);
 
-
                 var ids = [];
                 for (var i = 0; i < files.length; i++ ) {
                     ids.push(files[i].id);

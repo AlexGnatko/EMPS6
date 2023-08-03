@@ -94,7 +94,7 @@
             </div>
         </div>
 
-        <div v-sortable="{onUpdate: on_sort_files}">
+        <div v-sortable="{onUpdate: on_sort_files, handle: '.handle'}">
             <div class="box" v-for="(file, index) in files">
                 <div class="media">
                     <div class="media-content">

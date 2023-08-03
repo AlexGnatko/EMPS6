@@ -341,7 +341,11 @@ trait EMPS_Common_Utils
         $hour = intval($t[0]);
         $min = intval($t[1]);
         $sec = intval($t[2]);
-        $dt = mktime($hour, $min, $sec, $mon, $day, $year) - EMPS_TZ_CORRECT * 60 * 60;
+        try {
+            $dt = mktime($hour, $min, $sec, $mon, $day, $year) - EMPS_TZ_CORRECT * 60 * 60;
+        } catch (\Exception $e) {
+            $dt = 0;
+        }
 
         return $dt;
     }

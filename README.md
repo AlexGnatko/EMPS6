@@ -122,3 +122,7 @@ and `{$filename}` is the actual file name. For example, if we also need to load 
 script for this module from this JS file - `htdocs/modules/manage-orders/orders.js`
 we can open this external URL: `/mjs/manage-orders/orders.js`. The file name can be any name,
 it doesn't have to match the folder name here. So it can be like `/mjs/manage-orders/extra.css`.
+  
+### More docs on the website
+
+https://emps.ag38.ru/
