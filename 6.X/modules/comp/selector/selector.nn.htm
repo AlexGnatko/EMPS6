@@ -54,15 +54,15 @@
         </div>
         <div v-else :class="[{'field': !noField}, {'has-addons': !noClear}]">
             <p class="control is-expanded">
-            <input class="input" :value="description" :placeholder="placeholder" readonly="readonly" @click="select()"/>
+            <input :class="'input ' + exclass" :value="description" :placeholder="placeholder" readonly="readonly" @click="select()"/>
             </p>
             <p class="control" v-if="infoButton && (value > 0)">
-                <a class="button" @click="follow_link">
+                <a :class="'button ' + exclass" @click="follow_link">
                     <i class="fa fa-ellipsis-v"></i>
                 </a>
             </p>
             <p class="control" v-if="!noClear">
-                <a class="button" @click="clear()">
+                <a :class="'button ' + exclass" @click="clear()">
                     <i class="fa fa-remove"></i>
                 </a>
             </p>

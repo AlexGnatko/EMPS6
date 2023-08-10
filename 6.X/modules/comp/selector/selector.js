@@ -3,6 +3,7 @@
     Vue.component('selector', {
         template: '#selector-template',
         props: ['value', 'type', 'title', 'size', 'search', 'noClear', 'noPages', 'noField',
+            'exclass',
             'infoButton', 'onInfo', 'readOnly',
             'placeholder', 'hasExtra'],
         data: function(){
