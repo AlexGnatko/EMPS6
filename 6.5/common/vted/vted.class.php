@@ -569,7 +569,10 @@ class EMPS_VueTableEditor
                 $emps->loadvars();
 
                 $parent_id = intval($sd);
-                $nr['parent'] = $parent_id;
+                if (!isset($nr['parent'])) {
+                    $nr['parent'] = $parent_id;
+                }
+
                 if ($this->has_ord) {
                     $nr['ord'] = $this->get_next_ord($parent_id);
                 }
