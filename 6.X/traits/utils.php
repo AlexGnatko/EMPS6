@@ -324,13 +324,13 @@ trait EMPS_Common_Utils
         $d = explode($split, $p[0]);
         foreach ($d as $n => $v) {
             if ($xx[$n] == "%d") {
-                $day = $v;
+                $day = intval($v);
             }
             if ($xx[$n] == "%m") {
-                $mon = $v;
+                $mon = intval($v);
             }
             if ($xx[$n] == "%Y") {
-                $year = $v;
+                $year = intval($v);
             }
         }
         if (!$p[1]) {
