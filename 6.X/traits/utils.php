@@ -59,7 +59,7 @@ trait EMPS_Common_Utils
      * Parse an enum descriptor string into an enum array
      *
      * @param $name Enum name (code)
-     * @param $list Values list string (e.g. '10=Yes,20=No')
+     * @param $list Values list string (e.g. '10=Yes;20=No')
      */
     public function make_enum($name, $list)
     {
