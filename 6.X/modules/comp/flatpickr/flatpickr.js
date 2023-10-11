@@ -3,7 +3,7 @@
     Vue.component('flatpickr', {
         template: '#flatpickr-component-template',
         props: ['size', 'value', 'hasTime', 'minDate', 'maxDate', 'setclass',
-            'hasClock',
+            'hasClock', 'unix', 'mformat',
             'dateFormat', 'placeholder', 'asButton'],
         data: function(){
             return {
@@ -23,19 +23,37 @@
             },
             set_date: function(newDate, oldDate) {
 //                alert(newDate + " / " + oldDate);
-                if ((newDate !== oldDate) && newDate !== undefined && newDate != '') {
-                    this.picker.setDate(newDate);
-                    //console.log("Setting date: " + newDate + " / " + oldDate);
+                if (this.unix) {
+                    if ((newDate !== oldDate) && newDate !== undefined && newDate != '' && newDate != 0 && newDate != null) {
+                        let m = moment.unix(newDate);
+                        this.picker.setDate(m.format(this.mformat));
+                        console.log("Setting date (unix): " + newDate + " / " + oldDate);
+                    }
+                    if (newDate === undefined || newDate == '') {
+                        $(this.$refs.input).val('');
+                    }
+                } else {
+                    if ((newDate !== oldDate) && newDate !== undefined && newDate != '') {
+                        this.picker.setDate(newDate);
+                        console.log("Setting date: " + newDate + " / " + oldDate);
+                    }
+                    if (newDate === undefined || newDate == '') {
+                        $(this.$refs.input).val('');
+                    }
                 }
-                if (newDate === undefined || newDate == '') {
-                    $(this.$refs.input).val('');
-                }
+
             },
             date_updated: function(selectedDates, dateStr) {
                 if (dateStr !== undefined && dateStr != '') {
-                    //console.log("Date updated: "  + dateStr);
-                    this.value = dateStr;
-                    this.$emit("input", this.value);
+                    console.log("Date updated: "  + dateStr);
+                    if (this.unix) {
+                        var date = moment(dateStr, this.mformat);
+                        var edt = date.unix();
+                        this.$emit("input", edt);
+                    } else {
+                        this.$emit("input", this.value);
+                    }
+
                 }
             }
         },

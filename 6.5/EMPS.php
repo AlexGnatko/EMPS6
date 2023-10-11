@@ -351,6 +351,14 @@ class EMPS extends EMPS_Common
         return $full_id . $value;
     }
 
+    public function load_website($id) {
+        $row = $this->db->get_row("e_websites", "id = {$id}");
+        if ($row) {
+            return $row;
+        }
+        return false;
+    }
+
     public function not_default_website()
     {
         global $smarty;

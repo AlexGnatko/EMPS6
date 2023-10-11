@@ -174,7 +174,7 @@ trait EMPS_Common_Routing
      * Import URL variables from $GET/$POST
      *
      * Checks if any of the variables whose names are defined in EMPS_VARS exist in $GET or $POST arrays and loads them
-     * to the appropriate global variables, if found. Effecively this is a filtered track-vars.
+     * to the appropriate global variables, if found. Effectively this is a filtered track-vars.
      */
     private function import_vars()
     {
