@@ -26,8 +26,9 @@
                 if (this.unix) {
                     if ((newDate !== oldDate) && newDate !== undefined && newDate != '' && newDate != 0 && newDate != null) {
                         let m = moment.unix(newDate);
-                        this.picker.setDate(m.format(this.mformat));
-                        console.log("Setting date (unix): " + newDate + " / " + oldDate);
+                        let fdate = m.format(this.mformat);
+                        this.picker.setDate(fdate);
+                        console.log("Setting date (unix): " + newDate + " (" + fdate + ") / " + oldDate);
                     }
                     if (newDate === undefined || newDate == '') {
                         $(this.$refs.input).val('');
@@ -49,6 +50,7 @@
                     if (this.unix) {
                         var date = moment(dateStr, this.mformat);
                         var edt = date.unix();
+                        console.log("Emitting " + edt);
                         this.$emit("input", edt);
                     } else {
                         this.$emit("input", this.value);
@@ -84,8 +86,8 @@
                 }
 
                 this.picker = flatpickr(this.$refs.input, this.config);
-                this.set_date(this.value);
             }
+            setTimeout(this.set_date, 100, this.value);
             this.$watch('minDate', this.redraw);
             this.$watch('maxDate', this.redraw);
             this.$watch('config', this.redraw);
