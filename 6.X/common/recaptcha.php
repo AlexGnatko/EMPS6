@@ -57,8 +57,9 @@ if ($json['success'] && $json['action'] == $action) {
     }
 }
 $response['challenge_ts'] = $json['challenge_ts'];
+$response['orig'] = $result;
 
-$_SESSION['last_rc_token_' . $action] = ['token' => $token, 'action' => $action, 'result' => $response['result'], 'orig' => $result];
+$_SESSION['last_rc_token_' . $action] = ['token' => $token, 'action' => $action, 'result' => $response['result']];
 
 ob_end_clean();
 
