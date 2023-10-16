@@ -60,4 +60,6 @@ $response['challenge_ts'] = $json['challenge_ts'];
 
 $_SESSION['last_rc_token_' . $action] = ['token' => $token, 'action' => $action, 'result' => $response['result']];
 
+ob_end_clean();
+
 $emps->json_response($response); exit;
