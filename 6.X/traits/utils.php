@@ -246,6 +246,7 @@ trait EMPS_Common_Utils
         $a['pl'] = $npl;
         $a['count'] = count($npl);
         $a['total'] = $total;
+        $a['perpage'] = $perpage;
 
         return $a;
     }
