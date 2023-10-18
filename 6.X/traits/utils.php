@@ -128,6 +128,17 @@ trait EMPS_Common_Utils
         return $menu;
     }
 
+    public function default_perpage($default) {
+        $perpage = $default;
+        if (isset($_SESSION['default_perpage'])) {
+            $v = intval($_SESSION['default_perpage']);
+            if ($v > 0) {
+                $perpage = $v;
+            }
+        }
+        return $perpage;
+    }
+
     public function count_pages($total)
     {
         // New pagination function
