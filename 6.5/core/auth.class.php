@@ -918,6 +918,9 @@ class EMPS_Auth
         $nr['password'] = $this->encrypt_password($password);
         $nr['context_id'] = $emps->website_ctx;
         $nr['status'] = 0;
+        if ($data['site']) {
+            $nr['site'] = $data['site'];
+        }
         $emps->db->sql_insert_row("e_users", ['SET' => $nr]);
         $user_id = $emps->db->last_insert();
 
