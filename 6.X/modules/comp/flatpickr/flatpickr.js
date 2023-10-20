@@ -53,7 +53,7 @@
                         console.log("Emitting " + edt);
                         this.$emit("input", edt);
                     } else {
-                        this.$emit("input", this.value);
+                        this.$emit("input", dateStr);
                     }
 
                 }
