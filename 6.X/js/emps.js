@@ -5,10 +5,18 @@ var EMPS = {
     sp_id: 0,
     get_path_vars: function(){
         var l = window.location.href;
+        return this.path_vars(l);
+    },
+    path_vars: function(l) {
         var x = l.split("?");
         l = x[0];
         var p = l.split('//');
-        var l = p[1].split('/');
+        if (p.length > 1) {
+            l = p[1].split('/');
+        } else {
+            l = l.split('/');
+        }
+
         var last = l.pop();
         if (last != ''){
             l.push(last);
