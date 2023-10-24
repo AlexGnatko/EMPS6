@@ -359,6 +359,12 @@ trait EMPS_Common_Routing
                 return true;
             }
         }
+        if ($ua == "-") {
+            return true;
+        }
+        if (strpos($ua, "curl/") != false) {
+            return true;
+        }
 
         if (!$emps_just_set_cookie) {
             if (!isset($_COOKIE['EMPS'])) {
