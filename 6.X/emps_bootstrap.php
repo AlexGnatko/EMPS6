@@ -212,7 +212,7 @@ if ($emps->virtual_path && !$emps->fast) {
 
         if (file_exists($tn)) {
             $x = explode("-", $pp);
-            if ($x[0] == "comp") {
+            if (in_array("comp", $x)) {
                 // Prevent component HTML from being displayed
                 $emps->not_found();
             } else {
