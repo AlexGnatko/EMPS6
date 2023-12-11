@@ -245,6 +245,7 @@ CREATE TEMPORARY TABLE `temp_e_properties` (
   `v_char` varchar(255) DEFAULT NULL,
   `v_text` mediumtext,
   `v_data` mediumtext,
+  `v_json` JSON,
   `v_float` float DEFAULT NULL,
   `dt` bigint NOT NULL,
   `status` int(11) NOT NULL,

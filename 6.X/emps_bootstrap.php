@@ -186,8 +186,9 @@ if ($emps->virtual_path && !$emps->fast) {
     $fn = $emps->page_file_name('_' . $pp, 'controller');
 
     // PHP module
-    //echo $fn;
-    //echo $pp;
+    //echo $fn." - 1\r\n";
+    //echo $tn." - 2\r\n";
+    //echo $pp." - 3\r\n";
     //exit;
     if (file_exists($fn)) {
         require_once $fn;

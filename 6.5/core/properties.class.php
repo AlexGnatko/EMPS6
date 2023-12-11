@@ -48,6 +48,9 @@ class EMPS_Properties
             case "d":
                 $field = "v_data";
                 break;
+            case "j":
+                $field = "v_json";
+                break;
             default:
                 $field = "v_text";
         }
@@ -215,6 +218,9 @@ class EMPS_Properties
                     case "d":
                         $field = "v_data";
                         break;
+                    case "j":
+                        $field = "v_json";
+                        break;
                     case "b":
                         $field = "v_int";
                         break;
@@ -299,6 +305,9 @@ class EMPS_Properties
                 case "d":
                     $value = $prop['v_data'];
                     break;
+                case "j":
+                    $value = $prop['v_json'];
+                    break;
                 case "b":
                     $value = ($prop['v_int'] == 0)?false:true;
                     break;
@@ -345,6 +354,9 @@ class EMPS_Properties
                     break;
                 case "d":
                     $value = $ra['v_data'];
+                    break;
+                case "j":
+                    $value = $ra['v_json'];
                     break;
                 case "b":
                     $value = ($ra['v_int'] == 0)?false:true;
@@ -397,6 +409,9 @@ class EMPS_Properties
                     break;
                 case "d":
                     $value = $ra['v_data'];
+                    break;
+                case "j":
+                    $value = $ra['v_json'];
                     break;
                 case "b":
                     $value = ($ra['v_int'] == 0)?false:true;
@@ -469,6 +484,9 @@ class EMPS_Properties
                     break;
                 case "d":
                     $value = $ra['v_data'];
+                    break;
+                case "j":
+                    $value = $ra['v_json'];
                     break;
                 case "b":
                     $value = ($ra['v_int']==0)?false:true;

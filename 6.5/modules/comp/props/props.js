@@ -14,6 +14,7 @@ Vue.component('props-editor', {
                 {'code': 'i', 'name': 'Integer'},
                 {'code': 'f', 'name': 'Float'},
                 {'code': 'd', 'name': 'Data'},
+                {'code': 'j', 'name': 'JSON'},
                 {'code': 'b', 'name': 'Boolean'},
             ]
         };

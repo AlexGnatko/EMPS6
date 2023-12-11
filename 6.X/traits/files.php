@@ -21,14 +21,14 @@ trait EMPS_Common_Files
                 $fn .= '/' . $include_name;
                 break;
         }
-//        echo "file name: {$fn}\r\n";
+        //echo "file name: {$fn}\r\n";
         if (isset($this->require_cache['try_page_file_name'][$fn])) {
             return $this->require_cache['try_page_file_name'][$fn];
         }
 
         $fn = $this->resolve_include_path($fn);
 
-//        echo "resolved: {$fn}\r\n";
+        //echo "resolved: {$fn}\r\n";
 
         $this->require_cache['try_page_file_name'][$fn] = $fn;
         return $fn;
@@ -38,10 +38,11 @@ trait EMPS_Common_Files
         $ofn = $fn;
         $fn = stream_resolve_include_path($fn);
         if ($fn === false) {
-            if (file_exists($fn)) {
+            if (file_exists($ofn)) {
                 $fn = $ofn;
             } else {
-//                echo "not found: {$ofn}\r\n";
+                //echo "not found: {$ofn} / {$fn}\r\n";
+                //echo shell_exec("cat {$ofn} 2>&1");
             }
         }
         return $fn;

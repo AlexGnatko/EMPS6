@@ -73,7 +73,12 @@ emps_scripts.push(function() {
                             if (data.code == 'OK') {
                                 // remove from queue, add to files
                                 that.files = data.files;
-                                that.$emit("uptodate", true);
+                                if (that.queue.length == 0) {
+                                    that.$emit("uptodate", true);
+                                } else {
+                                    that.$emit("uptodate", false);
+                                }
+
                             }else{
                                 toastr.error(file.name, string_failed, {positionClass: "toast-bottom-full-width"});
                             }
@@ -109,6 +114,7 @@ emps_scripts.push(function() {
                         var data = response.data;
                         if (data.code == 'OK') {
                             that.files = data.files;
+                            that.$emit("uptodate", false);
                             $("button").blur();
                         }else{
                             alert(data.message);

@@ -2,8 +2,8 @@
 
 require_once "functions.php";
 
-$phpMyAdmin_url = "https://files.phpmyadmin.net/phpMyAdmin/5.1.0/phpMyAdmin-5.1.0-english.tar.gz";
-$phpMyAdmin_name = "phpMyAdmin-5.1.0-english";
+$phpMyAdmin_url = "https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.gz";
+$phpMyAdmin_name = "phpMyAdmin-5.2.1-all-languages";
 
 $config = json_decode(file_get_contents("config.json"), true);
 
