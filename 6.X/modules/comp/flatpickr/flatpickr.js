@@ -31,6 +31,7 @@
                         console.log("Setting date (unix): " + newDate + " (" + fdate + ") / " + oldDate);
                     }
                     if (newDate === undefined || newDate == '') {
+                        this.picker.clear();
                         $(this.$refs.input).val('');
                     }
                 } else {
@@ -39,6 +40,7 @@
                         console.log("Setting date: " + newDate + " / " + oldDate);
                     }
                     if (newDate === undefined || newDate == '') {
+                        this.picker.clear();
                         $(this.$refs.input).val('');
                     }
                 }
@@ -87,7 +89,8 @@
 
                 this.picker = flatpickr(this.$refs.input, this.config);
             }
-            setTimeout(this.set_date, 100, this.value);
+            //setTimeout(this.set_date, 100, this.value);
+            this.set_date(this.value);
             this.$watch('minDate', this.redraw);
             this.$watch('maxDate', this.redraw);
             this.$watch('config', this.redraw);
