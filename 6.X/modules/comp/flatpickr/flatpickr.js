@@ -3,12 +3,13 @@
     Vue.component('flatpickr', {
         template: '#flatpickr-component-template',
         props: ['size', 'value', 'hasTime', 'minDate', 'maxDate', 'setclass',
-            'hasClock', 'unix', 'mformat',
+            'hasClock', 'unix', 'mformat', 'fw',
             'dateFormat', 'placeholder', 'asButton'],
         data: function(){
             return {
                 picker: null,
                 set_class: '',
+                fdate: '',
                 config: window.emps_flatpickr_options,
             };
         },
@@ -27,6 +28,7 @@
                     if ((newDate !== oldDate) && newDate !== undefined && newDate != '' && newDate != 0 && newDate != null) {
                         let m = moment.unix(newDate);
                         let fdate = m.format(this.mformat);
+                        this.fdate = fdate;
                         this.picker.setDate(fdate);
                         console.log("Setting date (unix): " + newDate + " (" + fdate + ") / " + oldDate);
                     }
