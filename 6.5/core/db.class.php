@@ -305,7 +305,7 @@ class EMPS_DB
 
     public function sql_update_row($table, $row, $cond)
     {
-        if (!isset($row['SET']['dt']) && !$this->no_dt_update && !$row['nodt']) {
+        if (!isset($row['SET']['dt']) && !$this->no_dt_update && !($row['nodt'] ?? false)) {
             $row['SET']['dt'] = time();
         }
 

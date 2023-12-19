@@ -168,7 +168,7 @@ class EMPS_Common
             $skip = $this->should_prevent_session();
         }
         if (!$skip) {
-            if (!$this->is_localhost_request() || $GLOBALS['emps_localhost_mode']) {
+            if (!$this->is_localhost_request() || ($GLOBALS['emps_localhost_mode'] ?? false)) {
                 session_start();
                 if ($_SESSION['lsu'] < (EMPS_SESSION_COOKIE_LIFETIME / 30)) {
                     $_sess_name = session_name();
