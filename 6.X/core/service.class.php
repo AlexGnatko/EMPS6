@@ -28,7 +28,7 @@ class EMPS_Service
 
     public function is_runnable(){
         global $emps;
-        if($_GET['runnow']){
+        if($_GET['runnow'] ?? false){
             return true;
         }
         if($this->last_dt < (time() - $this->interval)){

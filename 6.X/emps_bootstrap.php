@@ -63,7 +63,7 @@ require_once EMPS_PATH_PREFIX . "/EMPS.php";                        // EMPS Clas
 $emps = new EMPS();
 $emps->check_fast();
 
-if (isset($emps_force_protocol) && $emps_force_protocol && !$_GET['nohttps']) {
+if (isset($emps_force_protocol) && $emps_force_protocol && !($_GET['nohttps'] ?? false)) {
     $emps->ensure_protocol($emps_force_protocol);
 }
 
