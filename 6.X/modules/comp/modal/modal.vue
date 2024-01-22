@@ -3,7 +3,7 @@
 {{else}}
 {{$str_close = "Закрыть"}}
 {{/if}}
-<div class="modal" :id="id">
+<div :class="'modal ' + addClass" :id="id">
     <template v-if="plain">
         <div class="modal-background" @click="close_modal"></div>
         <slot></slot>
