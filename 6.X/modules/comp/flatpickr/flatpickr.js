@@ -25,8 +25,12 @@
             set_date: function(newDate, oldDate) {
 //                alert(newDate + " / " + oldDate);
                 if (this.unix) {
-                    if ((newDate !== oldDate) && newDate !== undefined && newDate != '' && newDate != 0 && newDate != null) {
+                    if ((newDate !== oldDate) && newDate !== undefined && newDate != '' && newDate != 0 && newDate != null && !isNaN(newDate)) {
                         let m = moment.unix(newDate);
+                        if (window.timezone !== undefined) {
+                            m.tz(window.timezone);
+                        }
+
                         let fdate = m.format(this.mformat);
                         this.fdate = fdate;
                         this.picker.setDate(fdate);
@@ -52,7 +56,13 @@
                 if (dateStr !== undefined && dateStr != '') {
                     console.log("Date updated: "  + dateStr);
                     if (this.unix) {
-                        var date = moment(dateStr, this.mformat);
+                        var date;
+                        if (window.timezone !== undefined) {
+                            date = moment.tz(dateStr, this.mformat, window.timezone);
+                        } else {
+                            date = moment(dateStr, this.mformat);
+                        }
+
                         var edt = date.unix();
                         console.log("Emitting " + edt);
                         this.$emit("input", edt);
