@@ -54,7 +54,7 @@ trait EMPS_Common_Menus
                 if ($res > 0) $mr = 1;
             }
             if (@$v['sel'] > 0) {
-                if(!$this->no_spath[$v['grp']]){
+                if(!($this->no_spath[$v['grp']] ?? false)){
                     $this->add_to_spath($v);
                     foreach ($obtained_spath as $spv) {
                         $this->add_to_spath($spv);
