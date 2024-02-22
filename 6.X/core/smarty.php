@@ -403,7 +403,7 @@ if (defined('EMPS_PRE_MINIFY')) {
         {
             global $emps;
 
-            if($emps->dont_minify){
+            if($emps->dont_minify ?? false){
                 return $tpl_source;
             }
 
