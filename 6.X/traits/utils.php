@@ -212,7 +212,7 @@ trait EMPS_Common_Utils
             $pl[$i]['li'] = $res + 0;
             $pl[$i]['count'] = $res - $GLOBALS[$this->page_var] + 1;
 
-            if ($pl[$i]['sel']) {
+            if ($pl[$i]['sel'] ?? false) {
                 $a['cur'] = $pl[$i];
             }
 
