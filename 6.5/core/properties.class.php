@@ -122,8 +122,8 @@ class EMPS_Properties
 
             if (isset($ra[$xv[0]])) {
                 $value = $ra[$xv[0]];
-                if ($xv[2] == 'h') $history = true; else $history = false;
-                if ($xv[3] == 'idx') $explicit_idx = true; else $explicit_idx = false;
+                if (($xv[2] ?? '') == 'h') $history = true; else $history = false;
+                if (($xv[3] ?? '') == 'idx') $explicit_idx = true; else $explicit_idx = false;
                 $code = $xv[0];
                 if ($history) {
                     $emps->db->query('update ' . TP . "e_properties set status=1 where 

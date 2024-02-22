@@ -111,7 +111,7 @@ class EMPS_Mail
             $rv = true;
         } catch (phpmailerException $e) {
             echo $e->errorMessage(); //Pretty error messages from PHPMailer
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             echo $e->getMessage(); //Boring error messages from anything else!
         }
 

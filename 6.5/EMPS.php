@@ -151,7 +151,7 @@ class EMPS extends EMPS_Common
                 if ($this->auth->USER_ID) continue;
             }
 
-            $smenu = $this->section_menu_ex($code, $ra['id'], $ra['default_id']);
+            $smenu = $this->section_menu_ex($code, $ra['id'] ?? 0, $ra['default_id'] ?? 0);
 
             $ra['sub'] = $smenu;
             $ra['md'] = $md;
