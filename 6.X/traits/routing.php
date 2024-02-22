@@ -254,7 +254,7 @@ trait EMPS_Common_Routing
 
         $t = "./";
 
-        if (!$this->no_url_vars) {
+        if (!($this->no_url_vars ?? false)) {
             $x = explode(",", EMPS_URL_VARS);
             $rlist = [];
             foreach ($x as $v) {

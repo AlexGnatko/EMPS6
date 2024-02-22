@@ -319,7 +319,7 @@ class EMPS extends EMPS_Common
 
         $smarty->assign("timespan", sprintf("%02d", $span * 1000));
         $smarty->assign("errors", $this->db->sql_errors);
-        if ($_GET['sql_profile']) {
+        if ($_GET['sql_profile'] ?? false) {
             $smarty->assign("SqlProfile", 1);
             $smarty->assign("timing", $this->db->sql_timing);
         }

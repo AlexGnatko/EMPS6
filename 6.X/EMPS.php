@@ -246,7 +246,7 @@ class EMPS_Common
     {
         global $smarty;
 
-        if (!$this->page_properties['title']) {
+        if (!($this->page_properties['title'] ?? false)) {
             $this->page_properties['title'] = "";
             foreach ($this->spath as $v) {
                 if ($this->page_properties['title'] != "") {

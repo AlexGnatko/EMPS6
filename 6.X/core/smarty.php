@@ -34,7 +34,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
         $skip = false;
         $x = explode("|", $name, 2);
         $name = $x[0];
-        if ($x[1] == 'skip') {
+        if (($x[1] ?? '') == 'skip') {
             $skip = true;
         }
 
