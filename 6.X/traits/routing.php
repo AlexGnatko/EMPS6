@@ -278,7 +278,7 @@ trait EMPS_Common_Routing
         }
 
         $vars = EMPS_VARS;
-        if ($this->custom_vars) {
+        if ($this->custom_vars ?? false) {
             $vars = $this->custom_vars;
         }
         $s = false;
