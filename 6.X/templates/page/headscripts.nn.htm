@@ -110,6 +110,14 @@
     {{/if}}
 {{/if}}
 
+{{if $page.fancybox}}
+    <script src="/node_modules/@fancyapps/ui/dist/fancybox/fancybox.umd.js{{$page.css_reset}}" {{$add_defer}}></script>
+    <link
+            rel="stylesheet"
+            href="/node_modules/@fancyapps/ui/dist/fancybox/fancybox.css{{$page.css_reset}}" {{$add_media}}
+    />
+{{/if}}
+
 {{if $page.recaptcha}}
     <script src='https://www.google.com/recaptcha/api.js'></script>
 {{/if}}
