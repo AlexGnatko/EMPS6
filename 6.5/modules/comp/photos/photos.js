@@ -135,6 +135,7 @@
             start_uploading: function() {
                 for (var i = 0; i < this.queue.length; i++ ) {
                     var file = this.queue[i];
+                    console.log("FILE: ", file);
                     if (!file.started) {
                         file.started = true;
                         var form_data = new FormData();
@@ -489,6 +490,46 @@
                             $("button").blur();
                         }
                     });
+            },
+            convert_to_jpeg: function(blob) {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                const img = new Image();
+
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(blob => {
+                        // Now, upload the image blob to the server
+                        const file = new File([blob], "pastedImage.jpg",
+                            {type: blob.type, lastModified: new Date().getTime()});
+
+                        file.image_url = URL.createObjectURL(file);
+                        file.started = false;
+                        file.progress = 0;
+                        this.queue.push(file);
+                        this.start_uploading();
+                    }, 'image/jpeg');
+                };
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(blob);
+            },
+            on_paste: function(event) {
+                const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                console.log(JSON.stringify(items)); // will give you the mime types
+
+                for (const item of items) {
+                    if (item.type.indexOf("image") === 0) {
+                        const blob = item.getAsFile();
+
+                        this.convert_to_jpeg(blob);
+                    }
+                }
             }
         },
         computed: {
@@ -496,7 +537,14 @@
         mounted: function(){
             this.load_files();
             vuev.$on("update_pad", this.update_pad);
-        }
+            //this.$refs.clip.addEventListener("paste", this.on_paste);
+        },
+        created: function () {
+
+        },
+        destroyed: function () {
+            //this.$refs.clip.removeEventListener("paste", this.on_paste);
+        },
     });
 
 

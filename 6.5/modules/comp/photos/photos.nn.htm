@@ -2,6 +2,7 @@
     {{$str_select = "Select files"}}
     {{$str_select_one = "Select file"}}
     {{$str_by_url = "By URL"}}
+    {{$str_by_clipboard = "Paste"}}
     {{$str_delete = "Delete"}}
     {{$str_cancel = "Cancel"}}
     {{$str_no_descr = "(no description)"}}
@@ -33,6 +34,7 @@
     {{$str_select = "Выбрать файлы"}}
     {{$str_select_one = "Выбрать файл"}}
     {{$str_by_url = "По ссылке"}}
+    {{$str_by_clipboard = "Из буфера"}}
     {{$str_delete = "Удалить"}}
     {{$str_cancel = "Отмена"}}
     {{$str_no_descr = "(нет описания)"}}
@@ -80,6 +82,9 @@
                 <button type="button" @click="upload_zip" class="button is-primary is-outlined">
                     <i class="fa fa-upload"></i> &nbsp; {{$str_import_zip}}</button>
                 <div></div>
+            </div>
+            <div class="column is-1">
+                <input type="text" ref="clip" @paste="on_paste" class="input" placeholder="{{$str_by_clipboard}}"/>
             </div>
             <div class="column">
                 <div class="button-size is-fullwidth">
@@ -430,6 +435,7 @@
                 </div>
             </div>
         </modal>
+
     </div>
 
 
