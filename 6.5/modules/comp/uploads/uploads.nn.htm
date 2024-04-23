@@ -8,7 +8,7 @@
         <input type="file" multiple id="files" ref="files" @change="handle_uploads()"/>
 
         <div class="columns is-multiline">
-            <div :class="col_class" v-for="(file, index) in queue">
+            <div :class="col_class()" v-for="(file, index) in queue">
                 <button type="button"
                         @click="delete_queue(index)"
                         class="button is-outlined is-danger is-small">
@@ -16,7 +16,7 @@
                 </button>
                 <strong>{{"file.name"|js}}</strong>
             </div>
-            <div :class="col_class" v-for="(file, index) in files">
+            <div :class="col_class()" v-for="(file, index) in files">
                 <button type="button"
                         v-if="!readonly"
                         @click="delete_file(file)"
