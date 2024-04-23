@@ -9,6 +9,7 @@
     }
   ],
   "config": {
+    "platform-check": false,
     "secure-http": false
   },
   "require": {
