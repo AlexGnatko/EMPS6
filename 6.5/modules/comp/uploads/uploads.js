@@ -1,7 +1,7 @@
 emps_scripts.push(function() {
     Vue.component('uploads', {
         template: '#uploads-component-template',
-        props: ['context', 'readonly'],
+        props: ['context', 'readonly', 'col'],
         data: function(){
             return {
                 selected_file: '',
@@ -30,6 +30,12 @@ emps_scripts.push(function() {
                     this.queue.push(files[i]);
                     this.start_uploading();
                 }
+            },
+            col_class: function() {
+                if (this.col) {
+                    return "column " + this.col;
+                }
+                return "column is-3";
             },
             start_uploading: function() {
                 if (this.context === undefined || this.context === null || !this.context) {
