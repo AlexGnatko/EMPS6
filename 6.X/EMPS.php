@@ -246,6 +246,8 @@ class EMPS_Common
     {
         global $smarty;
 
+        header("Referrer-Policy: unsafe-url");
+
         if (!($this->page_properties['title'] ?? false)) {
             $this->page_properties['title'] = "";
             foreach ($this->spath as $v) {
@@ -265,8 +267,6 @@ class EMPS_Common
         if ($fn) {
             require_once $fn;
         }
-
-        header("Referrer-Policy: unsafe-url");
 
         $smarty->assign("spath", $this->spath);
 
