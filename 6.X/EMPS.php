@@ -216,8 +216,10 @@ class EMPS_Common
         if(isset($_SERVER["CONTENT_TYPE"]) && strstr($_SERVER["CONTENT_TYPE"], "application/json") !== false){
             $raw = file_get_contents("php://input");
             $request = json_decode($raw, true);
-            $_REQUEST = array_merge($_REQUEST, $request);
-            $_POST = array_merge($_POST, $request);
+            if (is_array($request)) {
+                $_REQUEST = array_merge($_REQUEST, $request);
+                $_POST = array_merge($_POST, $request);
+            }
         }
     }
 
