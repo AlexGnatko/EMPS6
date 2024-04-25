@@ -12,6 +12,12 @@
     "platform-check": false,
     "secure-http": false
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/d-javu/TCPDF"
+    }
+  ],
   "require": {
     "php": ">=7.2.0",
     "smarty/smarty": "~4.3",
