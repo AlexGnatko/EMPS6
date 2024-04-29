@@ -111,6 +111,11 @@ class EMPS_VueTableEditor
             $nr = $row;
 
             $old_id = $id;
+            foreach ($nr as $n => $v) {
+                if (is_array($v)) {
+                    $nr[$n] = json_encode($v);
+                }
+            }
 
             $emps->db->sql_insert_row($this->table_name, ['SET' => $nr]);
             $id = $emps->db->last_insert();
