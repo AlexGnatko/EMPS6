@@ -332,15 +332,23 @@ class EMPS_DB
         $this->sql_update_row($table, ['SET' => $nr], $cond);
     }
 
-    public function sql_ensure_row($table, $row, $single = false){
+    public function sql_ensure_row($table, $row, $single = false, $lock = false){
 
         $where = $this->where_clause($row);
 //        error_log($table." > ".$where);
+        if ($lock) {
+            $this->query("lock table ".TP.$table." write");
+        }
+
         $existing_row = $this->get_row($table, $where);
         if($existing_row){
             if ($single) {
                 $this->query("delete from ".TP.$table." where " . $where . " and id <> {$existing_row['id']}");
             }
+            if ($lock) {
+                $this->query("unlock tables");
+            }
+
             return $existing_row;
         }
         $update = ['SET' => $row];
@@ -348,6 +356,9 @@ class EMPS_DB
         $id = $this->last_insert();
         $this->was_inserted = true;
         $row = $this->get_row($table, "id = {$id}");
+        if ($lock) {
+            $this->query("unlock tables");
+        }
         return $row;
     }
 
