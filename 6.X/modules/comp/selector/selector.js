@@ -3,7 +3,7 @@
     Vue.component('selector', {
         template: '#selector-template',
         props: ['value', 'type', 'title', 'size', 'search', 'noClear', 'noPages', 'noField',
-            'exclass',
+            'exclass', 'st',
             'infoButton', 'onInfo', 'readOnly',
             'placeholder', 'hasExtra'],
         data: function(){
@@ -42,7 +42,7 @@
                 var that = this;
                 axios
                     .get("/pick-ng-list/" + this.type + "/" + this.start + "/?text="
-                        + encodeURIComponent(this.searchtext))
+                        + encodeURIComponent(this.searchtext ?? ''))
                     .then(function(response){
                         var data = response.data;
                         if (data.code == 'OK') {
@@ -97,10 +97,14 @@
         },
         mounted: function(){
             this.describe();
+            this.searchtext = this.st ?? '';
         },
         watch: {
             value: function(val) {
                 this.describe();
+            },
+            st: function(val) {
+                this.searchtext = val ?? '';
             },
             type: function(val) {
                 this.describe();
