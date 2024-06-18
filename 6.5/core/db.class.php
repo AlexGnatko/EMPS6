@@ -411,7 +411,10 @@ class EMPS_DB
         foreach($columns as $v) {
             $name = $v[0];
             $type = mb_strtolower($v[1]);
-            $v = $row[$name];
+            $v = $row[$name] ?? null;
+            if ($v === null) {
+                continue;
+            }
             if(strpos($type, "int") !== false){
                 $v = intval($v);
             }
