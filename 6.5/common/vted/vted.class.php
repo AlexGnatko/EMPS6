@@ -151,7 +151,10 @@ class EMPS_VueTableEditor
             unset($row['full_id']);
         }
 
-        $context_id = $emps->p->get_context($this->ref_type, $this->ref_sub, $row['id']);
+        $context_id = $emps->p->get_context_soft($this->ref_type, $this->ref_sub, $row['id']);
+        if (!$context_id) {
+            return $row;
+        }
         $row['own_context_id'] = $context_id;
         if ($this->props_by_ref) {
             $row = $emps->p->read_properties_ref($row, $context_id);
@@ -196,7 +199,10 @@ class EMPS_VueTableEditor
     {
         global $emps;
 
-        $context_id = $emps->p->get_context($this->ref_type, $this->ref_sub, $id);
+        $context_id = $emps->p->get_context_soft($this->ref_type, $this->ref_sub, $id);
+        if (!$context_id) {
+            return;
+        }
 
         $emps->p->delete_context($context_id);
 
@@ -468,10 +474,10 @@ class EMPS_VueTableEditor
 
         if ($id > 0) {
             if ($struct_mode) {
-                $this->tree->context_id = $emps->p->get_context($this->tree->ref_type, $this->tree->ref_sub, $id);
+                $this->tree->context_id = $emps->p->get_context_soft($this->tree->ref_type, $this->tree->ref_sub, $id);
                 $this->tree->ref_id = $id;
             } else {
-                $this->context_id = $emps->p->get_context($this->ref_type, $this->ref_sub, $id);
+                $this->context_id = $emps->p->get_context_soft($this->ref_type, $this->ref_sub, $id);
                 $this->ref_id = $id;
             }
         }
