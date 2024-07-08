@@ -262,7 +262,7 @@ class EMPS extends EMPS_Common
 
     public function website_by_host($hostname)
     {
-        $website = $this->db->get_row("e_websites", "'" . $this->db->sql_escape($hostname) . "' regexp hostname_filter or hostname = '" . $this->db->sql_escape($hostname) . "'");
+        $website = $this->db->get_row("e_websites", "hostname = '" . $this->db->sql_escape($hostname) . "' or '" . $this->db->sql_escape($hostname) . "' regexp hostname_filter");
         if ($website) {
 //			dump($website);
             $this->current_website = $website;
