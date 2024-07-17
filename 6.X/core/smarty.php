@@ -83,7 +83,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
             if (!file_exists($fn)) {
                 $fn = $emps->common_module_html($name);
                 if (!file_exists($fn)) {
-                    return null;
+                    return time() - 60;
                 } else {
                     $r = filemtime($fn);
                 }
