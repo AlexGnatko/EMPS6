@@ -1,7 +1,7 @@
 emps_scripts.push(function() {
     Vue.component('uploads', {
         template: '#uploads-component-template',
-        props: ['context', 'readonly', 'col'],
+        props: ['context', 'readonly', 'canadd', 'col'],
         data: function(){
             return {
                 selected_file: '',
