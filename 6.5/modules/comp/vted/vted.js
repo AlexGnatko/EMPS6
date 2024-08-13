@@ -69,7 +69,7 @@
             insert_at_cursor: function(id, text) {
                 tinmce.get(id).execCommand('mceInsertContent', false, text);
             },
-            load_row: function(after) {
+            load_row: function(after, no_update = false) {
                 if (this.path.key !== undefined) {
                     var that = this;
                     axios
@@ -79,9 +79,12 @@
                             if (data.code == 'OK') {
                                 that.row = data.row;
                                 that.selected_row = data.row;
-                                if (that.path.ss !== undefined) {
-                                    vuev.$emit("update_pad", that.path.ss);
+                                if (!no_update) {
+                                    if (that.path.ss !== undefined) {
+                                        vuev.$emit("update_pad", that.path.ss);
+                                    }
                                 }
+
                                 that.$forceUpdate();
                                 if (after !== undefined){
                                     after.call();
