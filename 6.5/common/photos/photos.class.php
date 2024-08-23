@@ -75,6 +75,7 @@ class EMPS_Photos
         $pic_type = "jpeg";
         if (strstr($ra['new_type'], "webp")) {
             $pic_type = "webp";
+            $ra['type'] = $ra['new_type'];
         }
 
         if (!file_exists($dname) || ($this->bypass_time > filemtime($dname)) || !$thumb_row) {
