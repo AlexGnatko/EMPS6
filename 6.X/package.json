@@ -10,7 +10,8 @@
     "vue-sortable": "latest",
     "vue-the-mask": "latest",
     "uglify-js": "~3.15.2",
-    "@fancyapps/ui": "latest"
+    "@fancyapps/ui": "latest",
+    "element-ui": "2.15.14"
   },
   "author": "Alex Gnatko",
   "license": "ISC"
