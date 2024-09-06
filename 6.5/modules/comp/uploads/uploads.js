@@ -185,7 +185,7 @@ emps_scripts.push(function() {
                 if (this.open) {
                     open = "/open/";
                 }
-                return "/json-upload/" + this.context + "/" + open;
+                return "/json-upload/" + this.context + open;
             }
         },
         watch: {
