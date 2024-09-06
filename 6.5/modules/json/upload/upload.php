@@ -7,7 +7,7 @@ $uploader->context_id = intval($key);
 
 $context = $emps->p->load_context($uploader->context_id);
 
-if ($emps->auth->credentials("users")) {
+if ($emps->auth->credentials("users") || $start == "open") {
     if (in_array($context['ref_type'], [DT_WEBSITE, DT_CONTENT, DT_MENU, DT_VIDEO], false)) {
         if ($emps->auth->credentials("admin")) {
             $uploader->can_save = false;
