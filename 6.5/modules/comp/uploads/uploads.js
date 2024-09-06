@@ -1,7 +1,7 @@
 emps_scripts.push(function() {
     Vue.component('uploads', {
         template: '#uploads-component-template',
-        props: ['context', 'readonly', 'canadd', 'col'],
+        props: ['context', 'readonly', 'canadd', 'col', 'open'],
         data: function(){
             return {
                 selected_file: '',
@@ -181,7 +181,11 @@ emps_scripts.push(function() {
         },
         computed: {
             target: function() {
-                return "/json-upload/" + this.context + "/";
+                let open = "";
+                if (this.open) {
+                    open = "/open/";
+                }
+                return "/json-upload/" + this.context + "/" + open;
             }
         },
         watch: {
