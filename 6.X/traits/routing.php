@@ -365,6 +365,9 @@ trait EMPS_Common_Routing
         if (strpos($ua, "curl/") != false) {
             return true;
         }
+        if (strpos($ua, "python") != false) {
+            return true;
+        }
 
         if (!$emps_just_set_cookie) {
             if (!isset($_COOKIE['EMPS'])) {
