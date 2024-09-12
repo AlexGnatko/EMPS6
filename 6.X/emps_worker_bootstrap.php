@@ -54,6 +54,7 @@ $emps->p->no_idx = true;
 
 $emps->load_enums_from_file();
 
+$emps->no_smarty = true;
 $emps->post_init();
 
 $emps->pre_controller();

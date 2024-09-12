@@ -203,7 +203,9 @@ class EMPS_Common
             $_REQUEST = array_merge($_REQUEST, $request);
             $_POST = array_merge($_POST, $request);
         }
-        $this->prepare_menus();
+        if (!$this->no_smarty) {
+            $this->prepare_menus();
+        }
     }
 
     /**

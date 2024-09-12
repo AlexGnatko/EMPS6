@@ -121,6 +121,11 @@ if (!$emps->fast) {
         require_once $fn;
     }
 
+    if (function_exists("emps_nosmarty_pp")) {
+        if (emps_nosmarty_pp($pp)) {
+            $emps->no_smarty = true;
+        }
+    }
     $emps->post_init();
 }
 
@@ -185,11 +190,6 @@ if ($emps->virtual_path && !$emps->fast) {
     $tn = $emps->page_file_name('_' . $pp, 'view');
     $fn = $emps->page_file_name('_' . $pp, 'controller');
 
-    // PHP module
-    //echo $fn." - 1\r\n";
-    //echo $tn." - 2\r\n";
-    //echo $pp." - 3\r\n";
-    //exit;
     if (file_exists($fn)) {
         require_once $fn;
     } else {
@@ -203,7 +203,6 @@ if ($emps->virtual_path && !$emps->fast) {
             }
         }
     }
-
 
     // HTML view
     if (!$emps->no_smarty) {
