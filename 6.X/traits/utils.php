@@ -220,7 +220,7 @@ trait EMPS_Common_Utils
 
         $GLOBALS[$this->page_var] = ($cf - 1) * $perpage;
 
-        if ($pl[$i - 1]['start'] == $GLOBALS[$this->page_var]) {
+        if (is_array($pl[$i - 1]) && $pl[$i - 1]['start'] == $GLOBALS[$this->page_var]) {
             $a['last'] = $pl[$i - 1];
         } else {
             $a['last'] = [];
