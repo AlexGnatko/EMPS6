@@ -225,7 +225,7 @@ class EMPS_DB
                 $part = "not ".$this->where_clause($v);
             } else {
                 $part = "{$this->where_table}`{$n}`";
-                if(is_numeric($v) || is_float($v)) {
+                if(!is_string($v) && (is_numeric($v) || is_float($v))) {
                     $part .= " = " . $v;
                 }elseif(is_array($v)){
                     if (isset($v['$gt'])) {
