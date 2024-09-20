@@ -113,8 +113,6 @@ class Smarty_Resource_EMPS_Page extends Smarty_Resource_Custom
             $mtime = time() - 60;
         }
         return true;
-
-
     }
 
     protected function fetchTimestamp($name)

@@ -11,6 +11,8 @@ $ited->add_pad_template("admin/vv/content/pads,%s");
 
 $ited->new_row_fields = ['context_id' => $ited->website_ctx];
 
+$ited->where = "where context_id = {$ited->website_ctx}";
+
 if ($_POST['post_export']) {
     $data = [];
 

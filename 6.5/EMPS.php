@@ -414,7 +414,7 @@ class EMPS extends EMPS_Common
             $r = $this->db->query($q);
             $ra = $this->db->fetch_named($r);
         }
-        $content_cache[$uri] = $ra;
+        $this->content_cache[$uri] = $ra;
         return $ra;
     }
 
