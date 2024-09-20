@@ -79,6 +79,7 @@ emps_scripts.push(function() {
                             if (data.code == 'OK') {
                                 // remove from queue, add to files
                                 that.files = data.files;
+                                that.$emit("uploaded", data);
                                 if (that.queue.length == 0) {
                                     that.$emit("uptodate", true);
                                 } else {
