@@ -489,7 +489,7 @@ CREATE TEMPORARY TABLE `temp_e_videos` (
   KEY `cdt` (`cdt`),
   KEY `youtube_id` (`youtube_id`),
   KEY `ord` (`ord`),
-  FULLTEXT KEY `name` (`name`,`description`)
+  FULLTEXT KEY `fullname` (`name`,`description`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_bin;
 
 -- table
