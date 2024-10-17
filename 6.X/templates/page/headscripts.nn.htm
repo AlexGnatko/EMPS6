@@ -76,19 +76,31 @@
 <script src="/js/emps.js{{$page.css_reset}}" defer></script>
 
 {{if $page.vuejs}}
-    <script src="/js/i18n.js{{$page.css_reset}}" {{$add_defer}}></script>
-    {{if $page.vue_debug}}
-        <script src="/bower_components/vue/dist/vue.js{{$page.css_reset}}" {{$add_defer}}></script>
-        <script src="/bower_components/axios/dist/axios.js{{$page.css_reset}}" {{$add_defer}}></script>
-    {{else}}
-        <script src="/bower_components/vue/dist/vue.min.js{{$page.css_reset}}" {{$add_defer}}></script>
-        <script src="/bower_components/axios/dist/axios.min.js{{$page.css_reset}}" {{$add_defer}}></script>
-    {{/if}}
     <script>
         emps_scripts.push(function(){
             axios.defaults.headers.common['Data-Only'] = 'yes';
         });
     </script>
+    <script src="/js/i18n.js{{$page.css_reset}}" {{$add_defer}}></script>
+    {{if $page.vue_debug}}
+        <script src="/bower_components/axios/dist/axios.js{{$page.css_reset}}" {{$add_defer}}></script>
+    {{else}}
+        <script src="/bower_components/axios/dist/axios.min.js{{$page.css_reset}}" {{$add_defer}}></script>
+    {{/if}}
+    {{if $page.vue3}}
+        {{if $page.vue_debug}}
+            <script src="/node_modules/vue3/dist/vue.global.js{{$page.css_reset}}" {{$add_defer}}></script>
+        {{else}}
+            <script src="/node_modules/vue3/dist/vue.global.prod.js{{$page.css_reset}}" {{$add_defer}}></script>
+        {{/if}}
+    {{else}}
+        {{if $page.vue_debug}}
+            <script src="/bower_components/vue/dist/vue.js{{$page.css_reset}}" {{$add_defer}}></script>
+        {{else}}
+            <script src="/bower_components/vue/dist/vue.min.js{{$page.css_reset}}" {{$add_defer}}></script>
+        {{/if}}
+    {{/if}}
+
     {{if $page.vue_numeric}}
         <script src="/node_modules/accounting-js/dist/accounting.umd.js{{$page.css_reset}}" {{$add_defer}}></script>
         <script src="/node_modules/vue-numeric/dist/vue-numeric.min.js{{$page.css_reset}}" {{$add_defer}}></script>

@@ -2,6 +2,7 @@
 var EMPS = {
     enum_cache: {},
     scroll_data: {},
+    vue3_components: [],
     sp_id: 0,
     get_path_vars: function(){
         var l = window.location.href;
@@ -282,16 +283,35 @@ var EMPS = {
         return is_ie;
     },
     vue_component: function(name, url, obj) {
-        Vue.component(name, function(resolve) {
+        let app = Vue;
+        let loader = (resolve) => {
             obj.template = '#' + name + "-component-template";
             axios
                 .get(url + css_reset)
                 .then(function(response){
-                    var data = response.data;
+                    let data = response.data;
                     $(obj.template).html(data);
                     resolve(obj);
                 });
-        });
+        };
+        if (EMPS.vue_version() == 3) {
+            //console.log(Vue);
+            app = EMPS.mainapp;
+            let asyncComponent = Vue.defineAsyncComponent(
+                () =>
+                    new Promise(loader));
+            this.vue3_components.push({name: name, comp: asyncComponent});
+        } else {
+            Vue.component(name, loader);
+        }
+    },
+    vue3_attach_components: function() {
+        let app = EMPS.mainapp;
+        while (this.vue3_components.length > 0) {
+            let x = this.vue3_components.shift();
+            console.log("ADDING COMPONENT", x.name, x.comp);
+            app.component(x.name, x.comp);
+        }
     },
     after_all_templates: null,
     after_template_loaded: function() {
@@ -333,6 +353,11 @@ var EMPS = {
     },
     navigate: function(href) {
         window.location = href;
+    },
+    vue_version: function() {
+        let version = Vue.version;
+        let x = version.split(".");
+        return parseInt(x[0]);
     }
 };
 

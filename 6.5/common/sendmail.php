@@ -25,7 +25,7 @@ if($srv->is_runnable()) {
         $dt = time();
 
         while ($ra = $emps->db->fetch_named($r)) {
-            if ($ra['sdt'] > (time() - 60)) {
+            if ($ra['sdt'] > (time() - 60) && !$_GET['force']) {
                 continue;
             }
             $to = $ra['to'];
