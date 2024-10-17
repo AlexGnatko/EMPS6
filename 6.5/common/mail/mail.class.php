@@ -38,7 +38,9 @@ class EMPS_Mail
             //Ask for HTML-friendly debug output
             $mail->Debugoutput = 'echo';
 
-            $mail->SMTPOptions = ['ssl'=> ['allow_self_signed' => true]];
+            $mail->SMTPOptions = ['ssl'=> ['verify_peer_name' => false,
+                'verify_peer' => false,
+                'allow_self_signed' => true]];
 
             $host = $smtp_data['host'];
             $x = explode("://", $host);
