@@ -101,6 +101,7 @@
         },
         watch: {
             value: function(val) {
+                this.value = val;
                 this.describe();
             },
             st: function(val) {
