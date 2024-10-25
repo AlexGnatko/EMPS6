@@ -72,6 +72,7 @@
             describe: function() {
                 if (this.value === undefined || this.value === 0 || this.value === '0') {
                     this.description = '';
+                    this.$forceUpdate();
                     return;
                 }
                 var that = this;
