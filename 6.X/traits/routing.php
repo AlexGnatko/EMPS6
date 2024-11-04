@@ -412,10 +412,13 @@ trait EMPS_Common_Routing
         echo json_encode($response, $this->json_options);
     }
 
-    public function json_error($message) {
+    public function json_error($message, $id = "") {
         $response = [];
         $response['code'] = "Error";
         $response['message'] = $message;
+        if ($id != "") {
+            $response['id'] = $id;
+        }
         $this->json_response($response);
     }
 
