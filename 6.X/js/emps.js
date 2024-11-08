@@ -93,6 +93,18 @@ var EMPS = {
 
         target.appendChild(tag);
     },
+    load_module: function(url, varname) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = url;
+            script.onload = () => {
+                resolve(window[varname]);
+            }
+
+            script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+            document.head.appendChild(script);
+        });
+    },
     load_all_post_scripts: function() {
         $(".post-script").each(function(){
             var src = $(this).data("src");
