@@ -20,7 +20,7 @@ class EMPS_Heartbeat
         $this->queue[] = $url;
     }
 
-    public function execute()
+    public function execute($timeout = 20, $conn_timeout = 10)
     {
         set_time_limit(60);
 
@@ -29,6 +29,7 @@ class EMPS_Heartbeat
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
             curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $conn_timeout);
 
             $this->ch[] = $ch;
         }
@@ -41,9 +42,13 @@ class EMPS_Heartbeat
 
         $running = 0;
 
+        $started = microtime(true);
         do {
             curl_multi_exec($mh, $running);
             curl_multi_select($mh);
+            if (microtime(true) - $started > $timeout) {
+                break;
+            }
         } while ($running > 0);
 
         foreach ($this->ch as $i => $ch) {
