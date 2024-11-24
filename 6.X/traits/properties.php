@@ -101,7 +101,9 @@ trait EMPS_Common_Properties
             if(!$value) {
                 continue;
             }
-            $this->page_property($v, $value);
+            if (!isset($this->page_properties[$v])) {
+                $this->page_property($v, $value);
+            }
         }
     }
 
