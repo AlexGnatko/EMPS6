@@ -39,6 +39,7 @@
 {{/if}}
 <vted filter-size="{{$filter_size}}" ref="vted" inline-template>
     <div>
+        {{$smarty.capture.commonhead}}
         <div v-show="list_mode">
             {{if $has_tree}}
                 <div class="columns">
