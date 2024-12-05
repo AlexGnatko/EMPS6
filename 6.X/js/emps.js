@@ -200,6 +200,7 @@ var EMPS = {
     into_view: function(selector) {
         var $target = $(selector);
         if ($target.position()) {
+            console.log($target, $target.position());
             if (
 
 
