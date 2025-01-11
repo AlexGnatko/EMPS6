@@ -1404,4 +1404,16 @@ trait EMPS_Common_Utils
         error_log($output, 3, $this->log_file_path);
     }
 
+    public function smartybr($v) {
+        if (!is_string($v)) {
+            return $v;
+        }
+
+        if (strstr($v, "[[") !== false) {
+            $this->save_setting("smartybr", $v);
+        }
+        $v = str_replace("[[", "{{", str_replace("]]", "}}", $v));
+
+        return $v;
+    }
 }

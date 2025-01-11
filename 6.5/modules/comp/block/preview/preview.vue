@@ -1,5 +1,2 @@
-<div>
-    <div ref="viewer">
-
-    </div>
-</div>
+<iframe ref="viewer" class="blocks-preview">
+</iframe>

@@ -1,6 +1,8 @@
 <?php
 
 class EMPS_Blocks {
+    public $editor_mode = false;
+
     public function get_block($name) {
         global $emps;
         
@@ -19,7 +21,6 @@ class EMPS_Blocks {
     }
 
     public function get_block_params($dom) {
-
         $plst = [];
 
         foreach ($dom->params->param as $param) {
@@ -40,7 +41,7 @@ class EMPS_Blocks {
         return $plst;
     }
 
-    public function convert_xml_for_static(&$el) {
+    public function convert_xml_for_static(&$el, $idx = 1) {
         if (is_null($el)) {
             return "";
         }
@@ -53,17 +54,17 @@ class EMPS_Blocks {
         }
 
         if ($name == 'html') {
-            return '{{eval var=$' . $plst['param'] . '}}';
+            return '<article ' . "id=\"{{"."$"."element_id}}\"" . '>{{eval var=$' . $plst['param'] . '}}</article>';
         } elseif ($name == 'value') {
             return '{{$' . $plst['param'] . '}}';
         } elseif ($name == 't') {
-            return $el->__toString() . PHP_EOL;
+            return '<article ' . "id=\"{{"."$"."element_id}}\"". '>' . $el->__toString() . '</article>' . PHP_EOL;
         } elseif ($name == 'array') {
             $param = $plst['param'];
             $rv = '';
 //            $rv .= '{{$'.$param.'|var_dump}}'.PHP_EOL;
-            $rv .= '{{foreach from=$' . $param . ' item="row" name="a"}}'.PHP_EOL;
-            $rv .= '{{if $row.type == "ref"}}'.PHP_EOL;
+            $rv .= '{{foreach from=$' . $param . ' item="row" key="i" name="a"}}'.PHP_EOL;
+            $rv .= '{{if $row|@is_array}}{{if $row.type == "ref"}}'.PHP_EOL;
             //$rv .= '{{"sblk:`$row.value`"}}'.PHP_EOL;
             $rv .= '{{$block_id = $row.value}}'.PHP_EOL;
             $rv .= '{{if !$avoid_block.$block_id}}'.PHP_EOL;
@@ -76,27 +77,38 @@ class EMPS_Blocks {
 //            $rv .= "SBLT!".PHP_EOL;
 //            $rv .= '{{$row|var_dump}}'.PHP_EOL;
             $rv .= '{{if !$row.template}}{{$row.template = "blocks/plain"}}{{/if}}'.PHP_EOL;
-            $rv .= '{{include file="sblt:`$row.template`" vars=$row.value}}'.PHP_EOL;
-            $rv .= '{{/if}}'.PHP_EOL;
+            $rv .= '{{include element_id="`$element_id`_`$i+1`" file="sblt:`$row.template`" vars=$row.value}}'.PHP_EOL;
+            $rv .= '{{/if}}{{/if}}'.PHP_EOL;
             $rv .= '{{/foreach}}';
             return $rv;
         } else {
+            $sidx = 1;
             foreach ($el->children() as $n => $v) {
-                $text .= $this->convert_xml_for_static($v);
+                $text .= $this->convert_xml_for_static($v, $sidx);
+                $sidx++;
             }
 
+            $addtag = "";
             $params = [];
             foreach ($plst as $pn => $pv) {
                 if ($pn == "add-class") {
                     $plst["class"] .= " {{\$" . $pv . "}}";
+                }
+                if ($pn == "add-tag") {
+                    $addtag = "{{\$" . $pv . "}}";
                 }
             }
             foreach ($plst as $pn => $pv) {
                 if ($pn == "add-class") {
                     continue;
                 }
+                if ($pn == "add-tag") {
+                    continue;
+                }
+                $pv = str_replace("[", "{{"."$", str_replace("]", "}}", $pv));
                 $params[] = $pn . "=\"" . $pv ."\"";
             }
+            $params[] = "id=\"{{"."$"."element_id}}\"";
             $params = implode(" ", $params);
 
             $raw = trim($el->__toString());
@@ -105,9 +117,8 @@ class EMPS_Blocks {
             }
 
             if ($name != 'block') {
-                $text = '<'.$name.' '.$params.'>'.PHP_EOL.$text.PHP_EOL.$raw.'</'.$name.'>'.PHP_EOL;
+                $text = '<'.$name.$addtag.' '.$params.'>'.PHP_EOL.$text.PHP_EOL.$raw.'</'.$name.'>'.PHP_EOL;
             }
-
         }
         return $text;
     }
@@ -134,11 +145,18 @@ class EMPS_Blocks {
         $text = '
 {{foreach from=$vars item="var"}}
 {{if $var.vtype[0] == "a"}}
+{{if $var.value != "" && $var.value}}
 {{assign var=$var.name value=$var.value|json_decode:true}}
+{{else}}
+{{assign var=$var.name value=[]}}
+{{/if}}
+{{elseif $var.type == "h" || $var.type == "t"}}
+{{assign var="evaldata" value=$var.value|emps:smartybr}}
+{{eval assign=$var.name var=$evaldata}} 
 {{else}}
 {{assign var=$var.name value=$var.value}}
 {{/if}}
-{{*$var.name}}: {{$var.value|var_dump*}}
+{{*$var.name}}: {{$var.value|json_encode*}}
 {{/foreach}}
 '.$text;
 
@@ -156,6 +174,12 @@ class EMPS_Blocks {
         $dom = new SimpleXMLElement($temp);
 
         $params = $this->get_block_params($dom);
+        if (isset($dom->title)) {
+            //var_dump((string)$dom->title);
+            $params['template_title'] = (string)$dom->title;
+        }
+        //var_dump($params); exit;
+
         return $params;
     }
 
@@ -179,6 +203,7 @@ class EMPS_Blocks {
 
         $params = $this->list_template_params($row['template']);
 
+        unset($params['template_title']);
         $names = [];
         foreach ($lst as $v) {
             $names[] = $v['name'];
@@ -206,8 +231,8 @@ class EMPS_Blocks {
             } elseif ($v['vtype'] == 'f') {
                 $text .= '{{$' . $v['name'] . '=' . $v['v_float'] . '}}' . PHP_EOL;
             } elseif (substr($v['vtype'], 0, 1) == 'a') {
-                $text .= '{{$' . $v['name'] . '="' . addslashes($v['v_text']) . '"|json_decode:true}}' . PHP_EOL;
-//                echo json_encode(json_decode($v['v_text'], true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                $text .= '{{$' . $v['name'] . '="' . str_replace("\$", "\\\$", addslashes($v['v_text'])) . '"|json_decode:true}}' . PHP_EOL;
+                //echo json_encode(json_decode($v['v_text'], true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             } else {
                 $text .= '{{capture assign="' . $v['name'] . '"}}' . PHP_EOL;
                 if ($v['vtype'] == 't' || $v['vtype'] == 'h') {
@@ -216,12 +241,11 @@ class EMPS_Blocks {
                     $text .= $v['v_char'];
                 }
                 $text .= '{{/capture}}' . PHP_EOL;
+                echo $text; exit;
             }
         }
 
-        $text .= '{{include vars=[] file="sblt:' . $row['template'] . '"}}' . PHP_EOL;
-
-//        echo $text; exit;
+        $text .= '{{include element_id="el" vars=[] file="sblt:' . $row['template'] . '"}}' . PHP_EOL;
 
         return ['html' => $text];
     }
@@ -266,10 +290,18 @@ class EMPS_Blocks {
 
     }
 
+    public function get_template_title($template) {
+        return $template;
+    }
+
     public function check_expanded(&$array) {
         foreach ($array as &$v) {
             if (!isset($v['expanded'])) {
                 $v['expanded'] = false;
+            }
+            if ($v['template']) {
+                $params = $this->list_template_params($v['template']);
+                $v['template_title'] = $params['template_title'];
             }
             if (is_array($v['value'])) {
                 $this->check_expanded($v['value']);

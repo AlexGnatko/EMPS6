@@ -1,5 +1,13 @@
 <div>
-    <template v-for="(row,idx) in value.value">
+
+    <div class="is-size-6 field has-text-weight-bold">
+      <button type="button"
+              v-if="depth > 0"
+              @click.stop.prevent="emit_edit(value)"
+              class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>
+      {{ value.template_title }} <span class="tag" v-if="nidx > 0">{{ nidx }}</span> {{* prefix *}}</div>
+
+    <template v-for="(row,idx) in value.value" v-if="mode !== 'compact'">
         <div class="mb-3">
             <label class="label">{{ row.title }}:</label>
             <template v-if="row.type == 'c'">
@@ -54,7 +62,7 @@
                                         {{/capture}}
 
                                         <button type="button"
-                                                @click="convert_to_raw(srow, row)"
+                                                @click="convert_to_raw(srow)"
                                                 class="button is-info is-light">
                                             <i class="fa fa-pencil"></i>
                                         </button>
@@ -109,10 +117,11 @@
                                 <block-params v-if="srow.expanded" v-model="value.value[idx].value[si]"
                                               @clipboard="emit_clipboard"
                                               :clipboard="clipboard"
-                                              :prefix="prefix + '_' + idx + '_' + si" @save="save"></block-params>
+                                              :nidx="si + 1"
+                                              :prefix="prefix + '_' + (si + 1)" @save="save"></block-params>
                             </template>
                         </template>
-                        <button type="button" @click="add_row(row)" class="button is-primary is-light">Добавить элемент</button>
+                        <button type="button" @click="emit_add(row)" class="button is-primary is-light">Добавить элемент</button>
                         <button type="button"
                                 v-if="clipboard !== null"
                                 @click="insert_from_clipboard(row, -1)"
@@ -125,4 +134,253 @@
             </template>
         </div>
     </template>
+    <template v-for="(row,idx) in value.value" v-if="mode == 'compact'">
+      <div class="mb-3">
+        <template v-if="row.type.substr(0, 1) == 'a'">
+
+          <div class="panel mb-3">
+            <div class="panel-block is-block">
+              <template v-for="(srow,si) in row.value">
+                <span class="is-pulled-right">
+                    <button type="button"
+                            @click="toggle_expanded(srow)"
+                            class="button is-info is-light is-small">
+                        <i v-if="!srow.expanded" class="fa fa-chevron-down"></i>
+                        <i v-else class="fa fa-chevron-up"></i>
+                    </button>
+
+
+
+                  <div class="dropdown is-right is-hoverable">
+  <div class="dropdown-trigger">
+                    <button type="button"
+                            class="button is-link is-light is-small">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </button>
+  </div>
+  <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+    <div class="dropdown-content">
+                                              <template v-if="clipboard === null">
+                                                <a href="javascript:;"
+                                                   @click="cut_to_clipboard(srow, row, si)"
+                                                   class="dropdown-item"> Вырезать </a>
+                                                <a href="javascript:;"
+                                                   @click="copy_to_clipboard(srow)"
+                                                   class="dropdown-item"> Копировать </a>
+                                              </template>
+                                              <template v-else>
+                                                <a href="javascript:;"
+                                                   @click="insert_from_clipboard(row, si)"
+                                                   class="dropdown-item"> Вставить до </a>
+                                              </template>
+      <hr class="dropdown-divider" />
+      <a href="javascript:;" @click="remove_item(si, row.value)" class="dropdown-item"> Удалить </a>
+    </div>
+  </div>
+</div>
+
+{{*                    <button type="button"
+                            @click="remove_item(si, row.value)"
+                            class="button is-danger is-light is-small">
+                    <i class="fa fa-remove"></i>
+                    </button>*}}
+                </span>
+                <template v-if="srow.type == 'ref'">
+                  <div class="is-size-6 field has-text-weight-bold">
+                    <button type="button"
+                            @click.stop.prevent="emit_edit(srow)"
+                            class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>
+                    Пустой блок <span class="tag">{{ si + 1 }}</span></div>
+
+                </template>
+                <template v-if="srow.type == 'raw'">
+
+
+                  <block-params v-if="srow.expanded" v-model="value.value[idx].value[si]"
+                                @clipboard="emit_clipboard"
+                                @edit="emit_edit"
+                                @add="emit_add"
+                                :clipboard="clipboard"
+                                mode="compact"
+                                :nidx="si + 1"
+                                :depth="depth + 1"
+                                :prefix="prefix + '_' + (si + 1)" @save="save"></block-params>
+                  <template v-else>
+                    <div class="is-size-6 field has-text-weight-bold">
+                      <button type="button"
+                              @click.stop.prevent="emit_edit(srow)"
+                              class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>
+                      {{ srow.template_title }} <span class="tag">{{ si + 1 }}</span>
+                      {{* prefix + '_' + (si + 1) *}}
+                    </div>
+                  </template>
+
+                </template>
+              </template>
+              <button type="button" @click="emit_add(row)" class="button is-primary is-light is-small"><i class="fa fa-plus"></i></button>
+              /{{ value.template_title }}
+              <span class="is-pulled-right">
+                <button type="button"
+                        v-if="clipboard !== null"
+                        @click="insert_from_clipboard(row, -1)"
+                        class="button is-info is-light is-small">
+                            <i class="fa fa-clipboard"></i>
+                        </button>
+              </span>
+            </div>
+          </div>
+        </template>
+      </div>
+    </template>
+  <template v-if="depth == 0">
+    <modal id="editParamModal" :submit="submit_block_form" size="container">
+      <template slot="header">Редактирование блока</template>
+
+      <div class="tabs" style="margin-bottom: 1rem">
+        <ul>
+          <li :class="{'is-active': erow.type == 'ref'}">
+            <a
+               @click.stop.prevent="convert_to_ref(erow)">Под-блок</a>
+          </li>
+          <li :class="{'is-active': erow.type == 'raw'}">
+            <a
+                @click.stop.prevent="convert_to_raw(erow)">Элемент</a>
+          </li>
+        </ul>
+      </div>
+
+      <template v-if="erow.type == 'ref'">
+        <div class="control">
+          <selector
+              v-model="erow.value"
+              title="Блок"
+              :has-extra="true"
+              :search="true"
+              :type="'e_blocks' + ((erow.template !== undefined && erow.template != '')?'|template=' + urlencode(erow.template):'')">
+          </selector>
+        </div>
+      </template>
+      <template v-if="erow.type == 'raw'">
+        <div class="field has-text-weight-bold">{{ erow.template_title }}</div>
+
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input type="text" v-model="erow.template"
+                   @keydown.enter="change_template(erow)"
+                   class="input" />
+          </div>
+          <div class="control">
+            <button
+                @click="change_template(erow)"
+                class="button is-info is-light" type="button">
+              <i class="fa fa-check"></i>
+            </button>
+          </div>
+        </div>
+
+        <template v-for="(row,idx) in erow.value" v-if="row.type.substr(0, 1) != 'a'">
+          <div class="mb-3">
+            <label class="label">{{ row.title }}:</label>
+            <template v-if="row.type == 'c'">
+              <template v-if="row.name == 'class'">
+
+              </template>
+              <template v-else>
+                <input type="text" v-model="row.value" @keydown.enter="save" class="input" :placeholder="row.default" />
+              </template>
+
+            </template>
+            <template v-if="row.type == 'h'">
+              <editor v-model="row.value" :id="'param_html_' + prefix + '_' + idx" :init="emps_tinymce_settings"></editor>
+            </template>
+            <template v-if="row.type == 't'">
+              <textarea class="textarea" v-model="row.value" rows="3"></textarea>
+            </template>
+          </div>
+        </template>
+      </template>
+
+
+      <template slot="actions">
+        <button type="submit" class="button is-success">Сохранить изменения</button>
+      </template>
+    </modal>
+
+    <modal id="addBlockModal" :submit="submit_new_block" size="container">
+      <template slot="header">Добавление блока</template>
+
+      <div class="tabs" style="margin-bottom: 1rem">
+        <ul>
+          <li :class="{'is-active': addmode == 'ref'}">
+            <a
+                @click.stop.prevent="addmode = 'ref'">Под-блок</a>
+          </li>
+          <li :class="{'is-active': addmode == 'raw'}">
+            <a
+                @click.stop.prevent="addmode = 'raw'">Элемент</a>
+          </li>
+          <li :class="{'is-active': addmode == 'group'}">
+            <a
+                @click.stop.prevent="addmode = 'group'">Составной элемент</a>
+          </li>
+        </ul>
+      </div>
+
+      <template v-if="addmode == 'ref'">
+        <div class="control">
+          <selector
+              v-model="arow.value"
+              title="Блок"
+              :has-extra="true"
+              :search="true"
+              :type="'e_blocks' + ((arow.template !== undefined && arow.template != '')?'|template=' + urlencode(arow.template):'')">
+          </selector>
+        </div>
+      </template>
+      <template v-if="addmode == 'raw'">
+        <div class="field has-text-weight-bold">{{ arow.template_title }}</div>
+
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input type="text" v-model="arow.template"
+                   @keydown.enter="change_template(arow)"
+                   class="input" />
+          </div>
+          <div class="control">
+            <button
+                @click="change_template(arow)"
+                class="button is-info is-light" type="button">
+              <i class="fa fa-check"></i>
+            </button>
+          </div>
+        </div>
+
+        <template v-for="(row,idx) in arow.value" v-if="row.type.substr(0, 1) != 'a'">
+          <div class="mb-3">
+            <label class="label">{{ row.title }}:</label>
+            <template v-if="row.type == 'c'">
+              <template v-if="row.name == 'class'">
+                Class editor
+              </template>
+              <template v-else>
+                <input type="text" v-model="row.value" @keydown.enter="save" class="input" :placeholder="row.default" />
+              </template>
+            </template>
+            <template v-if="row.type == 'h'">
+              <editor v-model="row.value" :id="'param_html_' + prefix + '_' + idx" :init="emps_tinymce_settings"></editor>
+            </template>
+            <template v-if="row.type == 't'">
+              <textarea class="textarea" v-model="row.value" rows="3"></textarea>
+            </template>
+          </div>
+        </template>
+      </template>
+
+
+      <template slot="actions">
+        <button type="submit" class="button is-success">Добавить блок</button>
+      </template>
+    </modal>
+
+  </template>
 </div>

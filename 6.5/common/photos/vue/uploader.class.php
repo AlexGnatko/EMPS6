@@ -13,6 +13,8 @@ class EMPS_VuePhotosUploader {
 
     public $files = [];
 
+    public $select_one = 0;
+
     public function __construct()
     {
         $this->p = new EMPS_Photos;
@@ -190,8 +192,13 @@ class EMPS_VuePhotosUploader {
     public function list_uploaded_files() {
         global $emps;
 
+        $and = "";
+        if ($this->select_one) {
+            $id = intval($this->select_one);
+            $and = " and id = {$id} ";
+        }
         $r = $emps->db->query("select SQL_CALC_FOUND_ROWS * from ".TP."e_uploads where 
-        context_id = {$this->context_id} order by ord asc");
+        context_id = {$this->context_id} {$and} order by ord asc");
 
         $lst = [];
 
@@ -450,6 +457,10 @@ class EMPS_VuePhotosUploader {
         }
 
         if ($_GET['list_uploaded_photos']) {
+            $this->handle_list();
+        }
+        if ($_GET['list_one']) {
+            $this->select_one = intval($_GET['id']);
             $this->handle_list();
         }
 

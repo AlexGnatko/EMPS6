@@ -40,4 +40,7 @@
 {{/if}}
 {{include file="db:page/extraheadtags"}}
 {{include file="db:page/headscripts"}}
+{{if $no_html_scroll}}
+<style>html {overflow-Y: auto; scrollbar-width: thin}</style>
+{{/if}}
 </head>

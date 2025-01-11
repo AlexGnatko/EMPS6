@@ -16,6 +16,8 @@ emps_scripts.push(function(){
 var EMPS_V_blocks = {
     data: function() {
         return {
+            expanded: false,
+            mobile: false,
         };
     },
     methods: {
@@ -25,6 +27,9 @@ var EMPS_V_blocks = {
         },
         preview: function() {
             setTimeout(this.$refs.preview.load_preview, 0);
+        },
+        toggle: function(v) {
+            this[v] = !this[v];
         }
     },
     computed: {
@@ -40,3 +45,7 @@ if (window.EMPS_vted_mixins === undefined) {
 }
 
 window.EMPS_vted_mixins.push(EMPS_V_blocks);
+
+emps_scripts.push(()=>{
+    EMPS.load_css("/mjs/admin-vv-blocks/blocks.css");
+});

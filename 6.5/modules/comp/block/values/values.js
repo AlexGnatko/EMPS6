@@ -3,8 +3,8 @@ EMPS.vue_component('block-values', '/mjs/comp-block-values/values.vue',
         props: ['id', 'prefix'],
         data: function(){
             return {
-                obj: {value: []},
-                error: ""
+                obj: {value: [], template_title: 'test'},
+                error: "",
             };
         },
         methods: {
@@ -21,6 +21,7 @@ EMPS.vue_component('block-values', '/mjs/comp-block-values/values.vue',
                         var data = response.data;
                         if (data.code == 'OK') {
                             that.obj.value = data.lst;
+                            that.obj.template_title = data.lst[0].template_title;
                         }else{
                             that.error = data.message;
                         }

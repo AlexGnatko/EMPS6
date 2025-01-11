@@ -15,7 +15,7 @@ EMPS.vue_component('block-preview', '/mjs/comp-block-preview/preview.vue',
                     .then(function(response){
                         var data = response.data;
                         that.html = data;
-                        that.$refs.viewer.innerHTML = that.html;
+                        that.$refs.viewer.srcdoc = that.html;
                     });
             }
         },

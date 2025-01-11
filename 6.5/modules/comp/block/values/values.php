@@ -23,6 +23,13 @@ if ($emps->auth->credentials("admin")) {
 
     $nlst = $emps->blocks->list_template_params($row['template']);
 
+    $title = "";
+
+    if (isset($nlst['template_title'])) {
+        $title = $nlst['template_title'];
+        unset($nlst['template_title']);
+    }
+
     $vlst = $emps->blocks->list_block_param_values($row['id']);
     foreach ($vlst as $vv) {
         if ($vv['vtype'] == 'c') {
@@ -36,6 +43,11 @@ if ($emps->auth->credentials("admin")) {
             $nlst[$vv['name']]['value'] = $value;
         }
     }
+    //var_dump($nlst['blocks']); exit;
+    if (isset($nlst['blocks'])) {
+        $nlst['blocks']['template_title'] = $title;
+    }
+
 
     $lst = [];
     foreach ($nlst as $n => $v) {

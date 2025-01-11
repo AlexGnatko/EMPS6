@@ -5,7 +5,13 @@ if ($_POST['post_get_params']) {
 
     $template = str_replace("{slash}", '/', $key);
 
+    $title = $key;
+
     $nlst = $emps->blocks->list_template_params($template);
+    if (isset($nlst['template_title'])) {
+        $title = $nlst['template_title'];
+        unset($nlst['template_title']);
+    }
 
     $lst = [];
     foreach ($nlst as $n => $v) {
@@ -17,6 +23,6 @@ if ($_POST['post_get_params']) {
         $lst[] = $v;
     }
 
-    $emps->json_ok(['lst' => $lst]);
+    $emps->json_ok(['lst' => $lst, 'title' => $title]);
 
 }
