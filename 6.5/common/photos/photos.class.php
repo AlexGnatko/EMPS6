@@ -49,9 +49,21 @@ class EMPS_Photos
         $this->delete_thumbs($file_id);
     }
 
+    public function sanitize_size($size) {
+        $x = explode("x", $size, 2);
+        if (count($x) == 1) {
+            $size = intval($x);
+            return $size."x".$size;
+        }
+        $a = intval($x[0]);
+        $b = intval($x[1]);
+        return $a."x".$b;
+    }
+
     public function ensure_thumb($ra, $size, $opts)
     {
         global $emps;
+        $size = $this->sanitize_size($size);
         $fname = $this->up->UPLOAD_PATH . $ra['folder'] . "/" . $ra['id'] . "-img.dat";
         $fname_wm = $this->up->UPLOAD_PATH . $ra['folder'] . "/" . $ra['id'] . "-wm.dat";
         $dname = $this->up->UPLOAD_PATH . $ra['folder'] . "/thumb/" . $ra['id'] . "_" . $size . ".dat";
