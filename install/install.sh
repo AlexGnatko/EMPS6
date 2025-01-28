@@ -45,6 +45,8 @@ apt -y install php-fpm
 apt -y install curl php-curl php-gd php-mbstring php-mysqli php-mysqlnd php-zip php-http php-dom php-xml php-exif
 apt -y remove apache2
 
+#apt -y install php7.4-fpm php7.4-curl php7.4-gd php7.4-mbstring php7.4-mysqli php7.4-mysqlnd php7.4-zip php7.4-http php7.4-dom php7.4-xml php7.4-exif
+
 ### Install Git
 
 apt -y install git
