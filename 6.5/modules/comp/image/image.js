@@ -153,10 +153,16 @@
             load_selected: function(id) {
                 if (id > 0) {
                     axios.get("/json-upload-photos/" + this.context + "/?list_one=1&id=" + id).then(response => {
+                        if (this.cancel_loading) {
+                            this.cancel_loading = false;
+                            return;
+                        }
                         let data = response.data;
                         if (data.code == "OK") {
                             if (data.files.length > 0) {
                                 this.selected = data.files[0];
+                            } else {
+                                this.selected = {};
                             }
                         }
                     });
