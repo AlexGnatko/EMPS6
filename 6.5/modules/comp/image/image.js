@@ -173,9 +173,10 @@
         },
         watch: {
             value: function(newId) {
-                if (newId == 0) {
+                if (!newId) {
                     this.selected = null;
                     this.cancel_loading = true;
+                    return;
                 }
                 if (this.selected !== null && newId == this.selected.id) {
                     return;
