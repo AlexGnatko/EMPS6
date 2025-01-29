@@ -168,6 +168,9 @@
         },
         watch: {
             value: function(newId) {
+                if (newId == 0) {
+                    this.selected = null;
+                }
                 if (this.selected !== null && newId == this.selected.id) {
                     return;
                 }
