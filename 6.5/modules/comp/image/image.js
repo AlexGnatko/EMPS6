@@ -10,6 +10,7 @@
                 queue: [],
                 current: null,
                 selected: null,
+                cancel_loading: false,
             };
         },
         methods: {
@@ -32,6 +33,10 @@
             },
             load_images: function() {
                 axios.get("/json-upload-photos/" + this.current.context + "/?list_uploaded_photos=1").then(response => {
+                    if (this.cancel_loading) {
+                        this.cancel_loading = false;
+                        return;
+                    }
                     let data = response.data;
                     if (data.code == "OK") {
                         this.lst = data.files;
@@ -170,6 +175,7 @@
             value: function(newId) {
                 if (newId == 0) {
                     this.selected = null;
+                    this.cancel_loading = true;
                 }
                 if (this.selected !== null && newId == this.selected.id) {
                     return;
