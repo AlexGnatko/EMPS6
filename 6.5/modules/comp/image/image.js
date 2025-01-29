@@ -162,7 +162,7 @@
                             if (data.files.length > 0) {
                                 this.selected = data.files[0];
                             } else {
-                                this.selected = {};
+                                this.selected = null;
                             }
                         }
                     });
