@@ -13,7 +13,7 @@ class EMPS_VuePhotosUploader {
 
     public $files = [];
 
-    public $select_one = 0;
+    public $select_one = -1;
 
     public function __construct()
     {
@@ -193,7 +193,7 @@ class EMPS_VuePhotosUploader {
         global $emps;
 
         $and = "";
-        if ($this->select_one) {
+        if ($this->select_one != -1) {
             $id = intval($this->select_one);
             $and = " and id = {$id} ";
         }
