@@ -104,6 +104,14 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                     });
 
             },
+            select_element: function(template_name) {
+                this.arow.template = template_name;
+                this.change_template(this.arow);
+                this.close_modal("selectElementModal");
+            },
+            open_collection: function() {
+                this.open_modal("selectElementModal");
+            },
             copy_array: function(a) {
                 if (!a) {
                     return [];
@@ -230,3 +238,5 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
         }
     }
 );
+
+EMPS.load_css("/mjs/comp-block-params/params.css");

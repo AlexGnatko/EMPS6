@@ -316,6 +316,7 @@ class EMPS_Auth
             $response = [];
             if ($this->credentials("users")) {
                 $response['code'] = "OK";
+                $response['login'] = $_SESSION['login'];
             } else {
                 $response['code'] = "Error";
                 $response['error'] = $_SESSION['login']['error'];

@@ -1,6 +1,6 @@
 (function() {
 
-    Vue.component('loading', {
+    EMPS.vue_component_direct('loading', {
         template: '#loading-component-template',
         props: {
             value: Boolean,

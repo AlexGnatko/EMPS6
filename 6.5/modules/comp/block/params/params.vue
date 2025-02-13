@@ -236,19 +236,6 @@
     <modal id="editParamModal" :submit="submit_block_form" size="container">
       <template slot="header">Редактирование блока</template>
 
-      <div class="tabs" style="margin-bottom: 1rem">
-        <ul>
-          <li :class="{'is-active': erow.type == 'ref'}">
-            <a
-               @click.stop.prevent="convert_to_ref(erow)">Под-блок</a>
-          </li>
-          <li :class="{'is-active': erow.type == 'raw'}">
-            <a
-                @click.stop.prevent="convert_to_raw(erow)">Элемент</a>
-          </li>
-        </ul>
-      </div>
-
       <template v-if="erow.type == 'ref'">
         <div class="control">
           <selector
@@ -283,7 +270,7 @@
             <label class="label">{{ row.title }}:</label>
             <template v-if="row.type == 'c'">
               <template v-if="row.name == 'class'">
-
+                <block-class mode="value" v-model="row.value" :placeholder="row.default" />
               </template>
               <template v-else>
                 <input type="text" v-model="row.value" @keydown.enter="save" class="input" :placeholder="row.default" />
@@ -341,6 +328,13 @@
         <div class="field has-text-weight-bold">{{ arow.template_title }}</div>
 
         <div class="field has-addons">
+          <div class="control">
+            <button
+                @click="open_collection"
+                class="button is-info is-light" type="button">
+              Выбрать...
+            </button>
+          </div>
           <div class="control is-expanded">
             <input type="text" v-model="arow.template"
                    @keydown.enter="change_template(arow)"
@@ -374,11 +368,21 @@
             </template>
           </div>
         </template>
+
       </template>
 
 
       <template slot="actions">
         <button type="submit" class="button is-success">Добавить блок</button>
+      </template>
+    </modal>
+
+    <modal id="selectElementModal" size="container">
+      <template slot="header">Коллекция элементов</template>
+
+      {{include file="db:blocks/_index"}}
+
+      <template slot="actions">
       </template>
     </modal>
 

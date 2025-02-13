@@ -318,6 +318,13 @@ var EMPS = {
             Vue.component(name, loader);
         }
     },
+    vue_component_direct: function(name, comp) {
+        if (EMPS.vue_version() == 3) {
+            this.vue3_components.push({name: name, comp: comp});
+        } else {
+            Vue.component(name, comp);
+        }
+    },
     vue3_attach_components: function() {
         let app = EMPS.mainapp;
         while (this.vue3_components.length > 0) {
