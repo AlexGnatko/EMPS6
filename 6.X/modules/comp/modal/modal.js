@@ -50,7 +50,7 @@ EMPS.vue_component('modal', '/mjs/comp-modal/modal.vue', {
         }
     },
     mounted: function(){
-        this.btn_class = Vue.util.extend(this.btn_class, this.buttonClass);
+        this.btn_class = Object.assign(this.btn_class, this.buttonClass);
         this.$forceUpdate();
         vuev.$on("modal:open:" + this.id, this.on_open);
         vuev.$on("modal:close:" + this.id, this.on_close);
