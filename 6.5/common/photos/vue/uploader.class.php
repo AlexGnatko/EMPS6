@@ -266,7 +266,7 @@ class EMPS_VuePhotosUploader {
             $filepath = $this->p->up->upload_filename($file['id'], DT_IMAGE);
             $filename = $file['filename'];
             if ($names[$filename] > 1) {
-                $filename = $names[$filename] . " " . $filename;
+                $filename = $file['id'] . "-" . $filename;
                 $names[$filename]--;
             }
             $zip->addFile($filepath, $filename);
