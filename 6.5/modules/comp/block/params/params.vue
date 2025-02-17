@@ -182,16 +182,16 @@
                                                 <a href="javascript:;"
                                                    @click="copy_to_clipboard(srow)"
                                                    class="dropdown-item"> Копировать </a>
-                                                <hr class="dropdown-divider" />
                                               </template>
-                                                <a href="javascript:;"
-                                                   @click="copy_json(srow)"
-                                                   class="dropdown-item"> Копировать JSON</a>
                                               <template v-else>
                                                 <a href="javascript:;"
                                                    @click="insert_from_clipboard(row, si)"
                                                    class="dropdown-item"> Вставить до </a>
                                               </template>
+                                                      <hr class="dropdown-divider" />
+                                                    <a href="javascript:;"
+                                                       @click="copy_json(srow)"
+                                                       class="dropdown-item"> Копировать JSON</a>
       <hr class="dropdown-divider" />
       <a href="javascript:;" @click="remove_item(si, row.value)" class="dropdown-item"> Удалить </a>
     </div>
