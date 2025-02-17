@@ -35,7 +35,7 @@ if ($emps->auth->credentials("admin")) {
         if ($vv['vtype'] == 'c') {
             $value = $vv['v_char'];
         } elseif (substr($vv['vtype'], 0, 1) == 'a') {
-            $value = json_decode($vv['v_text'], true);
+            $value = json_decode($vv['v_json'], true);
         } else {
             $value = $vv['v_text'];
         }

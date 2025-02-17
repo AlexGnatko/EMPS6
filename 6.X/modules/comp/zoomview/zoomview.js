@@ -1,6 +1,6 @@
 (function() {
 
-    Vue.component('zoomview', {
+    EMPS.vue_component_direct('zoomview', {
         template: '#zoomview-component-template',
         props: ['spacer', 'normal', 'zoom', 'scale', 'divClass', 'aClass', 'spacerClass'],
         data: function(){
@@ -93,6 +93,5 @@
         mounted: function(){
         }
     });
-
 
 })();

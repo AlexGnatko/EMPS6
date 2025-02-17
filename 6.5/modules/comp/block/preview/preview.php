@@ -15,6 +15,7 @@ if ($emps->auth->credentials("admin")) {
         echo "Block not found!"; exit;
     }
 
+    $emps->page_property("blocks", 1);
     $emps->pre_display();
     $smarty->assign("no_html_scroll", true);
 
@@ -23,16 +24,20 @@ if ($emps->auth->credentials("admin")) {
 //    echo $tpl->source->getContent();
     $html = $tpl->fetch();
 
-    $smarty->display("db:page/headtags");
-    echo "<body><div id='preview-app'>";
-    echo $html;
-    $smarty->display("db:_comp/block/preview,controls");
-    echo "</div>";
-    $smarty->display("db:page/commonfoot");
-    $smarty->display("db:page/footscripts");
-    $smarty->display("db:_comp/block/preview,footscripts");
-    echo "</body>";
-
+    if ($_REQUEST['inner'] ?? false) {
+        echo $html;
+    } else {
+        $smarty->display("db:page/headtags");
+        echo "<body><div id='preview-app' class='blocks container'>";
+        echo "<dynamic :template='html' :key='dckey'></dynamic>";
+        $smarty->display("db:_comp/block/preview,controls");
+        echo "</div>";
+        $smarty->display("db:page/commonfoot");
+        $smarty->display("db:page/footscripts");
+        echo "<script>var html = ".json_encode($html).";</script>";
+        $smarty->display("db:_comp/block/preview,footscripts");
+        echo "</body>";
+    }
 
 } else {
     echo "Admin access needed!";

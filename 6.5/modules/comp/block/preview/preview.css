@@ -9,6 +9,14 @@
     box-sizing: border-box;
 }
 
+.select-frame-left {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: none;
+    opacity: 0.75;
+}
+
 .select-frame.l-2 {
     border: 1px solid rgba(0,0,200,0.4);
 }

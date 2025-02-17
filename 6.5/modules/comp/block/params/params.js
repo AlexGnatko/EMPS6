@@ -1,6 +1,6 @@
 EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
     {
-        props: ['value', 'prefix', 'clipboard', 'mode', 'nidx', 'depth'],
+        props: ['value', 'prefix', 'clipboard', 'mode', 'nidx', 'depth', 'lc', 'ctx'],
         mixins: [EMPS_common_mixin],
         components: {
             'editor': Editor // <- Important part
@@ -14,6 +14,9 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                 arow: {},
                 atrow: {},
                 addmode: "raw",
+                found_parents: [],
+                last_clicked: null,
+                json_export: "",
             };
         },
         methods: {
@@ -48,6 +51,9 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
             },
             save: function() {
                 this.$emit("save");
+            },
+            save_later: function() {
+                setTimeout(this.save, 500);
             },
             remove_item: function(index, lst) {
                 if (confirm(window.strings.do_delete)) {
@@ -90,7 +96,17 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
 
                         if(data.code == 'OK'){
                             if (oldvalue === null) {
+                                console.log("COMPARE", srow.value, data.lst);
+                                let oldlst = srow.value;
                                 srow.value = data.lst;
+                                for (let old of oldlst) {
+                                    for (let row of srow.value) {
+                                        if (row.name == old.name && row.type == old.type) {
+                                            console.log("COPYING", row, old);
+                                            row.value = old.value;
+                                        }
+                                    }
+                                }
                             }
 
                             srow.template_title = data.title;
@@ -131,6 +147,10 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
             },
             copy_to_clipboard: function(srow) {
                 this.emit_clipboard(this.copy_array(srow));
+            },
+            copy_json: function(srow) {
+                this.json_export = JSON.stringify(srow);
+                this.open_modal("modalExport");
             },
             insert_from_clipboard: function(row, si) {
                 console.log(JSON.stringify(row));
@@ -178,6 +198,7 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                 x.shift();
                 let lst = this.value.value;
                 console.log("LST", lst);
+                this.found_parents = [];
                 return this.find_block(lst, x);
             },
             find_block: function(lst, ids) {
@@ -194,12 +215,40 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                                 if (ids.length == 0) {
                                     return subitem;
                                 }
+                                this.found_parents.push(subitem);
                                 return this.find_block(subitem.value, ids);
                             }
                         }
                     } else {
                         console.log("unusable param", param);
                     }
+                }
+            },
+            into_view: function(selector) {
+                let $target = $(selector);
+                let w = $("#scrollable");
+
+                if ($target.position()) {
+                    console.log("SCROLL", $target, $target.position(), $target.offset(), w.scrollTop(), w.height());
+                    console.log("SCORLLING INTO", w.scrollTop() + $(selector).position().top - (w.height() / 2));
+                    w.scrollTop(w.scrollTop() + $(selector).position().top - (w.height() / 2));
+/*                    if (
+
+
+                        (
+                            $target.position().top + ((
+                                w.height()
+                            ) / 3) >
+                            w.scrollTop() + (
+                                w.height()
+                            )
+                        )
+
+                    )
+                    {
+                        console.log("SCORLLING INTO", $(selector).position().top - 50);
+                        w.scrollTop($(selector).position().top - 50);
+                    }*/
                 }
             },
             message_handler: function(event) {
@@ -213,15 +262,30 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                     if (!row) {
                         return;
                     }
-                    console.log("FOUND", row);
+                    vuev.$emit("last_clicked", data.id);
+                    //this.last_clicked = data.id;
+                    console.log("FOUND", row, this.found_parents);
+                    for (let item of this.found_parents) {
+                        item.expanded = true;
+                    }
+                    setTimeout(() => {
+                        this.into_view("#" + data.id);
+                    }, 300);
+
                     this.emit_edit(row);
                 }
+            },
+            expand_block_by_id: function(id) {
+
             }
 
         },
         computed: {
         },
         watch: {
+            lc: function(new_val) {
+                this.last_clicked = new_val;
+            }
         },
         created: function () {
             window.addEventListener('message', this.message_handler);
@@ -234,6 +298,8 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                 this.$on("edit", this.handle_edit);
                 this.$on("add", this.add_row_start);
             }
+            vuev.$on("last_clicked", (data) => {this.last_clicked = data});
+            this.last_clicked = this.lc;
             this.emps_tinymce_settings.height = 300;
         }
     }

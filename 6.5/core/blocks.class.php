@@ -117,7 +117,7 @@ class EMPS_Blocks {
             }
 
             if ($name != 'block') {
-                $text = '<'.$name.$addtag.' '.$params.'>'.PHP_EOL.$text.PHP_EOL.$raw.'</'.$name.'>'.PHP_EOL;
+                $text = '<'.$name.$addtag.' '.$params.'>'.PHP_EOL.$text.PHP_EOL.$raw.'</'.$name.$addtag.'>'.PHP_EOL;
             }
         }
         return $text;
@@ -152,7 +152,9 @@ class EMPS_Blocks {
 {{/if}}
 {{elseif $var.type == "h" || $var.type == "t"}}
 {{assign var="evaldata" value=$var.value|emps:smartybr}}
-{{eval assign=$var.name var=$evaldata}} 
+{{eval assign=$var.name var=$evaldata}}
+{{elseif $var.type == "photo"}}
+{{assign var=$var.name value=$var.value|load_pic}}
 {{else}}
 {{assign var=$var.name value=$var.value}}
 {{/if}}
@@ -164,13 +166,14 @@ class EMPS_Blocks {
     }
 
     public function list_template_params($template) {
-        global $smarty;
+        global $smarty, $emps;
 
         $temp = $smarty->fetch("db:" . $template);
         if (!$temp) {
             return false;
         }
 
+        $emps->save_setting("last_temp", $temp);
         $dom = new SimpleXMLElement($temp);
 
         $params = $this->get_block_params($dom);
@@ -230,8 +233,10 @@ class EMPS_Blocks {
                 $text .= '{{$' . $v['name'] . '=' . $v['v_int'] . '}}' . PHP_EOL;
             } elseif ($v['vtype'] == 'f') {
                 $text .= '{{$' . $v['name'] . '=' . $v['v_float'] . '}}' . PHP_EOL;
+            } elseif ($v['vtype'] == 'photo') {
+                $text .= '{{$' . $v['name'] . '=' . $v['v_int'] . '|load_pic}}{{$'.$v['name']."|json_encode}}" . PHP_EOL;
             } elseif (substr($v['vtype'], 0, 1) == 'a') {
-                $text .= '{{$' . $v['name'] . '="' . str_replace("\$", "\\\$", addslashes($v['v_text'])) . '"|json_decode:true}}' . PHP_EOL;
+                $text .= '{{$' . $v['name'] . '="' . str_replace("\$", "\\\$", addslashes($v['v_json'])) . '"|json_decode:true}}' . PHP_EOL;
                 //echo json_encode(json_decode($v['v_text'], true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             } else {
                 $text .= '{{capture assign="' . $v['name'] . '"}}' . PHP_EOL;
@@ -278,10 +283,13 @@ class EMPS_Blocks {
         if ($param['type'] == 'c') {
             $nr['v_char'] = $param['value'];
         }
+        if ($param['type'] == 'photo') {
+            $nr['v_int'] = $param['value'];
+        }
         if ($param['type'] == 't' || $param['type'] == 'h') {
             $nr['v_text'] = $param['value'];
         } elseif (substr($param['type'], 0, 1) == 'a') {
-            $nr['v_text'] = json_encode($param['value']);
+            $nr['v_json'] = json_encode($param['value'], JSON_UNESCAPED_UNICODE);
         }
         $row = $emps->db->sql_ensure_row("e_block_param_values", $qr);
         if ($row) {

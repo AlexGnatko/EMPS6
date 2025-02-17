@@ -41,6 +41,9 @@ if ($emps->auth->credentials("admin")) {
             global $emps;
 
             $row = parent::explain_row($row);
+
+            $row['own_context_id'] = $emps->p->get_context($this->ref_type, $this->ref_sub, $row['id']);
+
             return $row;
         }
 

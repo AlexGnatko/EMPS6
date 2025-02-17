@@ -111,6 +111,20 @@ function smarty_plugin_video($params)
     }
 }
 
+function smarty_modifier_load_pic($v)
+{
+    global $emps;
+
+    $id = intval($v);
+    $pic = $emps->db->get_row("e_uploads", "id = {$id}");
+    if ($pic) {
+        return $pic;
+    }
+    $pic = [];
+    $pic['md5'] = '';
+    $pic['filename'] = 'empty.jpg';
+    return $pic;
+}
 
 $fn = $emps->common_module('config/smarty/plugins.php');
 if (file_exists($fn)) {

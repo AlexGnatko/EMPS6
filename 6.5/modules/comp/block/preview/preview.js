@@ -9,14 +9,34 @@ EMPS.vue_component('block-preview', '/mjs/comp-block-preview/preview.vue',
         },
         methods: {
             load_preview: function() {
+                if (!this.id) {
+                    return;
+                }
                 var that = this;
-                axios
-                    .get("/comp-block-preview/" + this.id + "/")
-                    .then(function(response){
-                        var data = response.data;
-                        that.html = data;
-                        that.$refs.viewer.srcdoc = that.html;
-                    });
+                if (!this.$refs.viewer.srcdoc) {
+                    axios
+                        .get("/comp-block-preview/" + this.id + "/")
+                        .then(function(response){
+                            var data = response.data;
+                            that.html = data;
+                            that.$refs.viewer.srcdoc = that.html;
+                        });
+
+                } else {
+                    axios
+                        .get("/comp-block-preview/" + this.id + "/?inner=1")
+                        .then(function(response){
+                            var data = response.data;
+
+                            that.html = data;
+                            that.$refs.viewer.contentWindow.postMessage({
+                                type: 'updateHTML',
+                                newHTML: that.html
+                            }, '*');
+                        });
+
+
+                }
             }
         },
         computed: {

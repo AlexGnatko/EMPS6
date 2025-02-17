@@ -1,11 +1,19 @@
 <div>
 
-    <div class="is-size-6 field has-text-weight-bold">
-      <button type="button"
+    <div class="is-size-6 field has-text-weight-bold" :id="prefix">
+      {{*<button type="button"
               v-if="depth > 0"
               @click.stop.prevent="emit_edit(value)"
-              class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>
-      {{ value.template_title }} <span class="tag" v-if="nidx > 0">{{ nidx }}</span> {{* prefix *}}</div>
+              class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>*}}
+      <span :class="{'has-text-success': (prefix == last_clicked)}">
+        {{ value.template_title }}</span> <span class="tag" v-if="nidx > 0">{{ nidx }} </span>
+      <template v-if="depth == 0"><span class="is-pulled-right">
+      <button type="button"
+              @click.stop.prevent="copy_json(value)"
+              class="button is-primary is-light is-small"><i class="fa fa-copy"></i></button>
+    </span></template>
+    </div>
+
 
     <template v-for="(row,idx) in value.value" v-if="mode !== 'compact'">
         <div class="mb-3">
@@ -118,6 +126,7 @@
                                               @clipboard="emit_clipboard"
                                               :clipboard="clipboard"
                                               :nidx="si + 1"
+                                              :lc="last_clicked"
                                               :prefix="prefix + '_' + (si + 1)" @save="save"></block-params>
                             </template>
                         </template>
@@ -137,18 +146,24 @@
     <template v-for="(row,idx) in value.value" v-if="mode == 'compact'">
       <div class="mb-3">
         <template v-if="row.type.substr(0, 1) == 'a'">
-
           <div class="panel mb-3">
             <div class="panel-block is-block">
               <template v-for="(srow,si) in row.value">
+
+                <span class="is-pulled-left pr-1" :id="prefix + '_' + (si + 1)">
+                  <button type="button"
+                          @click="toggle_expanded(srow)"
+                          class="button is-info is-light is-small">
+                  <i v-if="!srow.expanded" class="fa fa-folder-o"></i>
+                  <i v-else class="fa fa-folder-open-o"></i>
+                </button>
+                  <i class="fa fa-arrow-right has-text-success" v-if="(prefix + '_' + (si + 1)) == last_clicked"></i>
+                  {{* last_clicked *}}
+                </span>
                 <span class="is-pulled-right">
                     <button type="button"
-                            @click="toggle_expanded(srow)"
-                            class="button is-info is-light is-small">
-                        <i v-if="!srow.expanded" class="fa fa-chevron-down"></i>
-                        <i v-else class="fa fa-chevron-up"></i>
-                    </button>
-
+                            @click.stop.prevent="emit_edit(srow)"
+                            class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>
 
 
                   <div class="dropdown is-right is-hoverable">
@@ -167,7 +182,11 @@
                                                 <a href="javascript:;"
                                                    @click="copy_to_clipboard(srow)"
                                                    class="dropdown-item"> Копировать </a>
+                                                <hr class="dropdown-divider" />
                                               </template>
+                                                <a href="javascript:;"
+                                                   @click="copy_json(srow)"
+                                                   class="dropdown-item"> Копировать JSON</a>
                                               <template v-else>
                                                 <a href="javascript:;"
                                                    @click="insert_from_clipboard(row, si)"
@@ -188,8 +207,14 @@
                 <template v-if="srow.type == 'ref'">
                   <div class="is-size-6 field has-text-weight-bold">
                     <button type="button"
+                            @click="toggle_expanded(srow)"
+                            class="button is-info is-light is-small">
+                      <i v-if="!srow.expanded" class="fa fa-chevron-down"></i>
+                      <i v-else class="fa fa-chevron-up"></i>
+                    </button>
+                    {{*<button type="button"
                             @click.stop.prevent="emit_edit(srow)"
-                            class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>
+                            class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>*}}
                     Пустой блок <span class="tag">{{ si + 1 }}</span></div>
 
                 </template>
@@ -202,15 +227,19 @@
                                 @add="emit_add"
                                 :clipboard="clipboard"
                                 mode="compact"
+                                :lc="last_clicked"
                                 :nidx="si + 1"
                                 :depth="depth + 1"
                                 :prefix="prefix + '_' + (si + 1)" @save="save"></block-params>
                   <template v-else>
                     <div class="is-size-6 field has-text-weight-bold">
-                      <button type="button"
+                      {{*<button type="button"
                               @click.stop.prevent="emit_edit(srow)"
-                              class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>
-                      {{ srow.template_title }} <span class="tag">{{ si + 1 }}</span>
+                              class="button is-primary is-light is-small"><i class="fa fa-pencil"></i></button>*}}
+                      <span :class="{'has-text-success': (prefix + '_' + (si + 1)) == last_clicked}">
+                        {{ srow.template_title }}
+                      </span>
+                       <span class="tag">{{ si + 1 }}</span>
                       {{* prefix + '_' + (si + 1) *}}
                     </div>
                   </template>
@@ -283,10 +312,17 @@
             <template v-if="row.type == 't'">
               <textarea class="textarea" v-model="row.value" rows="3"></textarea>
             </template>
+            <template v-if="row.type == 'photo'">
+              <div style="max-width: 15rem">
+              <imagesel v-model="row.value"
+                        cl="is-4by3"
+                        @input="save_later"
+                        :context="ctx"></imagesel>
+              </div>
+            </template>
           </div>
         </template>
       </template>
-
 
       <template slot="actions">
         <button type="submit" class="button is-success">Сохранить изменения</button>
@@ -357,7 +393,7 @@
                 Class editor
               </template>
               <template v-else>
-                <input type="text" v-model="row.value" @keydown.enter="save" class="input" :placeholder="row.default" />
+                <input type="text" v-model="row.value" class="input" :placeholder="row.default" />
               </template>
             </template>
             <template v-if="row.type == 'h'">
@@ -365,6 +401,13 @@
             </template>
             <template v-if="row.type == 't'">
               <textarea class="textarea" v-model="row.value" rows="3"></textarea>
+            </template>
+            <template v-if="row.type == 'photo'">
+              <div style="max-width: 15rem">
+                <imagesel v-model="row.value"
+                          cl="is-4by3"
+                          :context="ctx"></imagesel>
+              </div>
             </template>
           </div>
         </template>
@@ -381,6 +424,15 @@
       <template slot="header">Коллекция элементов</template>
 
       {{include file="db:blocks/_index"}}
+
+      <template slot="actions">
+      </template>
+    </modal>
+
+    <modal id="modalExport" size="container">
+      <template slot="header">Экспорт блоков в JSON</template>
+
+      <textarea class="textarea" rows="15" :value="json_export"></textarea>
 
       <template slot="actions">
       </template>

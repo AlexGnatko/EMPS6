@@ -1,6 +1,6 @@
-EMPS.vue_component('block-values', '/mjs/comp-block-values/values.vue',
+EMPS.vue_component('block-values', '/mjs/comp-block-values/values.vue?2',
     {
-        props: ['id', 'prefix'],
+        props: ['id', 'prefix', 'ctx'],
         data: function(){
             return {
                 obj: {value: [], template_title: 'test'},

@@ -1,19 +1,62 @@
 var vuev, app;
 
 emps_scripts.push(function(){
+    Vue.component('dynamic', {
+        props: ['template'],
+        data() {
+            return { compiled: null }
+        },
+        watch: {
+            template: {
+                immediate: true,
+                handler(newTemplate) {
+                    // Compile the template string into render functions
+                    this.compiled = Vue.compile("<div>" + newTemplate + "</div>")
+                    // Force a re-render by replacing the component’s render function
+                    this.$options.render = this.compiled.render
+                    this.$options.staticRenderFns = this.compiled.staticRenderFns
+                    this.$forceUpdate();
+                    console.log("FORCING COMPONENT UPDATE");
+                }
+            }
+        },
+        render(createElement) {
+            // If the template hasn’t been compiled yet, render an empty div.
+            return this.compiled ? this.compiled.render.call(this, createElement) : createElement('div')
+        }
+    });
+
     vuev = new Vue();
     app = new Vue({
         el: '#preview-app',
         data: function() {
             return {
                 current: {},
+                html: "",
+                dckey: "",
+                parents: [],
             };
         },
         mounted: function(){
             let e = $("#preview-app")[0];
+            this.html = window.html;
+            this.dckey = EMPS.guid();
             e.addEventListener("mousemove", this.mousemove);
             e.addEventListener("mouseout", this.mouseout);
             e.addEventListener("click", this.click);
+
+            var that = this;
+            window.addEventListener('message', function(event) {
+                console.log("MESSAGE", event);
+                if (event.data && event.data.type === 'updateHTML') {
+                    // Update the content based on the received message
+                    that.html = event.data.newHTML;
+                    that.dckey = EMPS.guid();
+                    that.$forceUpdate();
+                    console.log("NEW HTML", that.html);
+                    //document.getElementById('contents').innerHTML = event.data.newHTML;
+                }
+            });
         },
         methods: {
             mouseout: function(e) {
@@ -52,11 +95,23 @@ emps_scripts.push(function(){
                 f.style.width = this.current.offsetWidth + "px";
                 f.style.height = this.current.offsetHeight + "px";
                 f.style.display = "block";
+
+                f = this.$refs.plst;
+                f.style.top = (this.current.offsetTop + this.current.offsetHeight - 34) + "px";
+                f.style.left = (this.current.offsetLeft + 4) + "px";
+                f.style.display = "block";
+
+                this.parents = [];
+                this.parents.push(this.current);
                 let p = this.highlight_parent(($(this.current).parent())[0], 2);
                 if (!p) {
                     return;
                 }
-                this.highlight_parent(($(p).parent())[0], 3);
+                p = this.highlight_parent(($(p).parent())[0], 3);
+                if (!p) {
+                    return;
+                }
+                this.highlight_parent(($(p).parent())[0], 4);
             },
             highlight_parent: function(o, level) {
                 if (!o) {
@@ -78,6 +133,7 @@ emps_scripts.push(function(){
                 f.style.height = c.offsetHeight + "px";
                 f.style.display = "block";
 //                console.log("F", f.style);
+                this.parents.push(c);
                 return c;
             },
             valid_id: function(id) {
@@ -96,9 +152,15 @@ emps_scripts.push(function(){
                 }
                 window.parent.postMessage({code: 'click', id: this.current.id}, '*');
                 //alert(this.current.id);
+            },
+            click_parent: function(el) {
+                if (!el.id) {
+                    return;
+                }
+                window.parent.postMessage({code: 'click', id: el.id}, '*');
             }
         }
     });
-    EMPS.load_css("/mjs/comp-block-preview/preview.css");
+    EMPS.load_css("/mjs/comp-block-preview/preview.css?3");
 });
 
