@@ -9,7 +9,7 @@
         {{ value.template_title }}</span> <span class="tag" v-if="nidx > 0">{{ nidx }} </span>
       <template v-if="depth == 0"><span class="is-pulled-right">
       <button type="button"
-              @click.stop.prevent="copy_json(value)"
+              @click.stop.prevent="copy_json(value.value[0].value)"
               class="button is-primary is-light is-small"><i class="fa fa-copy"></i></button>
     </span></template>
     </div>
@@ -346,6 +346,10 @@
             <a
                 @click.stop.prevent="addmode = 'group'">Составной элемент</a>
           </li>
+          <li :class="{'is-active': addmode == 'json'}">
+            <a
+                @click.stop.prevent="addmode = 'json'">JSON-код</a>
+          </li>
         </ul>
       </div>
 
@@ -414,6 +418,11 @@
 
       </template>
 
+      <template v-if="addmode == 'json'">
+        <div class="field">
+          <textarea class="textarea" rows="15" v-model="json_export"></textarea>
+        </div>
+      </template>
 
       <template slot="actions">
         <button type="submit" class="button is-success">Добавить блок</button>

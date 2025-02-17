@@ -304,7 +304,7 @@ class EMPS_Blocks {
 
     public function check_expanded(&$array) {
         foreach ($array as &$v) {
-            if (!isset($v['expanded'])) {
+            if (!isset($v['expanded']) && is_array($v['value'])) {
                 $v['expanded'] = false;
             }
             if ($v['template']) {
@@ -313,6 +313,8 @@ class EMPS_Blocks {
             }
             if (is_array($v['value'])) {
                 $this->check_expanded($v['value']);
+            } else {
+                unset($v['expanded']);
             }
         }
     }

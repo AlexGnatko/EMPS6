@@ -40,6 +40,18 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                 this.open_modal("addBlockModal");
             },
             add_row_finish: function() {
+                if (this.addmode == 'json') {
+                    let v = JSON.parse(this.json_export);
+                    if (!Array.isArray(v)) {
+                        v = [v];
+                    }
+//                    alert(JSON.stringify(this.atrow));
+                    for (let item of v) {
+//                        alert(JSON.stringify(item));
+                        this.atrow.value.push(item);
+                    }
+                    return;
+                }
                 this.arow.type = this.addmode;
                 this.atrow.value.push(this.arow);
                 console.log("ADDING", this.arow);
@@ -149,7 +161,7 @@ EMPS.vue_component('block-params', '/mjs/comp-block-params/params.vue',
                 this.emit_clipboard(this.copy_array(srow));
             },
             copy_json: function(srow) {
-                this.json_export = JSON.stringify(srow);
+                this.json_export = JSON.stringify(srow, null, 4);
                 this.open_modal("modalExport");
             },
             insert_from_clipboard: function(row, si) {
