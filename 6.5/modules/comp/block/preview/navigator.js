@@ -147,6 +147,8 @@ emps_scripts.push(function(){
                 return false;
             },
             click: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 if (!this.current.id) {
                     return;
                 }

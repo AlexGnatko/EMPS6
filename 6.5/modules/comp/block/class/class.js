@@ -27,6 +27,7 @@ EMPS.vue_component('block-class', '/mjs/comp-block-class/class.vue',
         },
         mounted: function(){
             //alert("mounted");
+            this.text = this.value;
         }
     }
 );
