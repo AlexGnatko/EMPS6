@@ -143,6 +143,11 @@ class EMPS_Blocks {
 
         $text = $this->convert_xml_for_static($dom->block);
 
+        $debug = "";
+        if ($this->debug) {
+            $debug = '{{$var.name}}: {{$var.value|json_encode}}';
+        }
+
 //        echo $text; exit;
         $text = '
 {{foreach from=$vars item="var"}}
@@ -160,7 +165,8 @@ class EMPS_Blocks {
 {{else}}
 {{assign var=$var.name value=$var.value}}
 {{/if}}
-{{*$var.name}}: {{$var.value|json_encode*}}
+'.$debug.
+'
 {{/foreach}}
 '.$text;
 
