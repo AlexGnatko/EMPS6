@@ -3,6 +3,8 @@
 class EMPS_Blocks {
     public $editor_mode = false;
 
+    public $debug = false;
+
     public function get_block($name) {
         global $emps;
         
