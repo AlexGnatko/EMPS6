@@ -132,7 +132,7 @@ function smarty_modifier_blockparam($v, $type)
 
     $id = intval($v);
     $row = $emps->db->get_row("e_block_param_values ", "id = {$id}");
-    if ($row) {
+    if (!$row) {
         return [];
     }
     if ($type == 'v_json') {
