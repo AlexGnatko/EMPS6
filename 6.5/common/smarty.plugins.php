@@ -126,6 +126,22 @@ function smarty_modifier_load_pic($v)
     return $pic;
 }
 
+function smarty_modifier_blockparam($v, $type)
+{
+    global $emps;
+
+    $id = intval($v);
+    $row = $emps->db->get_row("e_block_param_values ", "id = {$id}");
+    if ($row) {
+        return [];
+    }
+    if ($type == 'v_json') {
+        $a = json_decode($row['v_json'], true);
+        return $a;
+    }
+    return [];
+}
+
 $fn = $emps->common_module('config/smarty/plugins.php');
 if (file_exists($fn)) {
     require_once $fn;

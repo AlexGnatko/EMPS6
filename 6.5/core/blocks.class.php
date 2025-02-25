@@ -244,10 +244,11 @@ class EMPS_Blocks {
             } elseif ($v['vtype'] == 'photo') {
                 $text .= '{{$' . $v['name'] . '=' . $v['v_int'] . '|load_pic}}{{$'.$v['name']."|json_encode}}" . PHP_EOL;
             } elseif (substr($v['vtype'], 0, 1) == 'a') {
-                $text .= '{{$' . $v['name'] . '="' . str_replace("\$", "\\\$", addslashes($v['v_json'])) . '"|json_decode:true}}' . PHP_EOL;
+/*                $text .= '{{$' . $v['name'] . '="' . str_replace("\$", "\\\$", addslashes($v['v_json'])) . '"|json_decode:true}}' . PHP_EOL;
                 if ($this->debug) {
                     echo json_encode(json_decode($v['v_json'], true), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-                }
+                }*/
+                $text .= '{{$' . $v['name'] . '=' . $v['id'] . '|blockparam:v_json}}' . PHP_EOL;
             } else {
                 $text .= '{{capture assign="' . $v['name'] . '"}}' . PHP_EOL;
                 if ($v['vtype'] == 't' || $v['vtype'] == 'h') {
