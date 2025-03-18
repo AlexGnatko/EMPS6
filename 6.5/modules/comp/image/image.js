@@ -23,6 +23,7 @@
             },
             clear: function() {
                 this.selected = null;
+                console.log("EMITTING ZERO");
                 this.$emit("input", 0);
             },
             open_select_image: function(that) {
