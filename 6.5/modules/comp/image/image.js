@@ -40,6 +40,20 @@
                     let data = response.data;
                     if (data.code == "OK") {
                         this.lst = data.files;
+                        if (this.lst.length == 0) {
+                            this.clear();
+                        } else {
+                            let found = false;
+                            for (let v of this.lst) {
+                                if (v.id == this.value) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                this.clear();
+                            }
+                        }
                         this.open_modal("modalImageCompSelector");
                     }
                 });
