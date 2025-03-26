@@ -2,7 +2,7 @@
 
     Vue.component('descriptor', {
         template: '#descriptor-template',
-        props: ['value', 'type'],
+        props: ['value', 'type', 'plain'],
         data: function(){
             return {
                 description: '',
@@ -15,6 +15,9 @@
                     return;
                 }
                 let idx = this.type + "-" + this.value;
+                if (this.plain) {
+                    idx += "-p";
+                }
                 if (window.descriptor_cache[idx] !== undefined) {
                     if (window.descriptor_cache[idx] == "loading") {
                         setTimeout(this.describe, 500);
@@ -26,8 +29,12 @@
                 window.descriptor_cache[idx] = "loading";
 
                 let that = this;
+                let add = '';
+                if (this.plain) {
+                    add = "?plain=1";
+                }
                 axios
-                    .get("/pick-ng-describe/" + this.type + "/" + this.value + "/")
+                    .get("/pick-ng-describe/" + this.type + "/" + this.value + "/" + add)
                     .then(function(response){
                         let data = response.data;
                         if (data.code == 'OK') {
