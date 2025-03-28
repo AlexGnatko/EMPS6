@@ -2,7 +2,8 @@
 $emps->no_smarty = true;
 
 if ($key) {
-    $file = $emps->db->get_row("e_files", "md5='$key'");
+    $key = $emps->db->sql_escape($key);
+    $file = $emps->db->get_row("e_files", "md5 = '{$key}'");
 
     require_once $emps->common_module('uploads/uploads.class.php');
     $up = new EMPS_Uploads;

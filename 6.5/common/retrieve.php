@@ -2,12 +2,14 @@
 $emps->no_smarty = true;
 
 if ($key) {
-    $file = $emps->db->get_row("e_files", "md5='$key'");
+    $key = $emps->db->sql_escape($key);
+
+    $file = $emps->db->get_row("e_files", "md5 = '{$key}'");
 
     if ($file) {
 
         require_once $emps->common_module('uploads/uploads.class.php');
-        $up = new EMPS_Uploads;
+        $up = new EMPS_Uploads();
 
         $fname = $up->upload_filename($file['id'], DT_FILE);
 
