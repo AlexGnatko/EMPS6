@@ -1,6 +1,6 @@
 (function() {
 
-    Vue.component('flatpickr', {
+    EMPS.vue_component_direct('flatpickr', {
         template: '#flatpickr-component-template',
         props: ['size', 'value', 'hasTime', 'minDate', 'maxDate', 'setclass',
             'hasClock', 'unix', 'mformat', 'fw',
