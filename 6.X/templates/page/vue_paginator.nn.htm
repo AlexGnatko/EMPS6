@@ -25,6 +25,11 @@
         <li v-if="{{$pages_var}}.pl.length > 0 && {{$pages_var}}.last.page > {{$pages_var}}.pl[{{$pages_var}}.count - 1].page">
             <a class="pagination-link" @click="{{$roll_to}}({{$pages_var}}.last)" v-html="{{$pages_var}}.last.page"></a>
         </li>
+        {{if $pages_all}}
+            <li>
+                <a class="pagination-link" @click="{{$roll_to}}({{$pages_var}}.all)" v-html="'{{$pages_all}}'"></a>
+            </li>
+        {{/if}}
     </ul>
 </nav>
 

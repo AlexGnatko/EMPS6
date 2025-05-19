@@ -2,9 +2,10 @@
 
     EMPS.vue_component_direct('flatpickr', {
         template: '#flatpickr-component-template',
-        props: ['size', 'value', 'hasTime', 'minDate', 'maxDate', 'setclass',
+        props: ['size', 'value', 'modelValue', 'hasTime', 'minDate', 'maxDate', 'setclass',
             'hasClock', 'unix', 'mformat', 'fw',
-            'dateFormat', 'placeholder', 'asButton'],
+            'dateFormat', 'placeholder', 'asButton', 'asSlot'],
+        emits: ['update:modelValue'],
         data: function(){
             return {
                 picker: null,
@@ -34,7 +35,7 @@
                         let fdate = m.format(this.mformat);
                         this.fdate = fdate;
                         this.picker.setDate(fdate);
-                        console.log("Setting date (unix): " + newDate + " (" + fdate + ") / " + oldDate);
+                        //console.log("Setting date (unix): " + newDate + " (" + fdate + ") / " + oldDate);
                     }
                     if (newDate === undefined || newDate == '') {
                         this.picker.clear();
@@ -43,7 +44,7 @@
                 } else {
                     if ((newDate !== oldDate) && newDate !== undefined && newDate != '') {
                         this.picker.setDate(newDate);
-                        console.log("Setting date: " + newDate + " / " + oldDate);
+                        //console.log("Setting date: " + newDate + " / " + oldDate);
                     }
                     if (newDate === undefined || newDate == '') {
                         this.picker.clear();
@@ -54,7 +55,7 @@
             },
             date_updated: function(selectedDates, dateStr) {
                 if (dateStr !== undefined && dateStr != '') {
-                    console.log("Date updated: "  + dateStr);
+                    //console.log("Date updated: "  + dateStr);
                     if (this.unix) {
                         var date;
                         if (window.timezone !== undefined) {
@@ -64,10 +65,18 @@
                         }
 
                         var edt = date.unix();
-                        console.log("Emitting " + edt);
-                        this.$emit("input", edt);
+                        //console.log("Emitting " + edt);
+                        if (EMPS.vue_version() == 3) {
+                            this.$emit('update:modelValue', edt)
+                        } else {
+                            this.$emit("input", edt);
+                        }
                     } else {
-                        this.$emit("input", dateStr);
+                        if (EMPS.vue_version() == 3) {
+                            this.$emit('update:modelValue', dateStr)
+                        } else {
+                            this.$emit("input", dateStr);
+                        }
                     }
 
                 }
@@ -102,7 +111,12 @@
                 this.picker = flatpickr(this.$refs.input, this.config);
             }
             //setTimeout(this.set_date, 100, this.value);
-            this.set_date(this.value);
+            if (EMPS.vue_version() == 3) {
+                this.set_date(this.modelValue);
+            } else {
+                this.set_date(this.value);
+            }
+
             this.$watch('minDate', this.redraw);
             this.$watch('maxDate', this.redraw);
             this.$watch('config', this.redraw);
