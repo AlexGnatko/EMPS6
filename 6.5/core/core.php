@@ -2,7 +2,11 @@
 
 // core includes
 require_once EMPS_COMMON_PATH_PREFIX . "/core/proc.php";
-require_once EMPS_PATH_PREFIX . "/core/db.class.php";
+if (defined('EMPS_POSTGRES') && EMPS_POSTGRES) {
+    require_once EMPS_PATH_PREFIX . "/core/postgresdb.class.php";
+} else {
+    require_once EMPS_PATH_PREFIX . "/core/db.class.php";
+}
 require_once EMPS_PATH_PREFIX . "/core/properties.class.php";
 
 require_once EMPS_PATH_PREFIX . "/core/session_handler_sql.class.php";

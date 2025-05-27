@@ -5,6 +5,9 @@ require_once "functions.php";
 $version = phpversion();
 $installer->say( "PHP version: {$version}");
 
+$x = explode(".", $version);
+$ver = $x[0].".".$x[1];
+
 $installer->say("PHP ver: {$ver}");
 
 $etc_path = "/etc/php/{$ver}";
