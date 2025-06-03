@@ -332,7 +332,46 @@ function smarty_function_script($params, Smarty_Internal_Template $template)
         $defer = " defer";
     }
     $reset = $emps->get_setting("css_reset");
-    $val = sprintf("<script type=\"application/javascript\" src=\"%s%s\"%s></script>", $params['src'], $reset, $defer);;
+    if (isset($params['localfile'])) {
+        if (file_exists(EMPS_SCRIPT_PATH."/".$params['src'])) {
+            $reset = "?dt=".filemtime(EMPS_SCRIPT_PATH."/".$params['src']);
+        }
+
+    } elseif (isset($params['mjs'])) {
+        $x = explode("/", $params['src']);
+
+        $part = str_replace("-", "/", $x[2]);
+        $file = str_replace("..", "", $x[3]);
+
+
+        $x = explode(".", $file);
+        $ext = array_pop($x);
+
+        $fail = false;
+        if ($ext == "php") {
+            $fail = true;
+        }
+        if ($ext == "htm") {
+            $fail = true;
+        }
+        if (!$fail) {
+            $page = "_{$part},{$file}";
+
+            $file_name = $emps->page_file_name($page, "inc");
+            if ($file_name){
+                if (file_exists($file_name)) {
+                    $reset = "?dt=".filemtime($file_name);
+                }
+            }
+        }
+    }
+
+    $type = "application/javascript";
+    if ($params['type']) {
+        $type = $params['type'];
+    }
+
+    $val = sprintf("<script type=\"{$type}\" src=\"%s%s\"%s></script>", $params['src'], $reset, $defer);
     return $val;
 }
 

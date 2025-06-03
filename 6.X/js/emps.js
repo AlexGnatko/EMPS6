@@ -93,16 +93,24 @@ var EMPS = {
 
         target.appendChild(tag);
     },
-    load_module: function(url, varname) {
+    load_module: function(url, varname, module = false) {
         return new Promise((resolve, reject) => {
-            const script = document.createElement("script");
-            script.src = url;
-            script.onload = () => {
-                resolve(window[varname]);
+            if (module) {
+                import(url).then((obj) => {
+                    console.log("RESOLVED", obj);
+                    resolve(obj);
+                });
+            } else {
+                const script = document.createElement("script");
+                script.src = url;
+                script.onload = () => {
+                    resolve(window[varname]);
+                }
+
+                script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+                document.head.appendChild(script);
             }
 
-            script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
-            document.head.appendChild(script);
         });
     },
     load_all_post_scripts: function() {
