@@ -33,10 +33,17 @@ if ($key) {
             $resp->setBody($body);
             $resp->send();
         }else{
+            @ini_set('display_errors', '0');
+            error_reporting(0);
+            ob_end_clean();
+            flush();
+
+            header("Accept-Ranges: none");
             header("Content-Type: " . $file['content_type']);
             header("Content-Length: " . $size);
-            header("Last-Modified: ", date("r", $file['dt']));
-            header("Expires: ", date("r", time() + 60 * 60 * 24 * 7));
+            header("Last-Modified: " . date("r", $file['dt']));
+            header("Expires: " . date("r", time() + 60 * 60 * 24 * 7));
+            header("Pragma: ");
             header("Cache-Control: max-age=" . (60 * 60 * 24 * 7));
 
             fpassthru($fh);
