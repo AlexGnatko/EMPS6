@@ -22,7 +22,7 @@ if ($key) {
             $body = new http\Message\Body($fh);
             $resp = new http\Env\Response;
 
-            $resp->setContentType("audio/mpeg");
+            $resp->setContentType($file['content_type']);
             $resp->setHeader("Content-Length", $size);
             $resp->setHeader("Last-Modified", date("r", $file['dt']));
             $resp->setHeader("Expires", date("r", time() + 60 * 60 * 24 * 7));
@@ -33,7 +33,7 @@ if ($key) {
             $resp->setBody($body);
             $resp->send();
         }else{
-            header("Content-Type: audio/mpeg");
+            header("Content-Type: " . $file['content_type']);
             header("Content-Length: " . $size);
             header("Last-Modified: ", date("r", $file['dt']));
             header("Expires: ", date("r", time() + 60 * 60 * 24 * 7));
