@@ -19,7 +19,8 @@ trait EMPS_Common_Routing
      */
     public function check_fast()
     {
-        global $pp;
+        $x = explode("/", $_SERVER["REQUEST_URI"]);
+        $pp = $x[1];
 
         if(!defined("EMPS_FAST")){
             return;

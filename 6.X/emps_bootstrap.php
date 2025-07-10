@@ -34,7 +34,6 @@ if (!isset($emps_no_common_autoload) || !$emps_no_common_autoload) {
     require_once EMPS_COMMON_PATH_PREFIX."/../vendor/autoload.php";
 }
 
-
 $emps_include_path = ini_get('include_path');
 
 $glue = PATH_SEPARATOR;
