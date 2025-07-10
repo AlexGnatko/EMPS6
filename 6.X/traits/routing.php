@@ -19,12 +19,12 @@ trait EMPS_Common_Routing
      */
     public function check_fast()
     {
-        $x = explode("/", $_SERVER["REQUEST_URI"]);
-        $pp = $x[1];
-
         if(!defined("EMPS_FAST")){
             return;
         }
+        $x = explode("/", $_SERVER["REQUEST_URI"]);
+        $pp = $x[1];
+
         $x = explode(',', EMPS_FAST);
         $skip = false;
         foreach($x as $v){
