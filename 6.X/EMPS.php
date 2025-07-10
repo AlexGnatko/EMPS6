@@ -235,12 +235,14 @@ class EMPS_Common
     public function pre_controller()
     {
         global $pp, $smarty;
-        $x = explode('-', $pp);
-        if ($x[0] == "admin" || $x[0] == "manage") {
-            $this->page_property("adminpage", 1);
-        }
+        if (!$this->fast) {
+            $x = explode('-', $pp);
+            if ($x[0] == "admin" || $x[0] == "manage") {
+                $this->page_property("adminpage", 1);
+            }
 
-        $smarty->assign("enum", $this->enum);
+            $smarty->assign("enum", $this->enum);
+        }
     }
 
     /**
