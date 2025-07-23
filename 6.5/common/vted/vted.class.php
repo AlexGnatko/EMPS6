@@ -34,6 +34,7 @@ class EMPS_VueTableEditor
     public $form_name = "db:vted/generic";
 
     public $what = "t.*";
+    public $with = '';
     public $where, $group, $having, $order, $join;
 
     public $pad_templates = [];
@@ -295,7 +296,7 @@ class EMPS_VueTableEditor
             $this->order = " order by ord asc, id asc ";
         }
 
-        $q = 'select SQL_CALC_FOUND_ROWS ' . $this->what . ' from ' . TP . $this->table_name . ' as t ' .
+        $q = $this->with.'select SQL_CALC_FOUND_ROWS ' . $this->what . ' from ' . TP . $this->table_name . ' as t ' .
             $this->join . ' ' . $this->where . ' ' . $this->group . ' ' . $this->having . ' ' . $this->order .
             ' limit ' . $start . ',' . $perpage;
         $r = $emps->db->query($q);
