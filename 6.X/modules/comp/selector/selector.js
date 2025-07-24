@@ -1,6 +1,6 @@
 (function() {
 
-    Vue.component('selector', {
+    EMPS.vue_component_direct('selector', {
         template: '#selector-template',
         props: ['value', 'type', 'title', 'size', 'search', 'noClear', 'noPages', 'noField',
             'exclass', 'st',

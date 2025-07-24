@@ -1,4 +1,4 @@
-
+{{capture name="vted_out"}}
 {{include file="db:_comp/selector"}}
 {{if $has_tree}}
     {{include file="db:_comp/treeitem"}}
@@ -20,3 +20,11 @@
 
     {{/if}}
 </script>
+{{/capture}}
+{{if $vue3}}
+    {{capture append="vue_out"}}
+        {{$smarty.capture.vted_out}}
+    {{/capture}}
+{{else}}
+    {{$smarty.capture.vted_out}}
+{{/if}}

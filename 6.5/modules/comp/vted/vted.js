@@ -5,7 +5,8 @@
         window.EMPS_vted_mixins = [];
     }
 
-    Vue.component('vted', {
+    EMPS.vue_component_direct('vted', {
+        template: '#vted-template',
         data: function(){
             return {
                 list_mode: true,
@@ -33,7 +34,7 @@
                 need_new_tree: true,
                 show_tree: true,
                 mhtml_vars: [{name: "HTML", var: "html"}],
-                emps_tinymce_settings: Vue.util.extend(window.emps_tinymce_settings, {}),
+                emps_tinymce_settings: Object.assign(window.emps_tinymce_settings, {}),
             }
         },
         props: {
@@ -258,7 +259,7 @@
                         } else {
                             that.struct_row = false;
                         }
-                        that.selected_row = Vue.util.extend({}, that.row);
+                        that.selected_row = Object.assign({}, that.row);
                     });
                 }
             },
@@ -321,7 +322,7 @@
             },
             to_current_list: function() {
                 if (this.path.key !== undefined && this.path.ss !== undefined) {
-                    var path = Vue.util.extend({}, this.path);
+                    var path = Object.assign({}, this.path);
                     path.ss = undefined;
                     path.key = undefined;
                     var link = EMPS.link(path);
@@ -337,7 +338,7 @@
                 return false;
             },
             pad_link: function(code) {
-                var path = Vue.util.extend({}, this.path);
+                var path = Object.assign({}, this.path);
                 path.ss = code;
                 var link = EMPS.link(path);
                 return link;
@@ -484,7 +485,7 @@
             },
             open_by_id: function(e) {
                 e.preventDefault();
-                var path = Vue.util.extend({}, this.path);
+                var path = Object.assign({}, this.path);
                 var id = parseInt(this.lookup_id);
                 if (id == 0) {
                     return false;
@@ -597,7 +598,7 @@
                     });
             },
             edit_folder: function(item) {
-                var path = Vue.util.extend({}, this.path);
+                var path = Object.assign({}, this.path);
                 path.ss = "info";
                 path.start = undefined;
                 path.key = "struct-" + item.id;
@@ -654,7 +655,7 @@
             },
             unselect_all_folders: function() {
                 this.set_inactive(this.tree);
-                var path = Vue.util.extend({}, this.path);
+                var path = Object.assign({}, this.path);
                 path.ss = undefined;
                 path.sd = undefined;
                 path.key = undefined;
@@ -666,7 +667,7 @@
                 this.need_new_tree = false;
                 this.set_inactive(this.tree);
                 Vue.set(item, 'active', true);
-                var path = Vue.util.extend({}, this.path);
+                var path = Object.assign({}, this.path);
                 path.ss = undefined;
                 path.sd = item.id;
                 path.key = undefined;
