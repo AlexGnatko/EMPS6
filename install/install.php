@@ -71,8 +71,11 @@ system("mysql -u root -p{$config['mysql_root_password']} -e \"GRANT ALL ON *.* T
 system("mysql -u root -p{$config['mysql_root_password']} -e \"create database if not exists {$config['main_user']}_emps_factory DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\"");
 system("service mysql restart");
 
+mkdir("/etc/nginx/ssl");
 $installer->nginx_config_file("conf.d/logformat.conf");
 $installer->nginx_config_file("conf.d/http.conf");
+$installer->nginx_config_file("ssl/nginx.crt");
+$installer->nginx_config_file("ssl/nginx.key");
 $installer->nginx_config_file("sites-enabled/00-factory.conf", ['factory.ag38.ru' => $factory_hostname]);
 $installer->nginx_config_file("deny.conf");
 $installer->nginx_config_file("gzip.conf");
