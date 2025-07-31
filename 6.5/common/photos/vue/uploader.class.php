@@ -49,7 +49,10 @@ class EMPS_VuePhotosUploader {
                         $nr['filename'] = $v['name'][0];
                         $nr['type'] = $v['type'][0];
                         $nr['size'] = $v['size'][0];
-                        $nr['descr'] = $_POST['title'][0];
+                        if (is_array($_POST['title'] ?? '')) {
+                            $nr['descr'] = $_POST['title'][0];
+                        }
+
                         $nr['thumb'] = $this->photo_size;
                         $nr['context_id'] = $context_id;
                         $nr['qual'] = 100;
@@ -78,6 +81,7 @@ class EMPS_VuePhotosUploader {
                             $file['dt'] = $row['dt'];
                             $file['ext'] = $row['ext'];
                             $file['has_orig'] = $row['has_orig'];
+
 
                             $this->files[] = $file;
                         }
@@ -373,35 +377,35 @@ class EMPS_VuePhotosUploader {
         global $emps;
 
         if ($this->can_save) {
-            if ($_POST['post_upload_photo']) {
+            if ($_POST['post_upload_photo'] ?? false) {
                 $this->handle_upload();
             }
 
-            if ($_POST['post_reupload_photo']) {
+            if ($_POST['post_reupload_photo'] ?? false) {
                 $this->handle_reupload(intval($_POST['photo_id']));
             }
 
-            if ($_POST['post_upload_zip']) {
+            if ($_POST['post_upload_zip'] ?? false) {
                 $this->handle_upload_zip();
             }
 
-            if ($_POST['post_reimport_photo']) {
+            if ($_POST['post_reimport_photo'] ?? false) {
                 $this->handle_reimport(intval($_POST['photo_id']), $_POST['url']);
             }
 
-            if ($_POST['post_save_description']) {
+            if ($_POST['post_save_description'] ?? false) {
                 $id = intval($_POST['photo_id']);
                 $nr = ['descr' => $_POST['descr']];
                 $emps->db->sql_update_row("e_uploads", ['SET' => $nr], "id = {$id}");
                 $this->handle_list();
             }
 
-            if ($_POST['post_manipulate']) {
+            if ($_POST['post_manipulate'] ?? false) {
                 $id = intval($_POST['photo_id']);
                 $this->handle_manipulate($id, $_REQUEST['payload']);
             }
 
-            if ($_POST['post_import_photos']) {
+            if ($_POST['post_import_photos'] ?? false) {
                 $emps->no_time_limit();
                 $x = explode("\n", $_POST['list']);
 
@@ -420,7 +424,7 @@ class EMPS_VuePhotosUploader {
                 $this->handle_list();
             }
 
-            if ($_GET['delete_uploaded_photo']) {
+            if ($_GET['delete_uploaded_photo'] ?? false) {
                 $id = $_GET['delete_uploaded_photo'];
                 $r = $emps->db->query("select * from ".TP."e_uploads 
                             where context_id = {$this->context_id} and id in ({$id})");
@@ -430,7 +434,7 @@ class EMPS_VuePhotosUploader {
                 $this->handle_list();
             }
 
-            if ($_GET['reorder_photos']) {
+            if ($_GET['reorder_photos'] ?? false) {
                 $x = explode(",", $_GET['reorder_photos']);
                 $ord = 100;
                 foreach($x as $id) {
@@ -444,7 +448,7 @@ class EMPS_VuePhotosUploader {
                 $this->handle_list();
             }
 
-            if ($_GET['zip']) {
+            if ($_GET['zip'] ?? false) {
                 $this->handle_zip();
             }
         }else{
@@ -456,10 +460,10 @@ class EMPS_VuePhotosUploader {
 
         }
 
-        if ($_GET['list_uploaded_photos']) {
+        if ($_GET['list_uploaded_photos'] ?? false) {
             $this->handle_list();
         }
-        if ($_GET['list_one']) {
+        if ($_GET['list_one'] ?? false) {
             $this->select_one = intval($_GET['id']);
             $this->handle_list();
         }

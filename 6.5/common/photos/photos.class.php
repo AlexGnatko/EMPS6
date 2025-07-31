@@ -270,10 +270,12 @@ class EMPS_Photos
         $info = getimagesize($oname);
         $mime_type = $info['mime'];
         if ($mime_type != $ra['type']) {
+//            error_log("UPDATING MIME TYPE {$ra['type']} => {$mime_type}\n");
             $ra['type'] = $mime_type;
             $nr = ['type' => $mime_type];
             $emps->db->sql_update_row("e_uploads", ['SET' => $nr], "id = {$ra['id']}");
         }
+//        error_log("USING {$ra['type']}");
 
         if (strstr($ra['type'], "jpeg")) {
             $img = imagecreatefromjpeg($oname);
@@ -346,6 +348,9 @@ class EMPS_Photos
 
         if ($sx == $px && $sy == $py && !PHOTOSET_WATERMARK) {
         } else {
+//            error_log("UPDATING MIME TYPE (downsized image) {$ra['type']} => image/jpeg\n");
+            $nr = ['type' => "image/jpeg"];
+            $emps->db->sql_update_row("e_uploads", ['SET' => $nr], "id = {$ra['id']}");
             imagejpeg($dst2, $oname, 100);
         }
 
@@ -618,8 +623,18 @@ class EMPS_Photos
         }
 
         $ra['size'] = filesize($this->up->upload_filename($ra['id'], DT_IMAGE));
-        $ra['orig_size'] = filesize($orig_name);
-        $ra['mod_size'] = filesize($mod_name);
+        if (file_exists($orig_name)) {
+            $ra['orig_size'] = filesize($orig_name);
+        } else {
+            $ra['orig_size'] = 0;
+        }
+
+        if (file_exists($mod_name)) {
+            $ra['mod_size'] = filesize($mod_name);
+        } else {
+            $ra['mod_size'] = 0;
+        }
+
         if (!$ra['new_type']) {
             $ra['new_type'] = $ra['type'];
         }
