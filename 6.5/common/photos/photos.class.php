@@ -267,6 +267,14 @@ class EMPS_Photos
 
         $this->fix_orientation($oname, 100);
 
+        $info = getimagesize($oname);
+        $mime_type = $info['mime'];
+        if ($mime_type != $ra['type']) {
+            $ra['type'] = $mime_type;
+            $nr = ['type' => $mime_type];
+            $emps->db->sql_update_row("e_uploads", ['SET' => $nr], "id = {$ra['id']}");
+        }
+
         if (strstr($ra['type'], "jpeg")) {
             $img = imagecreatefromjpeg($oname);
         } elseif (strstr($ra['type'], "png")) {
