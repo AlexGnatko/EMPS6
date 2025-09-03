@@ -3,6 +3,8 @@ var EMPS = {
     enum_cache: {},
     scroll_data: {},
     vue3_components: [],
+    vue3_scripts: [],
+
     sp_id: 0,
     get_path_vars: function(){
         var l = window.location.href;
@@ -339,6 +341,11 @@ var EMPS = {
             let x = this.vue3_components.shift();
             console.log("ADDING COMPONENT", x.name, x.comp);
             app.component(x.name, x.comp);
+        }
+        while (this.vue3_scripts.length > 0) {
+            let x = this.vue3_scripts.shift();
+            console.log("EXECUTING SCRIPT", x);
+            x.call(this, app);
         }
     },
     after_all_templates: null,

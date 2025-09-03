@@ -1,6 +1,7 @@
 (function() {
 
-    Vue.component('file-uploader', {
+    EMPS.vue_component_direct('file-uploader', {
+        template: '#files-component-template',
         data: function(){
             return {
                 selected_file: '',
