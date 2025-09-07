@@ -14,7 +14,9 @@
     </tr>
     {{foreach name=i from=$lst item="row"}}
         <tr>
-            <td>{{$row.id}}</td>
+            <td>{{$row.id}}
+                <a href="./?kill={{$row.id}}"><i class="fa fa-remove"></i></a>
+            </td>
             <td><a href="/admin-siteusers/{{$row.user.id}}/-/info/">{{$row.user.fullname}} ({{$row.user.id}})</a></td>
             <td><a target="_blank" href="http://geoip.ag38.ru/?ip={{$row.ip}}">{{$row.ip}}</a></td>
             <td>{{$row.browser.name}}</td>

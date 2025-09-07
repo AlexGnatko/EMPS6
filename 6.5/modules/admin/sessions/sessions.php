@@ -2,6 +2,11 @@
 
 if($emps->auth->credentials("admin")){
 
+    if ($_GET['kill']) {
+        $id = intval($_GET['kill']);
+        $emps->db->query("DELETE FROM ".TP."e_sessions WHERE id = {$id}");
+    }
+
     $r = $emps->db->query("select * from ".TP."e_sessions order by dt desc");
     $lst = [];
     while($ra = $emps->db->fetch_named($r)){
