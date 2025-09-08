@@ -1,6 +1,7 @@
 <?php
 
 if ($emps->auth->credentials('admin')):
+    $emps->page_property("vue3", false);
 
     $context_id = $emps->website_ctx;
 

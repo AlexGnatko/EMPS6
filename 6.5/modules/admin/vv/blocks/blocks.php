@@ -3,7 +3,8 @@
 if ($emps->auth->credentials("admin")) {
     $emps->page_property("vuejs", 1);
     $emps->page_property("fluid", 1);
-    $emps->page_property("vue_debug", 1);
+//    $emps->page_property("vue_debug", 1);
+    $emps->page_property("vue3", false);
 
     require_once $emps->common_module('vted/vted.class.php');
     require_once $emps->common_module('videos/videos.class.php');
