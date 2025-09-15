@@ -90,6 +90,9 @@ if ($ext == "vue") {
         }
     }
 } else {
+    if ($ext == 'md') {
+        header("Content-Type: text/markdown");
+    }
     $fh = fopen($file_name, "rb");
     if ($fh) {
         fpassthru($fh);
