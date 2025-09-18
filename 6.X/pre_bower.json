@@ -13,8 +13,7 @@
     "axios": "latest",
     "toastr": "latest",
     "moment": "latest",
-    "moment-timezone": "latest",
-    "font-awesome": "latest"
+    "moment-timezone": "latest"
   },
   "resolutions": {
     "jquery": "~2",
