@@ -127,10 +127,12 @@ class EMPS_Common
             }
         }
 
-        $plugins = $this->common_module('smarty.plugins.php');
+        if (!$this->fast) {
+            $plugins = $this->common_module('smarty.plugins.php');
 
-        if (file_exists($plugins)) {
-            require_once $plugins;
+            if (file_exists($plugins)) {
+                require_once $plugins;
+            }
         }
     }
 
