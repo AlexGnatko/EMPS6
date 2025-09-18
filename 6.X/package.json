@@ -9,6 +9,7 @@
     "flatpickr": "^4.6.3",
     "uglify-js": "~3.15.2",
     "vue3": "npm:vue@3.5.12",
+    "tiny-emitter": "latest",
     "vue-numeric": "latest",
     "vue-select": "^3.4.0",
     "vue-sortable": "latest",
