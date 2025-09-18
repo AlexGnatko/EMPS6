@@ -3,11 +3,16 @@
   "version": "6.0.0",
   "description": "EMPS Framework for PHP",
   "dependencies": {
+    "@fancyapps/ui": "latest",
     "@tinymce/tinymce-vue": "~3",
+    "element-ui": "2.15.14",
     "flatpickr": "^4.6.3",
+    "uglify-js": "~3.15.2",
+    "vue3": "npm:vue@3.5.12",
     "vue-numeric": "latest",
     "vue-select": "^3.4.0",
-    "vue-sortable": "latest"
+    "vue-sortable": "latest",
+    "vue-the-mask": "latest"
   },
   "author": "Alex Gnatko",
   "license": "ISC"
