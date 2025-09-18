@@ -8,8 +8,8 @@
   "dependencies": {
     "tinymce": "~5.5",
     "jquery": "latest",
-    "vue": "latest",
-    "vuex": "latest",
+    "vue": "2.6.14",
+    "vuex": "3",
     "axios": "latest",
     "toastr": "latest",
     "moment": "latest",
