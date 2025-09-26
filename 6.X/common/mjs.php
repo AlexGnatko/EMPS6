@@ -45,6 +45,24 @@ if(!$file_name){
     exit;
 }
 
+if ($emps->in_list($ext, "md")) {
+    $x = explode("/", $file_name);
+    $last = array_pop($x);
+    $path = implode("/", $x);
+    $ignore_filename = $path."/.mjsignore";
+    if (file_exists($ignore_filename)) {
+        $ignore = file_get_contents($ignore_filename);
+        $x = explode("\n", $ignore);
+        foreach($x as $line) {
+            $line = trim($line);
+            if ($line == $last) {
+                $emps->not_found();
+                exit;
+            }
+        }
+    }
+}
+
 if ($ext == "vue") {
     $emps->pre_display();
     $page = "_{$part},!{$file}";
