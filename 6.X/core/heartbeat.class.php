@@ -9,10 +9,11 @@ class EMPS_Heartbeat
     public $ch = [];
     public $rv = [];
     public $error = [];
+    public $base_url = EMPS_SCRIPT_WEB;
 
     public function add_url($url)
     {
-        $this->queue[] = EMPS_SCRIPT_WEB . $url;
+        $this->queue[] = $this->base_url . $url;
     }
 
     public function add_full_url($url)

@@ -258,6 +258,12 @@ class EMPS_DB
                     } elseif (isset($v['$ev'])) {
                         $value = $v['$ev'];
                         $part .= " {$value} ";
+                    } elseif (isset($v['$match'])) {
+                        $in = "";
+                        if ($v['$boolean']) {
+                            $in = " in boolean mode ";
+                        }
+                        $part = "match({$part}) against ('{$v['$match']}' {$in})";
                     } else {
                         $a = [];
                         foreach ($v as $item) {
