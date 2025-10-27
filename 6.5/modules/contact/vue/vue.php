@@ -11,7 +11,7 @@ if ($_POST['post_message']) {
     $rc = $_SESSION['last_rc_token_' . $action];
     $smarty->assign("contact_action", $action);
 
-    if (isset($rc) && ($rc['token'] == $payload['token']) && ($rc['action'] == $action)) {
+    if (isset($rc) && $rc && $payload['token'] && $rc['token'] && ($rc['token'] == $payload['token']) && ($rc['action'] == $action)) {
 
         if ((!$payload['email']) && (!$payload['phone'])){
             $response = [];
@@ -74,6 +74,8 @@ if ($_POST['post_message']) {
             $response['message'] = "Сбой отправки сообщения";
             $emps->json_response($response); exit;
         }else{
+            $_SESSION['last_rc_token_' . $action] = null;
+
             $response = [];
             $response['code'] = "OK";
             if (function_exists('on_ok_contact')) {
