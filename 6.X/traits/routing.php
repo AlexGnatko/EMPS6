@@ -356,17 +356,17 @@ trait EMPS_Common_Routing
         }
         $ua = $_SERVER['HTTP_USER_AGENT'];
         foreach ($emps_bots as $bot) {
-            if (strpos($ua, $bot) != false) {
+            if (strpos($ua, $bot) !== false) {
                 return true;
             }
         }
         if ($ua == "-") {
             return true;
         }
-        if (strpos($ua, "curl/") != false) {
+        if (strpos($ua, "curl/") !== false) {
             return true;
         }
-        if (strpos($ua, "python") != false) {
+        if (strpos($ua, "python") !== false) {
             return true;
         }
 
