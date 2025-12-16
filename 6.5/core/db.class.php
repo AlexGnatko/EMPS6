@@ -374,6 +374,9 @@ class EMPS_DB
             $use_what = implode(", ", $what);
         }
         $where_clause = $this->where_clause($query);
+        if ($where_clause) {
+            $where_clause = "where " . $where_clause;
+        }
         return $this->query("select {$use_what} from ".TP.$table." ".$where_clause." ".$sort);
     }
 
