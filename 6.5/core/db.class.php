@@ -368,6 +368,15 @@ class EMPS_DB
         return $row;
     }
 
+    public function sql_select($what, $table, $query = [], $sort = "") {
+        $use_what = $what;
+        if (is_array($what)) {
+            $use_what = implode(", ", $what);
+        }
+        $where_clause = $this->where_clause($query);
+        return $this->query("select {$use_what} from ".TP.$table." ".$where_clause." ".$sort);
+    }
+
     public function get_max($table, $field, $where){
         $addwhere = "";
         if($where){
