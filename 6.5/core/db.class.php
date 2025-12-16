@@ -24,6 +24,7 @@ class EMPS_DB
     public $was_inserted = false;
 
     public $where_table = "";
+    public $last_sql_query = "";
 
     public function connect()
     {
@@ -377,7 +378,9 @@ class EMPS_DB
         if ($where_clause) {
             $where_clause = "where " . $where_clause;
         }
-        return $this->query("select {$use_what} from ".TP.$table." ".$where_clause." ".$sort);
+        $sql_query = "select {$use_what} from ".TP.$table." ".$where_clause." ".$sort;
+        $this->last_sql_query = $sql_query;
+        return $this->query($sql_query);
     }
 
     public function get_max($table, $field, $where){
