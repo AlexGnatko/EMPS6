@@ -325,7 +325,11 @@ function smarty_function_var($params, Smarty_Internal_Template $template)
 
 function smarty_function_script($params, Smarty_Internal_Template $template)
 {
-    global $emps;
+    global $emps, $included_scripts;
+
+    if (!isset($included_scripts)) {
+        $included_scripts = [];
+    }
 
     $defer = "";
     if (isset($params['defer'])) {
@@ -372,6 +376,12 @@ function smarty_function_script($params, Smarty_Internal_Template $template)
     }
 
     $val = sprintf("<script type=\"{$type}\" src=\"%s%s\"%s></script>", $params['src'], $reset, $defer);
+    if ($params['once']) {
+        if ($included_scripts[md5($val)]) {
+            return "";
+        }
+    }
+    $included_scripts[md5($val)] = true;
     return $val;
 }
 
