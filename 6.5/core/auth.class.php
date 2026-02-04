@@ -57,12 +57,20 @@ class EMPS_Auth
         $user = $this->ensure_fullname($user);
 
         if (!$mode) {
-            $encrypted = $this->encrypt_password($password);
-            if ($user['password'] != $encrypted) {
-                $emps->save_setting("last_login_password", "{$user['password']} => {$password} => {$encrypted} ({$emps_hash_passwords})");
-                $this->login_error("wrong_password");
-                return false;
+
+            if ($emps_hash_passwords) {
+                if (!password_verify($password, $user['password'])) {
+                    $this->login_error("wrong_password");
+                    return false;
+                }
+            } else {
+                $encrypted = $this->encrypt_password($password);
+                if ($user['password'] != $encrypted) {
+                    $this->login_error("wrong_password");
+                    return false;
+                }
             }
+
         }
 
         if ($user['status'] == 0) {
