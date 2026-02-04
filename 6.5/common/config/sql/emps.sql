@@ -439,7 +439,7 @@ CREATE TEMPORARY TABLE `temp_e_users` (
   `context_id` bigint NOT NULL,
   `username` varchar(255) NOT NULL,
   `profile_name` varchar(255) NOT NULL,
-  `password` varchar(32) NOT NULL,
+  `password` text NOT NULL,
   `fullname` text NOT NULL,
   `status` int(11) NOT NULL,
   `cdt` bigint NOT NULL,

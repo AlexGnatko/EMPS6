@@ -1416,4 +1416,8 @@ trait EMPS_Common_Utils
 
         return $v;
     }
+
+    public function password_hash($password) {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
 }

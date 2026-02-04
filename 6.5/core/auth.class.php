@@ -937,6 +937,11 @@ class EMPS_Auth
     }
 
     public function encrypt_password($password) {
+        global $emps;
+
+        if ($GLOBALS['emps_hash_passwords'] ?? false) {
+            return $emps->password_hash($password);
+        }
         return md5($password);
     }
 
