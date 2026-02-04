@@ -60,8 +60,11 @@ class EMPS_Auth
 
             if ($emps_hash_passwords) {
                 if (!password_verify($password, $user['password'])) {
-                    $this->login_error("wrong_password");
-                    return false;
+                    // fallback to the old md5-only hashes
+                    if ($user['password'] != md5($password)) {
+                        $this->login_error("wrong_password");
+                        return false;
+                    }
                 }
             } else {
                 $encrypted = $this->encrypt_password($password);
