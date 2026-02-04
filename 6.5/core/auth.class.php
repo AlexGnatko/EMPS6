@@ -29,7 +29,7 @@ class EMPS_Auth
 
     function create_session($username, $password, $mode)
     {
-        global $emps;
+        global $emps, $emps_hash_passwords;
 
         $rv = $emps->do_action("username_filter", ['username' => $username]);
         $username = $rv['username'];
@@ -57,7 +57,9 @@ class EMPS_Auth
         $user = $this->ensure_fullname($user);
 
         if (!$mode) {
-            if ($user['password'] != $this->encrypt_password($password)) {
+            $encrypted = $this->encrypt_password($password);
+            if ($user['password'] != $encrypted) {
+                $emps->save_setting("last_login_password", "{$user['password']} => {$password} => {$encrypted} ({$emps_hash_passwords})");
                 $this->login_error("wrong_password");
                 return false;
             }
