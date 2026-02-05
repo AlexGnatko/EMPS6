@@ -1,6 +1,6 @@
 (function() {
 
-    Vue.component('descriptor', {
+    EMPS.vue_component_direct('descriptor', {
         template: '#descriptor-template',
         props: ['value', 'type', 'plain'],
         data: function(){
