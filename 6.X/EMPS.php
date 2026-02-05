@@ -256,7 +256,7 @@ class EMPS_Common
     {
         global $smarty;
 
-        header("Referrer-Policy: unsafe-url");
+//        header("Referrer-Policy: strict-origin-when-cross-origin");
 
         if (!($this->page_properties['title'] ?? false)) {
             $this->page_properties['title'] = "";
