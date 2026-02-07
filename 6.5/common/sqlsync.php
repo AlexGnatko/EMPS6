@@ -34,32 +34,71 @@ function sync_indices($dest_table, $src_table, $didx, $sidx)
 {
     global $emps;
 
-    foreach ($sidx as $sc) {
-        reset($didx);
-        $exists = false;
+    $exists = [];
+    $fulltext_indices = [];
+    foreach ($sidx as $si => $sc) {
+        $exists['idx'.$si] = false;
+        $column = $sc['Column_name'];
+        $index = $sc['Key_name'];
+
+        if ($sc['Index_type'] == 'FULLTEXT') {
+            if (!isset($fulltext_indices[$index])) {
+                $sc['columns'] = [];
+                $sc['columns'][] = $column;
+                $fulltext_indices[$index] = $sc;
+            } else {
+                $fulltext_indices[$index]['columns'][] = $column;
+            }
+        }
+
         foreach ($didx as $dc) {
             if ($dc['Table'] == $dest_table && $sc['Table'] == $src_table) {
                 if ($dc['Column_name'] == $sc['Column_name']) {
+                    //echo "Check: ";
+                    //echo $sc['Column_name']."/".$sc['Key_name']."/".$sc['Non_unique']." => ".$dc['Column_name']."/".$dc['Key_name']."/".$dc['Non_unique'];
+                    //echo "\r\n";
                     if (($dc['Key_name'] == $sc['Key_name']) && ($dc['Non_unique'] == $sc['Non_unique'])) {
-                        $exists = true;
+                        //echo "Exists: ";
+                        //echo $sc['Column_name']."/".$sc['Key_name']."/".$sc['Non_unique']." => ".$dc['Column_name']."/".$dc['Key_name']."/".$dc['Non_unique'];
+                        //echo "\r\n";
+                        $exists['idx'.$si] = true;
+                    } else {
+                        //var_dump($sc);
+                        //var_dump($dc);
+                        //echo "\r\n";
                     }
                 }
             }
         }
-        if (!$exists) {
+    }
+
+    $recreate_fulltext = [];
+
+    foreach ($sidx as $si => $sc) {
+        if (!$exists['idx'.$si]) {
             $column = $sc['Column_name'];
             $index = $sc['Key_name'];
 
-            echo $column . ": create index\r\n";
+            echo $column . ": create index {$index}\r\n";
             if ($sc['Key_name'] == 'PRIMARY') {
                 $emps->db->query("alter table `$dest_table` add primary key (`$column`)");
             } elseif ($sc['Index_type'] == 'FULLTEXT') {
-                $emps->db->query("alter table `$dest_table` add fulltext key `$index` (`$column`)");
+                if (!isset($recreate_fulltext[$index])) {
+                    $recreate_fulltext[$index] = $fulltext_indices[$index];
+                }
             } else {
                 $emps->db->query("alter table `$dest_table` add key `$index` (`$column`)");
             }
 
         }
+    }
+
+    foreach ($recreate_fulltext as $si => $sc) {
+        $columns = implode("`, `",$sc['columns']);
+        $index = $sc['Key_name'];
+        echo "create fulltext index {$index} `{$columns}`\r\n";
+        $emps->db->query("drop index `{$index}` on `{$dest_table}`");
+        $emps->db->query("alter table `{$dest_table}` add fulltext key `{$index}` (`{$columns}`)");
     }
 }
 
