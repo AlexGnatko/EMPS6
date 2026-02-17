@@ -378,7 +378,7 @@ function smarty_function_script($params, Smarty_Internal_Template $template)
     $val = sprintf("<script type=\"{$type}\" src=\"%s%s\"%s></script>", $params['src'], $reset, $defer);
     if ($params['once']) {
         if ($included_scripts[md5($val)]) {
-            return "";
+            return "<!-- skip {$params['src']} -->";
         }
     }
     $included_scripts[md5($val)] = true;
