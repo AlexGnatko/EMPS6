@@ -107,7 +107,7 @@
         <script>
             emps_scripts.push(function(){
                 if (EMPS.vue_version() == 3) {
-                    EMPS.mainapp.use(VueNumeric.default);
+                    EMPS.vue_component_direct('vue-numeric', VueNumeric.default);
                 } else {
                     Vue.use(VueNumeric.default);
                 }
