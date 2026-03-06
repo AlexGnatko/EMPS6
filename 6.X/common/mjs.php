@@ -36,7 +36,14 @@ if ($ext == "htm") {
     $emps->not_found();
     exit;
 }
-
+if ($ext == "sql") {
+    $emps->not_found();
+    exit;
+}
+if ($ext == "json") {
+    $emps->not_found();
+    exit;
+}
 $page = "_{$part},{$file}";
 
 $file_name = $emps->page_file_name($page, "inc");
