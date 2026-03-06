@@ -86,6 +86,8 @@ class EMPS_Common
 
     public $prand_seed = 17131;
 
+    public $raw_input = "";
+
     public function __construct()
     {
         $this->lang = $GLOBALS['emps_lang'];
@@ -201,6 +203,10 @@ class EMPS_Common
     {
         if(isset($_SERVER["CONTENT_TYPE"]) && strstr($_SERVER["CONTENT_TYPE"], "application/json") !== false){
             $raw = file_get_contents("php://input");
+            if ($raw) {
+                $this->raw_input = $raw;
+            }
+
             $request = json_decode($raw, true);
             if (is_array($request)) {
                 $_REQUEST = array_merge($_REQUEST, $request);
@@ -221,6 +227,9 @@ class EMPS_Common
     {
         if(isset($_SERVER["CONTENT_TYPE"]) && strstr($_SERVER["CONTENT_TYPE"], "application/json") !== false){
             $raw = file_get_contents("php://input");
+            if ($raw) {
+                $this->raw_input = $raw;
+            }
             $request = json_decode($raw, true);
             if (is_array($request)) {
                 $_REQUEST = array_merge($_REQUEST, $request);
