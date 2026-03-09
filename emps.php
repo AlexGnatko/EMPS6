@@ -10,5 +10,5 @@ if ($command == "install") {
     copy("pre_composer.json", "composer.json");
     chdir("6.X");
     system("bower update --allow-root");
-    system("npm install");
+    system("npm install --legacy-peer-deps");
 }
