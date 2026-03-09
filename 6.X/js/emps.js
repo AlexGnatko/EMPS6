@@ -4,6 +4,7 @@ var EMPS = {
     scroll_data: {},
     vue3_components: [],
     vue3_scripts: [],
+    vue3_async_scripts: [],
 
     sp_id: 0,
     get_path_vars: function(){
@@ -348,6 +349,20 @@ var EMPS = {
             x.call(this, app);
         }
     },
+    vue3_run_async_scripts: async function() {
+        let app = EMPS.mainapp;
+
+        while (this.vue3_async_scripts.length > 0) {
+            let x = this.vue3_async_scripts.shift();
+            console.log("EXECUTING ASYNC SCRIPT", x);
+
+            try {
+                await x.call(this, app);
+            } catch (err) {
+                console.error("Vue3 async script failed:", err);
+            }
+        }
+    }
     after_all_templates: null,
     after_template_loaded: function() {
         var all_loaded = true;
