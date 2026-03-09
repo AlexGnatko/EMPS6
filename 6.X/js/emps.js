@@ -362,7 +362,7 @@ var EMPS = {
                 console.error("Vue3 async script failed:", err);
             }
         }
-    }
+    },
     after_all_templates: null,
     after_template_loaded: function() {
         var all_loaded = true;
