@@ -14,7 +14,8 @@
     "vue-select": "^3.4.0",
     "vue-sortable": "latest",
     "vue-the-mask": "latest",
-    "vue-json-viewer": "latest"
+    "vue-json-viewer@2": "latest",
+    "vue-json-viewer@3": "latest"
   },
   "author": "Alex Gnatko",
   "license": "ISC"
