@@ -1420,4 +1420,12 @@ trait EMPS_Common_Utils
     public function password_hash($password) {
         return password_hash($password, PASSWORD_DEFAULT);
     }
+
+    public function get_client_ip() {
+        $ip = $_SERVER['HTTP_X_REAL_IP'];
+        if (empty($ip)) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+    }
 }

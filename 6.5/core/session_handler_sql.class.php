@@ -41,7 +41,7 @@ class EMPS_SessionHandler implements SessionHandlerInterface
         if (!$ra) {
             $nr = [];
             $nr['sess_id'] = $id;
-            $nr['ip'] = $_SERVER['REMOTE_ADDR'];
+            $nr['ip'] = $emps->get_client_ip();
             $nr['browser_id'] = $emps->ensure_browser($_SERVER['HTTP_USER_AGENT']);
             $emps->db->sql_insert_row("e_php_sessions", ['SET' => $nr]);
         } else {
@@ -79,7 +79,7 @@ class EMPS_SessionHandler implements SessionHandlerInterface
             $nr = [];
             $nr['data'] = $data;
             $nr['browser_id'] = $emps->ensure_browser($_SERVER['HTTP_USER_AGENT']);
-            $nr['ip'] = $_SERVER['REMOTE_ADDR'];
+            $nr['ip'] = $emps->get_client_ip();
 
             $row = $emps->db->get_row("e_php_sessions", "sess_id = '" . $emps->db->sql_escape($id) . "'");
             if ($row) {

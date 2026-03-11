@@ -90,7 +90,7 @@ class EMPS_Auth
 
         $nr = [];
         $nr['user_id'] = $user_id;
-        $nr['ip'] = $_SERVER['REMOTE_ADDR'];
+        $nr['ip'] = $emps->get_client_ip();
         $nr['browser_id'] = $emps->ensure_browser($_SERVER['HTTP_USER_AGENT']);
         $nr['dt'] = time();
         $emps->db->sql_insert_row("e_sessions", ['SET' => $nr]);
@@ -113,7 +113,7 @@ class EMPS_Auth
         $nr = array();
         $nr['user_id'] = $user_id;
         $nr['type'] = $type;
-        $nr['ip'] = $_SERVER['REMOTE_ADDR'];
+        $nr['ip'] = $emps->get_client_ip();
         if(isset($_REQUEST['email'])){
             $nr['email'] = $_REQUEST['email'];
         }
@@ -156,7 +156,7 @@ class EMPS_Auth
                 }
             }
             if ($session['dt'] < (time() - 60)) {
-                $emps->db->query("update " . TP . "e_sessions set dt = " . time() . $browser . ", ip = '" . $_SERVER['REMOTE_ADDR'] ."' where id = " . $session['id']);
+                $emps->db->query("update " . TP . "e_sessions set dt = " . time() . $browser . ", ip = '" . $emps->get_client_ip() ."' where id = " . $session['id']);
             }
         }
 
