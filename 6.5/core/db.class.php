@@ -218,68 +218,74 @@ class EMPS_DB
     public function where_clause($query){
         $parts = [];
         foreach($query as $n => $v){
-            if ($n == '$and') {
+            $xn = explode("/", $n);
+            $fn = $xn[0];
+            if ($fn == '$and') {
                 $part = $this->and_clause($v);
-            } elseif ($n == '$or') {
+            } elseif ($fn == '$or') {
                 $part = $this->or_clause($v);
-            } elseif ($n == '$nt') {
+            } elseif ($fn == '$nt') {
                 $part = "not ".$this->where_clause($v);
             } else {
-                $part = "{$this->where_table}`{$n}`";
-                if(!is_string($v) && (is_numeric($v) || is_float($v))) {
-                    $part .= " = " . $v;
-                }elseif(is_array($v)){
-                    if (isset($v['$gt'])) {
-                        $value = $v['$gt'];
-                        $part .= " > {$value}";
-                    } elseif (isset($v['$gte'])) {
-                        $value = $v['$gte'];
-                        $part .= " >= {$value}";
-                    } elseif (isset($v['$lt'])) {
-                        $value = $v['$lt'];
-                        $part .= " < {$value}";
-                    } elseif (isset($v['$lte'])) {
-                        $value = $v['$lte'];
-                        $part .= " <= {$value}";
-                    } elseif (isset($v['$range'])) {
-                        $value = $v['$range'];
-                        $part .= " >= {$value[0]} and {$this->where_table}`{$n}` <= {$value[1]}";
-                    } elseif (isset($v['$like'])) {
-                        $value = $v['$like'];
-                        $part .= " like ('{$value}') ";
-                    } elseif (isset($v['$in'])) {
-                        $value = $v['$in'];
-                        $part .= " in ({$value}) ";
-                    } elseif (isset($v['$nin'])) {
-                        $value = $v['$nin'];
-                        $part .= " not in ({$value}) ";
-                    } elseif (isset($v['$not'])) {
-                        $value = $v['$not'];
-                        $part .= " <> {$value} ";
-                    } elseif (isset($v['$ev'])) {
-                        $value = $v['$ev'];
-                        $part .= " {$value} ";
-                    } elseif (isset($v['$match'])) {
-                        $in = "";
-                        if ($v['$boolean']) {
-                            $in = " in boolean mode ";
-                        }
-                        $part = "match({$part}) against ('{$v['$match']}' {$in})";
-                    } else {
-                        $a = [];
-                        foreach ($v as $item) {
-                            if (is_string($item)) {
-                                $item = $this->sql_escape($item);
-                                $item = "'{$item}'";
+                if ($fn == '$ev') {
+                    $part = " {$v} ";
+                } else {
+                    $part = "{$this->where_table}`{$n}`";
+                    if(!is_string($v) && (is_numeric($v) || is_float($v))) {
+                        $part .= " = " . $v;
+                    }elseif(is_array($v)){
+                        if (isset($v['$gt'])) {
+                            $value = $v['$gt'];
+                            $part .= " > {$value}";
+                        } elseif (isset($v['$gte'])) {
+                            $value = $v['$gte'];
+                            $part .= " >= {$value}";
+                        } elseif (isset($v['$lt'])) {
+                            $value = $v['$lt'];
+                            $part .= " < {$value}";
+                        } elseif (isset($v['$lte'])) {
+                            $value = $v['$lte'];
+                            $part .= " <= {$value}";
+                        } elseif (isset($v['$range'])) {
+                            $value = $v['$range'];
+                            $part .= " >= {$value[0]} and {$this->where_table}`{$n}` <= {$value[1]}";
+                        } elseif (isset($v['$like'])) {
+                            $value = $v['$like'];
+                            $part .= " like ('{$value}') ";
+                        } elseif (isset($v['$in'])) {
+                            $value = $v['$in'];
+                            $part .= " in ({$value}) ";
+                        } elseif (isset($v['$nin'])) {
+                            $value = $v['$nin'];
+                            $part .= " not in ({$value}) ";
+                        } elseif (isset($v['$not'])) {
+                            $value = $v['$not'];
+                            $part .= " <> {$value} ";
+                        } elseif (isset($v['$ev'])) {
+                            $value = $v['$ev'];
+                            $part .= " {$value} ";
+                        } elseif (isset($v['$match'])) {
+                            $in = "";
+                            if ($v['$boolean']) {
+                                $in = " in boolean mode ";
                             }
-                            $a[] = $item;
+                            $part = "match({$part}) against ('{$v['$match']}' {$in})";
+                        } else {
+                            $a = [];
+                            foreach ($v as $item) {
+                                if (is_string($item)) {
+                                    $item = $this->sql_escape($item);
+                                    $item = "'{$item}'";
+                                }
+                                $a[] = $item;
+                            }
+                            $str = implode(", ", $a);
+                            $part .= " in ({$str})";
                         }
-                        $str = implode(", ", $a);
-                        $part .= " in ({$str})";
+                    }else{
+                        $v = $this->sql_escape($v);
+                        $part .= " = '{$v}'";
                     }
-                }else{
-                    $v = $this->sql_escape($v);
-                    $part .= " = '{$v}'";
                 }
             }
             $parts[] = $part;

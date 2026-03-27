@@ -121,6 +121,7 @@ emps_scripts.push(function() {
                         var data = response.data;
                         if (data.code == 'OK') {
                             that.files = data.files;
+                            that.$emit("deleted", file);
                             that.$emit("uptodate", false);
                             $("button").blur();
                         }else{

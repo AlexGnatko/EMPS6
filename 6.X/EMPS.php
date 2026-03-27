@@ -23,16 +23,6 @@ class EMPS_Common
     use EMPS_Common_Files;
     use EMPS_Common_Actions;
 
-    /**
-     * @var $p The Properties object
-     */
-    public $p;
-
-    /**
-     * @var $auth The Authentication object
-     */
-    public $auth;
-
     public $start_time = 0;
 
     public $log_file_path = EMPS_SCRIPT_PATH."/local/log.txt";

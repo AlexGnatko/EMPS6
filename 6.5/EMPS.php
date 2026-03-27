@@ -12,7 +12,24 @@ require_once EMPS_COMMON_PATH_PREFIX . "/EMPS.php";
  */
 class EMPS extends EMPS_Common
 {
+    /** @var \EMPS_DB */
     public $db;
+
+    /**
+     * @var \EMPS_Properties $p The Properties object
+     */
+    public $p;
+
+    /**
+     * @var \EMPS_Auth $auth The Authentication object
+     */
+    public $auth;
+
+    /**
+     * @var \EMPS_Blocks $blocks HTML Blocks
+     */
+    public $blocks;
+
     public $cas;
 
     public $settings_cache = [], $settings_cache_common = [], $content_cache = [], $new_settings = [];
