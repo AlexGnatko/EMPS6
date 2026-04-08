@@ -92,6 +92,7 @@ class EMPS_Auth
         $nr['user_id'] = $user_id;
         $nr['ip'] = $emps->get_client_ip();
         $nr['browser_id'] = $emps->ensure_browser($_SERVER['HTTP_USER_AGENT']);
+        $nr['mode'] = intval($mode);
         $nr['dt'] = time();
         $emps->db->sql_insert_row("e_sessions", ['SET' => $nr]);
 
