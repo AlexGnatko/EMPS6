@@ -5,7 +5,7 @@ class EMPS_Auth
     public $AUTH_R = -4;
     public $USER_ID = 0;
 
-    public $login;
+    public $login, $login_mode = 0;
 
     public function __construct()
     {
@@ -59,12 +59,8 @@ class EMPS_Auth
         if (!$mode) {
 
             if ($emps_hash_passwords) {
-                if (!password_verify($password, $user['password'])) {
-                    // fallback to the old md5-only hashes
-                    if ($user['password'] != md5($password)) {
-                        $this->login_error("wrong_password");
-                        return false;
-                    }
+                if (!$this->verify_password($password, $user)) {
+                    return false;
                 }
             } else {
                 $encrypted = $this->encrypt_password($password);
@@ -164,6 +160,8 @@ class EMPS_Auth
         $this->USER_ID = $session['user_id'];
 
         $this->login = $_SESSION['login'];
+
+        $this->login_mode = $session['mode'];
 
         $user = $this->load_user($this->USER_ID);
         if ($user) {
@@ -957,6 +955,17 @@ class EMPS_Auth
             return $emps->password_hash($password);
         }
         return md5($password);
+    }
+
+    public function verify_password($password, $user) {
+        if (!password_verify($password, $user['password'])) {
+            // fallback to the old md5-only hashes
+            if ($user['password'] != md5($password)) {
+                $this->login_error("wrong_password");
+                return false;
+            }
+        }
+        return true;
     }
 
     public function taken_user($username)
