@@ -134,16 +134,38 @@ class EMPS_Auth
             $ssid = $_SESSION['session_id'];
         }
 
+        /*
+         * To infect another website's php session id with a new EMPS session_id, pass the numeric id
+         * of the EMPS session alongside a secret hash (the hash field from the table). The numeric id
+         * is used to quickly find the session by id, the hash is used as a password.
+         */
+        if ($_GET['session_hash'] ?? false && $_GET['session_id'] ?? false) {
+            $ssid = $_GET['session_id'];
+        }
+
         if (!$ssid) {
             return false;
         }
 
-        $session = $emps->db->get_row("e_sessions", "id = $ssid");
+        $session = $emps->db->get_row("e_sessions", "id = ".intval($ssid));
         if (!$session) {
             unset($this->USER_ID);
             unset($_SESSION['session_id']);
             return false;
         } else {
+            if ($_GET['session_hash'] ?? false) {
+                if (isset($session['hash']) && $session['hash'] !== $_GET['session_hash']) {
+                    /*
+                     * Return false if the hash doesn't match
+                     */
+                    return false;
+                } else {
+                    /*
+                     * Infect this new php session with this EMPS session id.
+                     */
+                    $_SESSION['session_id'] = $ssid;
+                }
+            }
             $browser = "";
 
             if ($session['dt'] < (time() - 10 * 60)) {

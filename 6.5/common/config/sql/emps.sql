@@ -330,9 +330,11 @@ CREATE TEMPORARY TABLE `temp_e_sessions` (
   `ip` varchar(255) NOT NULL,
   `browser_id` bigint NOT NULL,
   `mode` tinyint NOT NULL,
+  `hash` varchar(255) NOT NULL,
   `cdt` bigint NOT NULL,
   `dt` bigint NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `hash` (`hash`),
   KEY `cdt` (`cdt`),
   KEY `dt` (`dt`),
   KEY `user_id` (`user_id`)
