@@ -154,7 +154,7 @@ class EMPS_Auth
             return false;
         } else {
             if ($_GET['session_hash'] ?? false) {
-                if (isset($session['hash']) && $session['hash'] !== $_GET['session_hash']) {
+                if (isset($session['hash']) && $session['hash'] != "" && $session['hash'] !== $_GET['session_hash']) {
                     /*
                      * Return false if the hash doesn't match
                      */
