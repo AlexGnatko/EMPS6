@@ -50,6 +50,9 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
                     $source = "";
                 }
                 $mtime = filemtime($fn);
+                if ($source == "") {
+                    $mtime = time() - 60;
+                }
             } else {
                 $fn = $emps->common_module_html($name);
 
@@ -200,6 +203,11 @@ class Smarty_Resource_EMPS_Markdown extends Smarty_Resource_Custom
 
         if (file_exists($fn)) {
             $source = file_get_contents($fn);
+
+            if ($source == "") {
+                $mtime = time() - 60;
+                return true;
+            }
 
             $xx = explode("### META", $source);
             $source = $xx[0];
