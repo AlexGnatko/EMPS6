@@ -26,6 +26,10 @@ $smarty->cache_lifetime = 1800;
 $smarty->compile_check = true;
 $smarty->caching = false;
 
+function missing_mtime() {
+    return floor(time()/60)*30;
+}
+
 class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
 {
     protected function fetch($name, &$source, &$mtime)
@@ -51,7 +55,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
                 }
                 $mtime = filemtime($fn);
                 if ($source == "") {
-                    $mtime = time() - 60;
+                    $mtime = missing_mtime();
                 }
             } else {
                 $fn = $emps->common_module_html($name);
@@ -61,7 +65,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
                     $mtime = filemtime($fn);
                 } else {
                     $source = "";
-                    $mtime = time() - 60;
+                    $mtime = missing_mtime();
                 }
             }
         } else {
@@ -86,7 +90,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
             if (!file_exists($fn)) {
                 $fn = $emps->common_module_html($name);
                 if (!file_exists($fn)) {
-                    return time() - 60;
+                    return missing_mtime();
                 } else {
                     $r = filemtime($fn);
                 }
@@ -113,7 +117,7 @@ class Smarty_Resource_EMPS_Page extends Smarty_Resource_Custom
             }
         } else {
             $source = "";
-            $mtime = time() - 60;
+            $mtime = missing_mtime();
         }
         return true;
     }
@@ -126,7 +130,7 @@ class Smarty_Resource_EMPS_Page extends Smarty_Resource_Custom
         if ($ra) {
             return $ra['dt'];
         } else {
-            return (time() - 60);
+            return missing_mtime();
         }
     }
 }
@@ -147,7 +151,7 @@ class Smarty_Resource_EMPS_StaticBlock extends Smarty_Resource_Custom
             }
         } else {
             $source = "";
-            $mtime = time() - 60;
+            $mtime = missing_mtime();
         }
         return true;
     }
@@ -160,7 +164,7 @@ class Smarty_Resource_EMPS_StaticBlock extends Smarty_Resource_Custom
         if ($ra) {
             return $ra['dt'];
         } else {
-            return (time() - 60);
+            return missing_mtime();
         }
     }
 }
@@ -183,7 +187,7 @@ class Smarty_Resource_EMPS_StaticBlockTemplate extends Smarty_Resource_EMPS_DB
             }
         } else {
             $source = "";
-            $mtime = time() - 60;
+            $mtime = missing_mtime();
         }
         return true;
     }
@@ -197,7 +201,7 @@ class Smarty_Resource_EMPS_Markdown extends Smarty_Resource_Custom
         global $emps;
 
         $source = "";
-        $mtime = time() - 60;
+        $mtime = missing_mtime();
 
         $fn = $emps->page_file_name($name, 'view');
 
@@ -205,7 +209,7 @@ class Smarty_Resource_EMPS_Markdown extends Smarty_Resource_Custom
             $source = file_get_contents($fn);
 
             if ($source == "") {
-                $mtime = time() - 60;
+                $mtime = missing_mtime();
                 return true;
             }
 
