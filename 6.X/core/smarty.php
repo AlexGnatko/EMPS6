@@ -51,7 +51,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
                 }
                 $mtime = filemtime($fn);
                 if ($source == "") {
-                    $mtime = 0;
+                    $mtime = time() - 60;
                 }
             } else {
                 $fn = $emps->common_module_html($name);
@@ -61,7 +61,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
                     $mtime = filemtime($fn);
                 } else {
                     $source = "";
-                    $mtime = 0;
+                    $mtime = time() - 60;
                 }
             }
         } else {
@@ -86,7 +86,7 @@ class Smarty_Resource_EMPS_DB extends Smarty_Resource_Custom
             if (!file_exists($fn)) {
                 $fn = $emps->common_module_html($name);
                 if (!file_exists($fn)) {
-                    return 0;
+                    return time() - 60;
                 } else {
                     $r = filemtime($fn);
                 }
@@ -113,7 +113,7 @@ class Smarty_Resource_EMPS_Page extends Smarty_Resource_Custom
             }
         } else {
             $source = "";
-            $mtime = 0;
+            $mtime = time() - 60;
         }
         return true;
     }
@@ -126,7 +126,7 @@ class Smarty_Resource_EMPS_Page extends Smarty_Resource_Custom
         if ($ra) {
             return $ra['dt'];
         } else {
-            return 0;
+            return (time() - 60);
         }
     }
 }
@@ -147,7 +147,7 @@ class Smarty_Resource_EMPS_StaticBlock extends Smarty_Resource_Custom
             }
         } else {
             $source = "";
-            $mtime = 0;
+            $mtime = time() - 60;
         }
         return true;
     }
@@ -160,7 +160,7 @@ class Smarty_Resource_EMPS_StaticBlock extends Smarty_Resource_Custom
         if ($ra) {
             return $ra['dt'];
         } else {
-            return 0;
+            return (time() - 60);
         }
     }
 }
@@ -183,7 +183,7 @@ class Smarty_Resource_EMPS_StaticBlockTemplate extends Smarty_Resource_EMPS_DB
             }
         } else {
             $source = "";
-            $mtime = 0;
+            $mtime = time() - 60;
         }
         return true;
     }
@@ -197,7 +197,7 @@ class Smarty_Resource_EMPS_Markdown extends Smarty_Resource_Custom
         global $emps;
 
         $source = "";
-        $mtime = 0;
+        $mtime = time() - 60;
 
         $fn = $emps->page_file_name($name, 'view');
 
@@ -205,7 +205,7 @@ class Smarty_Resource_EMPS_Markdown extends Smarty_Resource_Custom
             $source = file_get_contents($fn);
 
             if ($source == "") {
-                $mtime = 0;
+                $mtime = time() - 60;
                 return true;
             }
 
