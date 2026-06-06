@@ -12,7 +12,7 @@ $uri = $x[0];
 
 $dir = EMPS_SCRIPT_PATH;
 
-$uri = str_replace('../', '/', $uri);
+$uri = preg_replace('/\.{2,}\//', '/', $uri);
 
 $fname = $dir . $uri;
 
