@@ -75,7 +75,7 @@ URL pattern: `/mjs/{module-pp}/{filename}.js`
 
 Defined in `modules/_common/config/enum.nn.txt`:
 ```
-14  pool_match_status:100=Ставки открыты;200=Закрыты;300=Результат внесён
+pool_match_status:100=Ставки открыты;200=Закрыты;300=Результат внесён
 ```
 - Use steps of 100 (or 10) to allow inserting values between
 - In Vue: `enum_val('pool_match_status', row.status)`
