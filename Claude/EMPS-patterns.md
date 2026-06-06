@@ -127,7 +127,7 @@ emps_scripts.push(function () {
 2. **`$start` = pagination offset** — never use as item ID if page has a paginator
 3. **`$emps->loadvars()` after loop** — always restore URL vars after generating elinks in a while loop
 4. **EMPS parses JSON POST body** — axios sends JSON, EMPS merges it into `$_POST` in `pre_init()`, so `$_POST['payload']` works
-5. **`mainapp` vs `no_mainapp`** — depends on project. In osharov.ru: `page_property("mainapp", true)` enables mainapp.js. Check `templates/site/headscripts.nn.htm` for the project's pattern
+5. **`mainapp` vs `no_mainapp`** — depends on project. In one project: `page_property("mainapp", true)` enables mainapp.js. In another, `page_property("no_mainapp", true)` disables it. Check `templates/site/headscripts.nn.htm` for the project's pattern
 6. **Selector component** — `type="table_name_without_TP"`, shows `name` field, returns `id`. Include with `{{include file="db:_comp/selector"}}`
 7. **Tabs via `path.ss`** — `EMPS.elink({ss:'info'},[])` to navigate, `v-if="path.ss == 'info'"` to show content
 8. **`$sd` for secondary filter** — better than GET params. Server reads `$sd`, JS navigates via `EMPS.elink({sd: val}, ['key','ss'])`
@@ -148,7 +148,13 @@ $emps->auth->json_user($user_id)            // safe user object (no password)
 
 ## EMPS_Service (periodic tasks)
 
+Say, a file like `modules/do/work/work.php` (URL `/do-work/`):
+
 ```php
+<?php
+
+$emps->plaintext_response();
+
 require_once $emps->core_module("service.class");
 $srv = new EMPS_Service();
 $srv->init("_unique_task_name", 60*60); // throttle: once per hour
@@ -157,9 +163,33 @@ if ($srv->is_runnable()) {
 }
 ```
 
+This is usually called from a `modules/heartbeat/project.php` like this:
+
+```php
+<?php
+
+$emps->plaintext_response();
+
+require_once $emps->core_module("heartbeat.class");
+
+$hb = new EMPS_Heartbeat();
+
+if($emps->website_ctx == $emps->default_ctx){
+    // common tasks
+    echo "Common tasks: ";
+
+    $hb->add_url("/do-work/");
+
+    $hb->execute();
+
+}else{
+    // per-website tasks
+}
+```
+
 ## pool.class.php Pattern
 
-Create a domain class for shared logic across modules:
+Create a domain class for shared logic across modules (`/modules/pool/pool.class.php`):
 ```php
 class Pool {
     public $table_contests = "pool_contests";
