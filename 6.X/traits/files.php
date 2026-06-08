@@ -388,6 +388,12 @@ trait EMPS_Common_Files
             $x = explode("\n", $data);
             foreach ($x as $v) {
                 $v = trim($v);
+                if (!$v) {
+                    continue;
+                }
+                if (substr($v, 0, 1) == "#") {
+                    continue;
+                }
                 $m = explode(':', $v, 2);
                 $name = trim($m[0]);
                 $value = null;
