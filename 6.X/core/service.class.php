@@ -28,7 +28,7 @@ class EMPS_Service
 
     public function is_runnable(){
         global $emps;
-        if ($emps->auth->credentials("admin")) {
+        if ($emps->auth->credentials("admin") || $emps->is_localhost_request()) {
             if($_GET['runnow'] ?? false){
                 return true;
             }
