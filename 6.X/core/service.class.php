@@ -28,9 +28,12 @@ class EMPS_Service
 
     public function is_runnable(){
         global $emps;
-        if($_GET['runnow'] ?? false){
-            return true;
+        if ($emps->auth->credentials("admin")) {
+            if($_GET['runnow'] ?? false){
+                return true;
+            }
         }
+
         if($this->last_dt < (time() - $this->interval)){
             $this->save_setting($this->service_variable, time());
             return true;
