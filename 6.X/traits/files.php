@@ -9,8 +9,10 @@ trait EMPS_Common_Files
             case 'view':
                 if (mb_substr($first_name, 0, 1) == '!') {
                     $first_name = mb_substr($first_name, 1);
+                    $first_name = basename($first_name);
                     $fn .= '/' . $first_name;
                 } else {
+                    $first_name = basename($first_name);
                     $fn .= '/' . $first_name . '.' . $lang . '.htm';
                 }
                 break;
