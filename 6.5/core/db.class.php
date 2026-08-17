@@ -197,39 +197,6 @@ class EMPS_DB
         return $lst;
     }
 
-    private function sql_findcols($table)
-    {
-        global $sql_reset;
-        $columns = $this->table_columns($table);
-        foreach($columns as $v) {
-            $name = $v[0];
-            if (isset($GLOBALS['SET'][$name])) {
-                $this->sql_take[$name] = "`" . $name . "`";
-                $this->sql_value[$name] = "'" . $this->sql_escape($GLOBALS['SET'][$name]) . "'";
-            } elseif ($_REQUEST[$name] != '') {
-                $this->sql_take[$name] = "`" . $name . "`";
-                $this->sql_value[$name] = "'" . $this->sql_escape($_REQUEST[$name]) . "'";
-            } elseif ($sql_reset[$name]) {
-                $this->sql_take[$name] = "`" . $name . "`";
-                $this->sql_value[$name] = "''";
-            } elseif ($this->sql_null[$name]) {
-                $this->sql_take[$name] = "`" . $name . "`";
-                $this->sql_value[$name] = "null";
-            }
-        }
-    }
-
-    public function set_sql_reset(){
-        global $sql_reset;
-
-        $sql_reset = [];
-        foreach($_REQUEST as $n => $v){
-            if($v == ""){
-                $sql_reset[$n] = true;
-            }
-        }
-    }
-
     private function sql_findcols_row($table, $row)
     {
         $columns = $this->table_columns($table);

@@ -209,7 +209,9 @@ class EMPS_Auth
                 }
             }
             if ($session['dt'] < (time() - 60)) {
-                $emps->db->query("update " . TP . "e_sessions set dt = " . time() . $browser . ", ip = '" . $emps->get_client_ip() ."' where id = " . $session['id']);
+                $emps->db->query("update " . TP . "e_sessions set dt = " . time() . $browser .
+                    ", ip = " . $emps->db->sql_quote($emps->get_client_ip()) .
+                    " where id = " . intval($session['id']));
             }
         }
 

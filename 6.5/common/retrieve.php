@@ -2,9 +2,12 @@
 $emps->no_smarty = true;
 
 if ($key) {
-    $key = $emps->db->sql_escape($key);
-
-    $file = $emps->db->get_row("e_files", "md5 = '{$key}'");
+    if (!is_scalar($key)) {
+        http_response_code(404);
+        exit;
+    }
+    $key = $emps->db->sql_quote($key);
+    $file = $emps->db->get_row("e_files", "md5 = {$key}");
 
     if ($file) {
 

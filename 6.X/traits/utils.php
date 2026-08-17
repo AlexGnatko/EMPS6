@@ -1421,11 +1421,114 @@ trait EMPS_Common_Utils
         return password_hash($password, PASSWORD_DEFAULT);
     }
 
-    public function get_client_ip() {
-        $ip = $_SERVER['HTTP_X_REAL_IP'];
-        if (empty($ip)) {
-            $ip = $_SERVER['REMOTE_ADDR'];
+    /**
+     * Check whether an address belongs to a CIDR range
+     *
+     * Works for both IPv4 and IPv6: the addresses are compared in their packed form, so a range of
+     * one family never matches an address of the other.
+     */
+    public function ip_in_range($ip, $range)
+    {
+        $x = explode("/", $range, 2);
+        if (!isset($x[1])) {
+            return false;
         }
-        return $ip;
+
+        $net = @inet_pton(trim($x[0]));
+        $addr = @inet_pton($ip);
+
+        if ($net === false || $addr === false || strlen($net) != strlen($addr)) {
+            return false;
+        }
+
+        $bits = intval($x[1]);
+        if ($bits < 0 || $bits > (strlen($net) * 8)) {
+            return false;
+        }
+
+        $bytes = intdiv($bits, 8);
+        $rest = $bits % 8;
+
+        if ($bytes > 0 && strncmp($net, $addr, $bytes) !== 0) {
+            return false;
+        }
+        if ($rest > 0) {
+            $mask = chr((0xff << (8 - $rest)) & 0xff);
+            if (($net[$bytes] & $mask) !== ($addr[$bytes] & $mask)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Is this address one of our own proxies?
+     *
+     * By default only the loopback addresses are trusted: nginx and php-fpm normally live on the
+     * same machine, so a request coming from 127.0.0.1 is our own front end and the X-Real-Ip it
+     * passes on may be believed. A proxy anywhere else has to be named in EMPS_TRUSTED_PROXIES,
+     * comma separated, each entry either a plain address or a CIDR range:
+     *
+     *     define('EMPS_TRUSTED_PROXIES', '127.0.0.1, ::1, 10.0.0.0/24');
+     *
+     * The constant replaces this default rather than adding to it, so keep the loopback addresses in
+     * the list if the front end still runs locally. An empty string trusts nothing at all.
+     */
+    public function is_trusted_proxy($ip)
+    {
+        if (!$ip) {
+            return false;
+        }
+
+        $list = "127.0.0.1, ::1";
+        if (defined("EMPS_TRUSTED_PROXIES")) {
+            $list = EMPS_TRUSTED_PROXIES;
+        }
+
+        $x = explode(",", $list);
+        foreach ($x as $v) {
+            $v = trim($v);
+            if ($v == "") {
+                continue;
+            }
+            if ($v === $ip) {
+                return true;
+            }
+            if (strstr($v, "/") !== false && $this->ip_in_range($ip, $v)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * The IP address of the client
+     *
+     * X-Real-Ip is an ordinary request header. Nginx talks to php-fpm over fastcgi, where every
+     * client header is handed to PHP as HTTP_*, so unless a proxy of ours overwrites it the value is
+     * whatever the client typed. It is therefore believed only when the connection itself comes from
+     * a proxy we put there, listed in EMPS_TRUSTED_PROXIES; while that constant is undefined the
+     * header is ignored and the connecting address is used.
+     *
+     * The result is always a valid IP address or "" - this value is written to the database and to
+     * the logs, and it must never be able to carry anything else.
+     */
+    public function get_client_ip() {
+        $remote = strval($_SERVER['REMOTE_ADDR'] ?? '');
+
+        if ($this->is_trusted_proxy($remote)) {
+            $ip = trim(strval($_SERVER['HTTP_X_REAL_IP'] ?? ''));
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                return $ip;
+            }
+        }
+
+        if (filter_var($remote, FILTER_VALIDATE_IP)) {
+            return $remote;
+        }
+
+        return "";
     }
 }
