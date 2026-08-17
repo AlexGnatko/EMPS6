@@ -192,6 +192,41 @@ trait EMPS_Common_Routing
         }
     }
 
+    /**
+     * Make sure the page name cannot address a file outside the modules folder
+     *
+     * $pp names the module whose controller and view are included by the bootstrap, so it ends up
+     * inside a filesystem path. It is also simply the first segment of the URL, which for a CMS page
+     * may be anything the editor typed (including non-latin text), so this is deliberately not a
+     * whitelist: only the characters that let a name step out of its folder are rejected. Note that
+     * hyphens become slashes in page_file_name(), so ".." is refused in any form.
+     *
+     * An offending $pp is blanked rather than answered with an error: the request then goes on to
+     * the normal "page not found" path, and a CMS page that happens to live at that URL still works.
+     */
+    public function check_page_name()
+    {
+        $pp = strval($GLOBALS['pp'] ?? '');
+
+        if ($pp == '') {
+            return true;
+        }
+
+        if (strstr($pp, '..') === false
+            && strstr($pp, '/') === false
+            && strstr($pp, "\\") === false
+            && strpos($pp, "\0") === false) {
+            return true;
+        }
+
+        error_log("EMPS: refused page name: " . str_replace(["\r", "\n"], " ", $pp));
+
+        $GLOBALS['pp'] = '';
+        $this->VA['pp'] = '';
+
+        return false;
+    }
+
     public function getvar($varname) {
         return $GLOBALS[$varname];
     }

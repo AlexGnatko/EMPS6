@@ -112,6 +112,7 @@ class EMPS_Common
         if (!$this->cli_mode) {
             $this->parse_path();
             $this->import_vars();
+            $this->check_page_name();   // after import_vars(): $pp can also arrive in $_GET / $_POST
             $this->savevars();
 
             if (isset($GET['plain']) && $_GET['plain']) {

@@ -31,6 +31,21 @@ class EMPS_Auth
     {
         global $emps, $emps_hash_passwords;
 
+        /*
+         * $username and $password come straight from the login form, so they may be anything at all
+         * - including an array, which "login_username[]=x" or a JSON request body produces. Refuse
+         * everything that is not a plain string before it reaches the database or password_verify().
+         */
+        if (!is_scalar($username) || (!$mode && !is_scalar($password))) {
+            $this->login_error("no_user");
+            return false;
+        }
+        $username = trim(strval($username));
+        if ($username === '') {
+            $this->login_error("no_user");
+            return false;
+        }
+
         $rv = $emps->do_action("username_filter", ['username' => $username]);
         $username = $rv['username'];
 
@@ -38,12 +53,12 @@ class EMPS_Auth
             $username = '+7' . mb_substr($username, 1);
         }*/
 
-        $user = $emps->db->get_row('e_users', "username='{$username}'");
+        $user = $emps->db->get_row('e_users', "username = " . $emps->db->sql_quote($username));
         if (!$user) {
             $domain = $emps->get_setting("default_user_domain");
             if($domain){
                 $username = $username . "." . $domain;
-                $user = $emps->db->get_row('e_users', "username='{$username}'");
+                $user = $emps->db->get_row('e_users', "username = " . $emps->db->sql_quote($username));
                 if (!$user) {
                     $this->login_error("no_user");
                     return false;
@@ -129,18 +144,50 @@ class EMPS_Auth
     function check_session()
     {
         global $emps;
-        $ssid = "";
+        $ssid = 0;
         if (isset($_SESSION['session_id'])) {
-            $ssid = $_SESSION['session_id'];
+            $ssid = intval($_SESSION['session_id']);
         }
 
         /*
          * To infect another website's php session id with a new EMPS session_id, pass the numeric id
          * of the EMPS session alongside a secret hash (the hash field from the table). The numeric id
          * is used to quickly find the session by id, the hash is used as a password.
+         *
+         * A session is transferable only while it carries a hash: the hash is written by
+         * issue_session_hash() at the moment such a link is handed out, and ordinary sessions
+         * created by create_session() have none. An empty hash therefore means "this session may
+         * not be transferred" - it must never be read as "no password required".
          */
-        if ($_GET['session_hash'] ?? false && $_GET['session_id'] ?? false) {
-            $ssid = $_GET['session_id'];
+        $transfer_id = intval($_GET['session_id'] ?? 0);
+        $transfer_hash = strval($_GET['session_hash'] ?? '');
+
+        if ($transfer_id > 0 && $transfer_hash !== '') {
+            $transfer = $emps->db->get_row("e_sessions", "id = " . $transfer_id);
+            $stored_hash = strval($transfer['hash'] ?? '');
+
+            if ($transfer && $stored_hash !== '' && hash_equals($stored_hash, $transfer_hash)) {
+                /*
+                 * Infect this new php session with this EMPS session id.
+                 */
+                $ssid = $transfer_id;
+                $_SESSION['session_id'] = $transfer_id;
+
+                /*
+                 * The hash is a one-time key: opening the link once is enough to copy the session,
+                 * so it is spent here and the link cannot be replayed later out of a server log, a
+                 * Referer header or a shared browser history. Define EMPS_SESSION_HASH_REUSABLE to
+                 * keep the hash in place instead.
+                 */
+                if (!defined("EMPS_SESSION_HASH_REUSABLE")) {
+                    $emps->db->sql_update_row("e_sessions", ['SET' => ['hash' => '']], "id = " . $transfer_id);
+                }
+            }
+
+            /*
+             * An unknown session, a session without a hash, or a wrong hash transfers nothing: the
+             * request simply carries on with whatever session this browser already had.
+             */
         }
 
         if (!$ssid) {
@@ -153,19 +200,6 @@ class EMPS_Auth
             unset($_SESSION['session_id']);
             return false;
         } else {
-            if ($_GET['session_hash'] ?? false) {
-                if (isset($session['hash']) && $session['hash'] != "" && $session['hash'] !== $_GET['session_hash']) {
-                    /*
-                     * Return false if the hash doesn't match
-                     */
-                    return false;
-                } else {
-                    /*
-                     * Infect this new php session with this EMPS session id.
-                     */
-                    $_SESSION['session_id'] = $ssid;
-                }
-            }
             $browser = "";
 
             if ($session['dt'] < (time() - 10 * 60)) {
@@ -203,15 +237,41 @@ class EMPS_Auth
         return true;
     }
 
+    /**
+     * Make the current (or a given) session transferable to another server
+     *
+     * Writes a fresh secret into the session's hash field and returns it. Hand it out as
+     * ?session_id=<id>&session_hash=<hash> - check_session() accepts that link once and spends the
+     * hash. Without a call to this method a session carries no hash and cannot be transferred.
+     */
+    public function issue_session_hash($session_id = 0)
+    {
+        global $emps;
+
+        $session_id = intval($session_id);
+        if (!$session_id) {
+            $session_id = intval($_SESSION['session_id'] ?? 0);
+        }
+        if (!$session_id) {
+            return false;
+        }
+
+        $hash = bin2hex(random_bytes(32));
+
+        $emps->db->sql_update_row("e_sessions", ['SET' => ['hash' => $hash]], "id = " . $session_id);
+
+        return $hash;
+    }
+
     function close_session()
     {
         global $emps;
-        $ssid = $_SESSION['session_id'];
+        $ssid = intval($_SESSION['session_id'] ?? 0);
         if (!$ssid) {
             return false;
         }
 
-        $emps->db->query('delete from ' . TP . "e_sessions where id=$ssid");
+        $emps->db->query('delete from ' . TP . "e_sessions where id=" . $ssid);
 
         unset($this->USER_ID);
         unset($_SESSION['session_id']);
@@ -938,15 +998,25 @@ class EMPS_Auth
     {
         global $emps;
 
+        if (!is_scalar($userword)) {
+            return -1;
+        }
+        $userword = trim(strval($userword));
+        if ($userword === '') {
+            return -1;
+        }
+
         $rv = $emps->do_action("username_filter", ['username' => $userword]);
         $userword = $rv['username'];
 
-        $user = $emps->db->get_row("e_users", "lcase(username) = lcase('{$userword}') and status>0");
+        $e_userword = $emps->db->sql_quote($userword);
+
+        $user = $emps->db->get_row("e_users", "lcase(username) = lcase({$e_userword}) and status>0");
         if ($user) {
             return -1;
         }
 
-        $emps->db->query("delete from " . TP . "e_users where lcase(username) = lcase('{$userword}')");
+        $emps->db->query("delete from " . TP . "e_users where lcase(username) = lcase({$e_userword})");
 
         $nr = [];
         $nr['username'] = $userword;
@@ -997,7 +1067,7 @@ class EMPS_Auth
         $rv = $emps->do_action("username_filter", ['username' => $username]);
         $username = $rv['username'];
 
-        $row = $emps->db->get_row("e_users", "lcase(username) = lcase('" . $username . "') and status>0");
+        $row = $emps->db->get_row("e_users", "lcase(username) = lcase(" . $emps->db->sql_quote($username) . ") and status>0");
         if ($row) {
             return $row;
         }
@@ -1011,7 +1081,7 @@ class EMPS_Auth
         $rv = $emps->do_action("username_filter", ['username' => $username]);
         $username = $rv['username'];
 
-        $row = $emps->db->get_row("e_users", "username = '{$username}' and status > 0");
+        $row = $emps->db->get_row("e_users", "username = " . $emps->db->sql_quote($username) . " and status > 0");
         if ($row) {
             return $row;
         }

@@ -10,11 +10,53 @@ header("Expires: " . $expires);
 header("Cache-Control: max-age=" . (60 * 60 * 24 * 7));
 header_remove("Pragma");
 
-$part = str_replace("-", "/", $key);
-$file = str_replace("..", "", $start);
+/*
+ * The only URL shape this module serves is:
+ *
+ *     /mjs/<module-path>/<file-name>
+ *
+ * <module-path> is a module folder where hyphens stand for slashes ("comp-mixins" => "comp/mixins"),
+ * <file-name> is a plain file name inside that folder - never a path.
+ *
+ * Both values come straight from the URL and are concatenated into a filesystem path below, so they
+ * are validated here against a strict whitelist rather than filtered: no slashes, no dots in the
+ * module path, no leading dot and no ".." in the file name. Anything else is a 404.
+ */
+$mjs_key = strval($key);
+$mjs_file = strval($start);
+
+if (!preg_match('/^[A-Za-z0-9_-]+$/', $mjs_key)) {
+    $emps->not_found();
+    exit;
+}
+
+if (!preg_match('/^[A-Za-z0-9_][A-Za-z0-9_.-]*$/', $mjs_file) || strstr($mjs_file, "..")) {
+    $emps->not_found();
+    exit;
+}
+
+$part = str_replace("-", "/", $mjs_key);
+$file = $mjs_file;
 
 $x = explode(".", $file);
-$ext = array_pop($x);
+$ext = "";
+if (count($x) > 1) {
+    $ext = mb_strtolower(array_pop($x));
+}
+
+/*
+ * Extensions are whitelisted, not blacklisted: a project that needs to publish another file type
+ * through /mjs/ declares it in EMPS_MJS_EXTENSIONS in its local.php.
+ */
+$mjs_extensions = "js,css,vue,md";
+if (defined("EMPS_MJS_EXTENSIONS")) {
+    $mjs_extensions = EMPS_MJS_EXTENSIONS;
+}
+
+if (!$emps->in_list($ext, $mjs_extensions)) {
+    $emps->not_found();
+    exit;
+}
 
 if ($ext == "css") {
     header("Content-Type: text/css");
@@ -28,22 +70,6 @@ if ($ext == "vue") {
     header("Content-Type: text/html; charset=utf-8");
 }
 
-if ($ext == "php") {
-    $emps->not_found();
-    exit;
-}
-if ($ext == "htm") {
-    $emps->not_found();
-    exit;
-}
-if ($ext == "sql") {
-    $emps->not_found();
-    exit;
-}
-if ($ext == "json") {
-    $emps->not_found();
-    exit;
-}
 $page = "_{$part},{$file}";
 
 $file_name = $emps->page_file_name($page, "inc");
@@ -98,7 +124,7 @@ if ($ext == "vue") {
                 $uglify = EMPS_COMMON_PATH_PREFIX."/node_modules/uglify-js/bin/uglifyjs";
                 $uglify = $emps->resolve_include_path($uglify);
                 if (file_exists($uglify)) {
-                    $rv = shell_exec("node {$uglify} --compress --mangle -- {$file_name}");
+                    $rv = shell_exec("node " . escapeshellarg($uglify) . " --compress --mangle -- " . escapeshellarg($file_name));
                 } else {
                     $rv = file_get_contents($file_name);
                 }
@@ -124,4 +150,3 @@ if ($ext == "vue") {
         fclose($fh);
     }
 }
-

@@ -113,6 +113,65 @@ class EMPS_DB
         return $r;
     }
 
+    /**
+     * Run a query with ? placeholders
+     *
+     * The query text goes to the server first and is parsed there; the values follow separately and
+     * are never read as SQL. The result is an ordinary mysqli result, so fetch_named(), fetch_row()
+     * and free() work on it exactly as they do on query().
+     *
+     *     $r = $emps->db->query_params("select * from " . TP . "e_users where username = ? and status > ?", [$username, 0]);
+     *     $user = $emps->db->fetch_named($r);
+     *
+     * Placeholders stand for values only - a table or column name cannot be passed this way.
+     */
+    public function query_params($query, $params = [])
+    {
+        if (!$this->db) {
+            return false;
+        }
+        if (!is_array($params) || count($params) == 0) {
+            return $this->query($query);
+        }
+
+        $params = array_values($params);
+        $types = "";
+        foreach ($params as $v) {
+            if (is_int($v)) {
+                $types .= "i";
+            } elseif (is_float($v)) {
+                $types .= "d";
+            } elseif ($v === null || is_scalar($v)) {
+                $types .= "s";
+            } else {
+                error_log("EMPS: query_params: a value is not a scalar in: " . $query);
+                return false;
+            }
+        }
+
+        $stmt = mysqli_prepare($this->db, $query);
+        if (!$stmt) {
+            error_log("EMPS: query_params: prepare failed: " . mysqli_error($this->db) . " in: " . $query);
+            return false;
+        }
+
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
+
+        if (!mysqli_stmt_execute($stmt)) {
+            error_log("EMPS: query_params: " . mysqli_stmt_error($stmt) . " in: " . $query);
+            mysqli_stmt_close($stmt);
+            return false;
+        }
+
+        $r = mysqli_stmt_get_result($stmt);
+        if ($r === false && mysqli_stmt_errno($stmt) == 0) {
+            $r = true;      // insert / update / delete: no result set, but it worked
+        }
+        mysqli_stmt_close($stmt);
+
+        return $r;
+    }
+
     public function last_insert()
     {
 /*        $r = $this->query("select last_insert_id()");
@@ -517,6 +576,32 @@ class EMPS_DB
     public function sql_escape($txt)
     {
         return mysqli_real_escape_string($this->db, $txt);
+    }
+
+    /**
+     * Quote a value for use inside an SQL string
+     *
+     * Returns the value escaped and wrapped in quotes, ready to be concatenated into a query:
+     *
+     *     $row = $emps->db->get_row("e_users", "username = " . $emps->db->sql_quote($username));
+     *
+     * Unlike sql_escape() this also refuses anything that is not a scalar. A value taken from the
+     * request can be an array - "name[]=x" in a form, or any JSON request body, which post_init()
+     * merges into $_POST - and an array reaching mysqli_real_escape_string() is a TypeError, not a
+     * safe query. Such a value is quoted as an empty string, so the query simply matches nothing.
+     */
+    public function sql_quote($value)
+    {
+        if ($value === null) {
+            return "null";
+        }
+        if (is_bool($value)) {
+            return $value ? "1" : "0";
+        }
+        if (!is_scalar($value)) {
+            return "''";
+        }
+        return "'" . $this->sql_escape(strval($value)) . "'";
     }
 
     public function sql_rewind($r){

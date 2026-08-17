@@ -2,8 +2,49 @@
 
 trait EMPS_Common_Files
 {
+    /**
+     * Check that a name is safe to glue onto a folder path
+     *
+     * Almost every file name in EMPS is assembled from parts of the URL, so before a name is
+     * concatenated with a folder it has to be proven relative: no NUL byte, no backslash, no leading
+     * slash and no "." or ".." component. A name that passes this test cannot escape the folder it
+     * is appended to, whatever it contains otherwise (so non-latin page names keep working).
+     *
+     * @param $name string The name to check
+     * @param $leading_slash bool Allow a leading slash (plain_file() is called with "/css/x.css")
+     * @return bool true when the name is safe to concatenate
+     */
+    public function safe_path_name($name, $leading_slash = false)
+    {
+        if (!is_string($name)) {
+            return false;
+        }
+        if (strpos($name, "\0") !== false) {
+            return false;
+        }
+        if (strpos($name, "\\") !== false) {
+            return false;
+        }
+        if (!$leading_slash && substr($name, 0, 1) == '/') {
+            return false;
+        }
+        $x = explode('/', $name);
+        foreach ($x as $part) {
+            if ($part == '.' || $part == '..') {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function try_page_file_name($page_name, $first_name, $include_name, $type, $path, $lang)
     {
+        if (!$this->safe_path_name($page_name)
+            || !$this->safe_path_name($first_name)
+            || !$this->safe_path_name($include_name)) {
+            return false;
+        }
+
         $fn = $path . '/modules/' . $page_name;
         switch ($type) {
             case 'view':
@@ -52,6 +93,10 @@ trait EMPS_Common_Files
 
     public function try_template_name($path, $page_name, $lang)
     {
+        if (!$this->safe_path_name($page_name)) {
+            return false;
+        }
+
         $fn = $path . '/templates/' . $page_name . '.' . $lang . '.htm';
         if (isset($this->require_cache['try_template_name'][$fn])) {
             return $this->require_cache['try_template_name'][$fn];
@@ -94,6 +139,11 @@ trait EMPS_Common_Files
         $x = explode(',', $page_name, 2);
         $page_name = $x[0];
         $include_name = $x[1];
+
+        // This function creates folders, so never let it walk out of local/minified/
+        if (!$this->safe_path_name($page_name) || !$this->safe_path_name($include_name)) {
+            return false;
+        }
 
         $prefix = EMPS_SCRIPT_PATH."/local/minified/";
 
@@ -202,7 +252,9 @@ trait EMPS_Common_Files
 
     public function try_common_module_html($path, $file_name, $lang)
     {
-
+        if (!$this->safe_path_name($file_name)) {
+            return false;
+        }
         $x = explode(".", $file_name);
         $len = mb_strlen($x[count($x) - 1], "utf-8");
         if ($len <= 3) {
@@ -227,10 +279,15 @@ trait EMPS_Common_Files
 
     public function common_module_html($file_name)
     {
+        if (!$this->safe_path_name($file_name)) {
+            return false;
+        }
+
         // This function controls the naming of files used by common modules
         if (isset($this->require_cache['common_module_html'][$file_name])) {
             return $this->require_cache['common_module_html'][$file_name];
         }
+
         $fn = $this->try_common_module_html(EMPS_WEBSITE_SCRIPT_PATH, $file_name, $this->lang);
         if (!$fn) {
             $fn = $this->try_common_module_html(EMPS_WEBSITE_SCRIPT_PATH, $file_name, 'nn');
@@ -274,6 +331,10 @@ trait EMPS_Common_Files
 
     public function try_common_module($path, $file_name)
     {
+        if (!$this->safe_path_name($file_name)) {
+            return false;
+        }
+
         if (isset($this->require_cache['common_module_try'][$path][$file_name])) {
             return $this->require_cache['common_module_try'][$path][$file_name];
         }
@@ -287,6 +348,10 @@ trait EMPS_Common_Files
 
     public function common_module_ex($file_name, $level)
     {
+        if (!$this->safe_path_name($file_name)) {
+            return false;
+        }
+
         // This function controls the naming of files used by common modules
         if (isset($this->require_cache['common_module'][$level][$file_name])) {
             return $this->require_cache['common_module'][$level][$file_name];
@@ -320,6 +385,10 @@ trait EMPS_Common_Files
 
     public function try_core_script($path, $file_name)
     {
+        if (!$this->safe_path_name($file_name)) {
+            return false;
+        }
+
         if (isset($this->require_cache['common_script_try'][$path][$file_name])) {
             return $this->require_cache['common_script_try'][$path][$file_name];
         }
@@ -345,6 +414,11 @@ trait EMPS_Common_Files
 
     public function try_plain_file($path, $file_name)
     {
+        // plain_file() is called with names like "/css/default.css", so a leading slash is expected
+        if (!$this->safe_path_name($file_name, true)) {
+            return false;
+        }
+
         if (isset($this->require_cache['plain_file_try'][$path][$file_name])) {
             return $this->require_cache['plain_file_try'][$path][$file_name];
         }
@@ -358,6 +432,11 @@ trait EMPS_Common_Files
 
     public function plain_file($file_name)
     {
+        // plain_file() is called with names like "/css/default.css", so a leading slash is expected
+        if (!$this->safe_path_name($file_name, true)) {
+            return false;
+        }
+
         // This function finds a file in the websites' folders
         // (first the primary website, then the base website) and then in the main EMPS folder
         if (isset($this->require_cache['plain_file'][$file_name])) {
