@@ -215,6 +215,40 @@ class EMPS_DB
         }
     }
 
+    /**
+     * Column list for a table, excluding the given columns
+     *
+     * Returns a comma-separated, backtick-quoted list of every column on $table except the ones
+     * named in $exclude, in the table's own column order - a drop-in replacement for `*` when a
+     * query needs to skip one or more heavy columns (a big JSON/mediumtext blob, say) without
+     * hand-listing every other column, and without them silently reappearing under a `*` if the
+     * schema changes. Backed by table_columns(), so after the first call per table this is a
+     * cache lookup + array_diff, not a fresh SHOW COLUMNS per query.
+     *
+     *     $cols = $emps->db->columns_except("translations", "cdata,data,chapter_data");
+     *     $r = $emps->db->query("select {$cols} from " . TP . "translations where video_id = {$id}");
+     *
+     * $exclude accepts either a comma-separated string or an array of column names.
+     */
+    public function columns_except($table, $exclude)
+    {
+        if (!is_array($exclude)) {
+            $exclude = array_map('trim', explode(",", $exclude));
+        }
+        $exclude = array_flip($exclude);
+
+        $columns = $this->table_columns(TP . $table);
+        $take = [];
+        foreach ($columns as $v) {
+            $name = $v[0];
+            if (isset($exclude[$name])) {
+                continue;
+            }
+            $take[] = "`{$name}`";
+        }
+        return implode(", ", $take);
+    }
+
     public function and_clause($lst) {
         $parts = [];
         foreach ($lst as $v) {
