@@ -222,6 +222,7 @@ class EMPS extends EMPS_Common
             }
             $website_settings['_full'] = array_merge($default_settings['_full'], $website_settings['_full']);
             $this->settings_cache = array_merge($default_settings, $website_settings);
+            $this->settings_cache = $this->do_action("settings_filter", $this->settings_cache);
 //			dump($this->settings_cache);
         }
 
