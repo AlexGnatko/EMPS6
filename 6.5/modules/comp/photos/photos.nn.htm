@@ -75,13 +75,13 @@
                 <button type="button" @click="add_files" class="button is-primary is-outlined">
                     <i class="fa fa-hand-pointer-o"></i> &nbsp; {{$str_select}}</button>
             </div>
-            <div class="column is-narrow buttons">
+            <div class="column is-narrow buttons pr-1">
                 <button type="button" @click="download_files" class="button is-primary is-outlined">
                     <i class="fa fa-download"></i> &nbsp; {{$str_by_url}}</button>
                 <button type="button" @click="upload_zip" class="button is-primary is-outlined">
                     <i class="fa fa-upload"></i> &nbsp; {{$str_import_zip}}</button>
             </div>
-            <div class="column is-1">
+            <div class="column is-1 pr-1">
                 <input type="text" ref="clip" @paste="on_paste" class="input" placeholder="{{$str_by_clipboard}}"/>
             </div>
             <div class="column">
