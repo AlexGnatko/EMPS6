@@ -54,6 +54,7 @@ if (defined("EMPS_MJS_EXTENSIONS")) {
 }
 
 if (!$emps->in_list($ext, $mjs_extensions)) {
+
     $emps->not_found();
     exit;
 }
