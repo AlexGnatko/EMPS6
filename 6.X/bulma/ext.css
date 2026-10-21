@@ -277,3 +277,6 @@ div.embed-responsive {
 .is-strike {
     text-decoration: line-through;
 }
+
+.columns.is-variable { margin: calc(-1 * var(--columnGap)); }
+.columns.is-variable .column { padding: var(--columnGap); }
