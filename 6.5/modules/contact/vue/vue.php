@@ -11,7 +11,8 @@ if ($_POST['post_message']) {
     $rc = $_SESSION['last_rc_token_' . $action];
     $smarty->assign("contact_action", $action);
 
-    if (isset($rc) && $rc && $payload['token'] && $rc['token'] && ($rc['token'] == $payload['token']) && ($rc['action'] == $action)) {
+    if (isset($rc) && $rc && $payload['token'] && $rc['token'] && ($rc['token'] == $payload['token'])
+        && ($rc['action'] == $action) && ($rc['result'] == 1)) {
 
         if ((!$payload['email']) && (!$payload['phone'])){
             $response = [];
