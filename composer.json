@@ -9,7 +9,10 @@
     }
   ],
   "config": {
-    "secure-http": false
+    "secure-http": false,
+    "audit": {
+      "block-insecure": false
+    }
   },
   "require": {
     "php": ">=7.2.0",
