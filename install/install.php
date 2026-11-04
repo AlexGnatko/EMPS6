@@ -2,8 +2,15 @@
 
 require_once "functions.php";
 
-$phpMyAdmin_url = "https://files.phpmyadmin.net/phpMyAdmin/5.2.2/phpMyAdmin-5.2.2-all-languages.tar.gz";
-$phpMyAdmin_name = "phpMyAdmin-5.2.2-all-languages";
+foreach (['mysql_root_password', 'mysql_user_password', 'user_password', 'factory_root_pwd'] as $k) {
+    if (!preg_match('/^[A-Za-z0-9_.@%+=-]{8,}$/', $config[$k] ?? '')) {
+        $installer->say("config: {$k} must be 8+ chars of A-Za-z0-9_.@%+=-");
+        $bad_config = true;
+    }
+}
+
+$phpMyAdmin_url = "https://files.phpmyadmin.net/phpMyAdmin/5.2.3/phpMyAdmin-5.2.3-all-languages.tar.gz";
+$phpMyAdmin_name = "phpMyAdmin-5.2.3-all-languages";
 
 $config = json_decode(file_get_contents("config.json"), true);
 
@@ -65,21 +72,66 @@ system("service php{$ver}-fpm restart");
 $factory_hostname = $config['factory_hostname'];
 $factory_root_pwd = $config['factory_root_pwd'];
 
-system("mysql -u root -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '{$config['mysql_root_password']}';\"");
-system("mysql -u root -p{$config['mysql_root_password']} -e \"CREATE USER '{$config['main_user']}'@'%' IDENTIFIED BY '{$config['mysql_user_password']}';\"");
-system("mysql -u root -p{$config['mysql_root_password']} -e \"GRANT ALL ON *.* TO '{$config['main_user']}'@'%';\"");
-system("mysql -u root -p{$config['mysql_root_password']} -e \"create database if not exists {$config['main_user']}_emps_factory DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\"");
-system("service mysql restart");
+function mysql_root_exec(string $sql): void
+{
+    $p = proc_open(
+        ['mysql', '-u', 'root'],
+        [0 => ['pipe', 'r'], 1 => STDOUT, 2 => STDERR],
+        $pipes
+    );
+    if (!is_resource($p)) {
+        throw new RuntimeException("Cannot start mysql client");
+    }
+    fwrite($pipes[0], $sql);
+    fclose($pipes[0]);
+    if (proc_close($p) !== 0) {
+        throw new RuntimeException("MySQL command failed");
+    }
+}
+
+function sql_str(string $s): string
+{
+    return "'" . str_replace(['\\', "'"], ['\\\\', "\\'"], $s) . "'";
+}
+
+$user = $config['main_user'];
+if (!preg_match('/^[a-z][a-z0-9_]{0,31}$/', $user)) {
+    throw new RuntimeException("Bad main_user name");
+}
+
+$fp = sql_str($config['mysql_root_password']);
+$up = sql_str($config['mysql_user_password']);
+$db = "{$user}_emps_factory";
+
+mysql_root_exec("
+CREATE USER IF NOT EXISTS 'factory'@'localhost' IDENTIFIED WITH caching_sha2_password BY $fp;
+ALTER USER 'factory'@'localhost' IDENTIFIED WITH caching_sha2_password BY $fp;
+GRANT ALL PRIVILEGES ON *.* TO 'factory'@'localhost' WITH GRANT OPTION;
+
+CREATE USER IF NOT EXISTS '$user'@'localhost' IDENTIFIED WITH caching_sha2_password BY $up;
+ALTER USER '$user'@'localhost' IDENTIFIED WITH caching_sha2_password BY $up;
+GRANT ALL ON `{$user}\\_%`.* TO '$user'@'localhost';
+
+CREATE DATABASE IF NOT EXISTS `$db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+");
 
 mkdir("/etc/nginx/ssl");
 $installer->nginx_config_file("conf.d/logformat.conf");
 $installer->nginx_config_file("conf.d/http.conf");
-$installer->nginx_config_file("ssl/nginx.crt");
-$installer->nginx_config_file("ssl/nginx.key");
+
+system("openssl req -x509 -nodes -newkey rsa:2048 -days 3650"
+    . " -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt"
+    . " -subj " . escapeshellarg("/CN=" . $factory_hostname));
+chmod("/etc/nginx/ssl/nginx.key", 0600);
+
+//$installer->nginx_config_file("ssl/nginx.crt");
+//$installer->nginx_config_file("ssl/nginx.key");
+
 $installer->nginx_config_file("sites-enabled/00-factory.conf", ['factory.ag38.ru' => $factory_hostname]);
 $installer->nginx_config_file("deny.conf");
 $installer->nginx_config_file("gzip.conf");
 $installer->nginx_config_file("rewrite.conf", ['php7.0-fpm' => 'php'.$ver.'-fpm'], "rewrite-{$ver}.conf");
+$installer->nginx_config_file("rewrite.conf", ['php7.0-fpm' => 'php8.2-fpm'], "rewrite-8.2.conf");
 
 mkdir("/srv");
 mkdir("/srv/www");
@@ -147,7 +199,9 @@ system("chown -R {$config['main_user']} /srv/www/emps-factory");
 copy(__DIR__."/templates/nginx/index.html", "/srv/www/htdocs/index.html");
 copy(__DIR__."/templates/nginx/sites-available/default", "/etc/nginx/sites-available/default");
 
-system("service nginx reload");
+system("nginx -t", $rc);
+if ($rc !== 0) { $installer->say("nginx config is broken, aborting"); exit(1); }
+system("systemctl reload nginx");
 
 copy($phpMyAdmin_url, "/srv/www/emps-factory/htdocs/".$phpMyAdmin_name.".tar.gz");
 chdir("/srv/www/emps-factory/htdocs/");
@@ -164,6 +218,11 @@ $installer->paths_config_file("config.sample.inc.php",
     ]
 );
 
-file_get_contents("http://{$factory_hostname}/sqlsync/");
-file_get_contents("http://{$factory_hostname}/sqlsync/factory/");
-file_get_contents("http://{$factory_hostname}/ensure_root/{$factory_root_pwd}/");
+
+function local_get(string $host, string $path) {
+    $ctx = stream_context_create(['http' => ['header' => "Host: $host\r\n", 'timeout' => 120]]);
+    return @file_get_contents("http://127.0.0.1" . $path, false, $ctx);
+}
+foreach (["/sqlsync/", "/sqlsync/factory/", "/ensure_root/" . rawurlencode($factory_root_pwd) . "/"] as $p) {
+    if (local_get($factory_hostname, $p) === false) $installer->say("FAILED: $p");
+}

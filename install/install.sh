@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a
+
 ### General APT installation
 
 CurrentDir=$(pwd)
@@ -11,17 +13,7 @@ apt -y install software-properties-common
 
 apt -y install mc
 
-### Install Webmin
-
 apt -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
-echo "deb http://download.webmin.com/download/repository sarge contrib" >> /etc/apt/sources.list
-cd /root
-wget http://www.webmin.com/jcameron-key.asc
-apt-key add jcameron-key.asc
-apt update
-apt -y install apt-transport-https
-apt -y install webmin
-apt -y install libio-socket-inet6-perl
 
 cd $CurrentDir
 pwd
@@ -55,6 +47,7 @@ apt -y install at
 
 ### Install AWStats
 
+apt -y install cron
 apt -y install awstats
 
 ### Let's Encrypt certbot
@@ -69,3 +62,5 @@ apt -y install npm
 ### Run the PHP installer script
 
 php ./install.php
+
+php8.2 ./configphp.php

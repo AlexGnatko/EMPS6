@@ -65,15 +65,10 @@ class EMPS_Installer {
 
     public function nginx_config_file($path, $rlst = [], $altpath = "") {
         $source_path = __DIR__ . "/templates/nginx/{$path}";
-        $dest_path = "/etc/nginx/{$path}";
+        $dest_path = "/etc/nginx/" . ($altpath != "" ? $altpath : $path);
         if (file_exists($dest_path)) {
-            if ($altpath != "") {
-                $dest_path = $altpath;
-            }
-            if (file_exists($dest_path)) {
-                $this->say("File {$path} already exists!");
-                return false;
-            }
+            $this->say("File {$dest_path} already exists!");
+            return false;
         }
         $this->paths_config_file($source_path, $dest_path, $rlst);
     }
