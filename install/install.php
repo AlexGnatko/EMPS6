@@ -130,9 +130,9 @@ chmod("/etc/nginx/ssl/nginx.key", 0600);
 $installer->nginx_config_file("sites-enabled/00-factory.conf", ['factory.ag38.ru' => $factory_hostname]);
 $installer->nginx_config_file("deny.conf");
 $installer->nginx_config_file("gzip.conf");
-$installer->nginx_config_file("rewrite.conf", ['php7.0-fpm' => 'php'.$ver.'-fpm'], "rewrite-{$ver}.conf");
+$installer->nginx_config_file("rewrite.conf", ['php7.0-fpm' => 'php'.$ver.'-fpm'], "rewrite.conf");
 
-foreach (['8.2'] as $v) {
+foreach (['8.2', $ver] as $v) {
     if (!is_file("/usr/sbin/php-fpm{$v}")) {
         continue;   // версия не установлена, сокета не будет
     }
