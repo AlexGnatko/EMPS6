@@ -13,7 +13,7 @@ apt -y install software-properties-common
 
 apt -y install mc
 
-apt -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
+apt -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions
 
 cd $CurrentDir
 pwd
