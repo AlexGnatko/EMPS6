@@ -131,7 +131,13 @@ $installer->nginx_config_file("sites-enabled/00-factory.conf", ['factory.ag38.ru
 $installer->nginx_config_file("deny.conf");
 $installer->nginx_config_file("gzip.conf");
 $installer->nginx_config_file("rewrite.conf", ['php7.0-fpm' => 'php'.$ver.'-fpm'], "rewrite-{$ver}.conf");
-$installer->nginx_config_file("rewrite.conf", ['php7.0-fpm' => 'php8.2-fpm'], "rewrite-8.2.conf");
+
+foreach (['8.2'] as $v) {
+    if (!is_file("/usr/sbin/php-fpm{$v}")) {
+        continue;   // версия не установлена, сокета не будет
+    }
+    $installer->nginx_config_file("rewrite.conf", ['php7.0-fpm' => "php{$v}-fpm"], "rewrite-{$v}.conf");
+}
 
 mkdir("/srv");
 mkdir("/srv/www");

@@ -35,6 +35,17 @@ apt -y install nginx
 apt -y install php php-fpm curl php-curl php-gd php-mbstring php-mysqli php-mysqlnd php-zip php-http php-dom php-xml php-exif
 apt -y remove apache2
 
+for v in 8.2; do
+    if apt-cache policy php$v-fpm | grep -q 'Candidate: [0-9]'; then
+        apt -y install php$v-cli php$v-fpm php$v-curl php$v-gd php$v-mbstring \
+                       php$v-mysql php$v-zip php$v-xml
+        apt-cache policy php$v-http | grep -q 'Candidate: [0-9]' && apt -y install php$v-http
+        php$v ./configphp.php
+    else
+        echo "WARNING: php$v not available, skipped"
+    fi
+done
+
 #apt -y install php7.4-fpm php7.4-curl php7.4-gd php7.4-mbstring php7.4-mysqli php7.4-mysqlnd php7.4-zip php7.4-http php7.4-dom php7.4-xml php7.4-exif
 
 ### Install Git
@@ -62,5 +73,3 @@ apt -y install npm
 ### Run the PHP installer script
 
 php ./install.php
-
-php8.2 ./configphp.php
