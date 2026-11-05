@@ -78,3 +78,5 @@ apt -y install npm
 ### Run the PHP installer script
 
 php ./install.php
+
+chmod +x ~/sysinfo.sh && ~/sysinfo.sh
