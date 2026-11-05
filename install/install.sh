@@ -35,6 +35,11 @@ apt -y install nginx
 apt -y install php php-fpm curl php-curl php-gd php-mbstring php-mysqli php-mysqlnd php-zip php-http php-dom php-xml php-exif
 apt -y remove apache2
 
+apt -y install ca-certificates curl gnupg lsb-release
+curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /usr/share/keyrings/sury-php.gpg
+echo "deb [signed-by=/usr/share/keyrings/sury-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/sury-php.list
+apt update
+
 for v in 8.2; do
     if apt-cache policy php$v-fpm | grep -q 'Candidate: [0-9]'; then
         apt -y install php$v-cli php$v-fpm php$v-curl php$v-gd php$v-mbstring \
