@@ -211,8 +211,8 @@ system("systemctl reload nginx");
 
 copy($phpMyAdmin_url, "/srv/www/emps-factory/htdocs/".$phpMyAdmin_name.".tar.gz");
 chdir("/srv/www/emps-factory/htdocs/");
-system("rm -R {$phpMyAdmin_name}");
 system("tar xzf ./{$phpMyAdmin_name}.tar.gz");
+system("rm {$phpMyAdmin_name}.tar.gz");
 rename($phpMyAdmin_name, $config['phpmyadmin']);
 chdir($config['phpmyadmin']);
 system("rm -R setup");
