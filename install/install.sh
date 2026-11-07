@@ -79,4 +79,4 @@ apt -y install npm
 
 php ./install.php
 
-chmod +x ~/sysinfo.sh && ~/sysinfo.sh
+chmod +x ./sysinfo.sh && ./sysinfo.sh
