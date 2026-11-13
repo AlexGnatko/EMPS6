@@ -82,7 +82,7 @@ class EMPS_Photos
             }
         }
 
-        $thumb_row = $emps->db->get_row("e_thumbs", "size='{$size}' and upload_id = {$ra['id']} limit 1");
+        $thumb_row = $emps->db->get_row("e_thumbs", "size = '{$size}' and upload_id = {$ra['id']} limit 1");
 
         $pic_type = "jpeg";
         if (strstr($ra['new_type'], "webp")) {
@@ -188,7 +188,7 @@ class EMPS_Photos
 //            error_log("thumb creation not needed");
         }
         $id = $ra['id'];
-        $r = $emps->db->query("select * from " . TP . "e_thumbs where size='$size' and upload_id=$id limit 1");
+        $r = $emps->db->query("select * from " . TP . "e_thumbs where size = '{$size}' and upload_id = {$id} limit 1");
         $ra = $emps->db->fetch_named($r);
         $ra['fname'] = $dname;
 //        error_log("ensure_thumb return");
