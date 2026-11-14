@@ -174,6 +174,9 @@ chdir("/srv/www/lib/EMPS6");
 system("composer install");
 system("npm install -g bower");
 system("php ./emps.php install");
+chdir("/srv/www/lib/EMPS/common");
+system("bower --allow-root install");
+system("npm install --legacy-peer-deps");
 
 chdir("/srv/www/emps-factory/");
 system("composer install");
