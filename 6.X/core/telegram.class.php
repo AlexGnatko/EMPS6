@@ -21,6 +21,9 @@ class EMPS_TelegramBot {
 
     public function set_key($key) {
         $this->key = $key;
+        if (defined("TG_API_URL")) {
+            $this->set_api_url(TG_API_URL);
+        }
     }
 
 
