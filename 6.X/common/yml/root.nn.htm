@@ -26,7 +26,7 @@
                 <currencyId>RUB</currencyId>
                 <categoryId>{{$item.node_id}}</categoryId>
 
-                <picture>{{$BaseURL}}/pic/{{$item.pic.md5}}/{{$item.pic.filename}}</picture>
+                <picture>{{$BaseURL}}/pic/{{$item.pic.md5}}/{{$item.pic.filename|urlencode}}</picture>
 {{if $item.html|trim|strlen > 0 }}
                 <description>
                     <![CDATA[
