@@ -60,13 +60,25 @@ class EMPS_Photos
         return $a."x".$b;
     }
 
+    public function sanitize_opts($opts) {
+        $x = explode(",", strval($opts));
+        $parts = [];
+        foreach ($x as $value) {
+            $result = preg_replace('/[^a-zA-Z0-9]/', '', $value);
+            $result = substr($result, 0, 16);
+            $parts[] = $result;
+        }
+        return implode(",", $parts);
+    }
+
     public function ensure_thumb($ra, $size, $opts)
     {
         global $emps;
         $size = $this->sanitize_size($size);
+        $opts = $this->sanitize_opts($opts);
         $fname = $this->up->UPLOAD_PATH . $ra['folder'] . "/" . $ra['id'] . "-img.dat";
         $fname_wm = $this->up->UPLOAD_PATH . $ra['folder'] . "/" . $ra['id'] . "-wm.dat";
-        $dname = $this->up->UPLOAD_PATH . $ra['folder'] . "/thumb/" . $ra['id'] . "_" . $size . ".dat";
+        $dname = $this->up->UPLOAD_PATH . $ra['folder'] . "/thumb/" . $ra['id'] . "_" . $size . "_" . $opts . ".dat";
 
         $orig_name = $this->up->UPLOAD_PATH . $ra['folder'] . "/" . $ra['id'] . "-orig.dat";
 
@@ -82,7 +94,7 @@ class EMPS_Photos
             }
         }
 
-        $thumb_row = $emps->db->get_row("e_thumbs", "size = '{$size}' and upload_id = {$ra['id']} limit 1");
+        $thumb_row = $emps->db->get_row("e_thumbs", "size = '{$size}' and opts = '{$opts}' and upload_id = {$ra['id']} limit 1");
 
         $pic_type = "jpeg";
         if (strstr($ra['new_type'], "webp")) {
@@ -90,20 +102,36 @@ class EMPS_Photos
             $ra['type'] = $ra['new_type'];
         }
 
-        if (!file_exists($dname) || ($this->bypass_time > filemtime($dname)) || !$thumb_row) {
+        $sopts = $opts;
+
+        if (!file_exists($dname) || ($this->bypass_time > filemtime($dname)) || !$thumb_row || $thumb_row['opts'] != $sopts) {
 //            error_log("modifying image: ".$ra['id']." ".$emps->form_time($this->bypass_time)." / ".$emps->form_time(filemtime($dname)));
-            if (strstr($ra['type'], "jpeg")) {
+            // The loader is chosen by the format of the file that is really loaded: the watermark copy
+            // (-wm.dat) is always JPEG (or WebP), even for PNG/GIF uploads, while e_uploads.type keeps
+            // the original type. If the format cannot be detected, fall back to the type from the database.
+            $load_type = $ra['type'];
+            $gis = @getimagesize($fname);
+            if ($gis && !empty($gis['mime'])) {
+                $load_type = $gis['mime'];
+            }
+            $img = false;
+            if (strstr($load_type, "jpeg")) {
                 $img = imagecreatefromjpeg($fname);
-            } elseif (strstr($ra['type'], "png")) {
+            } elseif (strstr($load_type, "png")) {
                 $img = imagecreatefrompng($fname);
-            } elseif (strstr($ra['type'], "gif")) {
+            } elseif (strstr($load_type, "gif")) {
                 $img = imagecreatefromgif($fname);
-            } elseif (strstr($ra['type'], "webp")) {
+            } elseif (strstr($load_type, "webp")) {
                 $img = imagecreatefromwebp($fname);
                 $type = "webp";
             } else {
                 $ra['fname'] = $fname;
 //                error_log("skip thumbnail");
+                return $ra;
+            }
+            if (!$img) {
+                // the file could not be read as an image: do not fail on imagesx(false), serve it as is
+                $ra['fname'] = $fname;
                 return $ra;
             }
 
@@ -170,11 +198,12 @@ class EMPS_Photos
                 imagewebp($dst, $dname, $quality);
             }
 
-            $emps->db->query("delete from ".TP."e_thumbs where size = '{$size}' and upload_id = {$ra['id']}");
+            $emps->db->query("delete from ".TP."e_thumbs where size = '{$size}' and opts = '{$sopts}' and upload_id = {$ra['id']}");
 
             $nr = [];
             $nr['upload_id'] = $ra['id'];
             $nr['size'] = $size;
+            $nr['opts'] = $sopts;
             $nr['dt'] = time();
             $emps->db->sql_insert_row("e_thumbs", ['SET' => $nr]);
 
@@ -188,7 +217,7 @@ class EMPS_Photos
 //            error_log("thumb creation not needed");
         }
         $id = $ra['id'];
-        $r = $emps->db->query("select * from " . TP . "e_thumbs where size = '{$size}' and upload_id = {$id} limit 1");
+        $r = $emps->db->query("select * from " . TP . "e_thumbs where size = '{$size}' and opts = '{$sopts}' and upload_id = {$id} limit 1");
         $ra = $emps->db->fetch_named($r);
         $ra['fname'] = $dname;
 //        error_log("ensure_thumb return");
@@ -203,7 +232,7 @@ class EMPS_Photos
         if (!$folder) return false;
         $r = $emps->db->query("select * from " . TP . "e_thumbs where upload_id=$photo_id");
         while ($ra = $emps->db->fetch_named($r)) {
-            $tname = $this->up->UPLOAD_PATH . $folder . "/thumb/" . $photo_id . "_" . $ra['size'] . ".dat";
+            $tname = $this->up->UPLOAD_PATH . $folder . "/thumb/" . $photo_id . "_" . $ra['size'] . "_" . $ra['opts'] . ".dat";
             if (file_exists($tname)) {
                 unlink($tname);
             }
